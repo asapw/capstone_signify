@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MyCapstone</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="login_now">click to login</string>
+    <string name="register_now">click to register</string>
+    <string name="logout">logout</string>
+</resources>
