@@ -7,4 +7,9 @@
     <string name="login_now">click to login</string>
     <string name="register_now">click to register</string>
     <string name="logout">logout</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="next">Next</string>
+    <string name="finish">Finish</string>
+
 </resources>

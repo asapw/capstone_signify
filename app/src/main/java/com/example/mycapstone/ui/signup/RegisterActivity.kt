@@ -1,4 +1,4 @@
-package com.example.mycapstone
+package com.example.mycapstone.ui.signup
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,6 +9,8 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.mycapstone.ui.login.LoginActivity
+import com.example.mycapstone.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
