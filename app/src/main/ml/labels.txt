@@ -1,3 +1,4 @@
+git add path/to/your/model/file
 a
 b
 c
