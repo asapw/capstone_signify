@@ -37,10 +37,21 @@ android {
 
     buildFeatures{
         viewBinding = true
+        mlModelBinding = true
     }
 }
 
 dependencies {
+
+
+// CameraX dependencies
+    implementation (libs.androidx.camera.core)
+    implementation (libs.camera.camera2) // Required for Camera2 implementation
+    implementation (libs.androidx.camera.lifecycle)  // For lifecycle support
+    implementation (libs.androidx.camera.view) // For CameraX view (if using)
+    
+    implementation (libs.tensorflow.lite)
+
     // Splash Screen
     implementation ("androidx.core:core-splashscreen:1.0.1")
 
@@ -63,6 +74,10 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.tensorflow.lite.support)
+    implementation(libs.tensorflow.lite.metadata)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.camera.lifecycle)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -3,14 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
-
+    android:label="app_name"
+    app:startDestination="@id/nav_home">
 
     <fragment
-        android:id="@+id/homeFragment"
+        android:id="@+id/nav_home"
         android:name="com.example.mycapstone.ui.home.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home" />
 
+    <fragment
+        android:id="@+id/nav_camera"
+        android:name="com.example.mycapstone.ui.camera.CameraFragment"
+        android:label="Camera"
+        tools:layout="@layout/fragment_camera" />
 
+    <fragment
+        android:id="@+id/nav_learn"
+        android:name="com.example.mycapstone.ui.learn.LearnFragment"
+        android:label="Learn"
+        tools:layout="@layout/fragment_learn" />
+
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.example.mycapstone.ui.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>
