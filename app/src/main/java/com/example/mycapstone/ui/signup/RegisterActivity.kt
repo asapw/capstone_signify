@@ -4,20 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mycapstone.ui.login.LoginActivity
-import com.example.mycapstone.R
+import com.example.mycapstone.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
-    private lateinit var progressBar: ProgressBar
+    private lateinit var binding: ActivityRegisterBinding
 
     companion object {
         private const val TAG = "RegisterActivity"
@@ -25,22 +22,25 @@ class RegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
+
+        // Initialize ViewBinding
+        binding = ActivityRegisterBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
-        progressBar = findViewById(R.id.progressBar)
 
-        findViewById<Button>(R.id.registerButton).setOnClickListener {
-            val email = findViewById<EditText>(R.id.registerEmailEditText).text.toString()
-            val password = findViewById<EditText>(R.id.registerPasswordEditText).text.toString()
+        // Register Button Click Listener
+        binding.registerButton.setOnClickListener {
+            val email = binding.registerEmailEditText.text.toString()
+            val password = binding.registerPasswordEditText.text.toString()
 
             // Show ProgressBar
-            progressBar.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.VISIBLE
 
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     // Hide ProgressBar
-                    progressBar.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
 
                     if (task.isSuccessful) {
                         // Registration success
@@ -60,8 +60,8 @@ class RegisterActivity : AppCompatActivity() {
                 }
         }
 
-        // Set up listener for "Login Now" button to go to LoginActivity
-        findViewById<Button>(R.id.loginNowButton).setOnClickListener {
+        // Login Now Button Click Listener
+        binding.loginNowButton.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish() // Close RegisterActivity
@@ -85,5 +85,3 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 }
-
-

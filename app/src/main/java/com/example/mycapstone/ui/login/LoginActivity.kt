@@ -2,12 +2,11 @@ package com.example.mycapstone.ui.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mycapstone.MainActivity
-import com.example.mycapstone.R
 import com.example.mycapstone.databinding.ActivityLoginBinding
 import com.example.mycapstone.ui.signup.RegisterActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -15,7 +14,6 @@ import com.google.firebase.auth.FirebaseAuth
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
-    private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +21,6 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
-        progressBar = findViewById(R.id.progressBar)
 
         // Login
         binding.loginButton.setOnClickListener {
@@ -37,13 +34,14 @@ class LoginActivity : AppCompatActivity() {
             }
 
             // Show progress bar while logging in
-            progressBar.visibility = View.VISIBLE
+            Log.d("LoginActivity", "Showing ProgressBar")
+            binding.progressBar.visibility = View.VISIBLE
 
             // Sign in using Firebase Auth
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     // Hide progress bar after login attempt
-                    progressBar.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE
 
                     if (task.isSuccessful) {
                         val intent = Intent(this, MainActivity::class.java)
