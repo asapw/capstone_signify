@@ -6,10 +6,17 @@
     <string name="register">Register</string>
     <string name="login_now">click to login</string>
     <string name="register_now">click to register</string>
-    <string name="logout">logout</string>
+    <string name="logout">Logout</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="next">Next</string>
     <string name="finish">Finish</string>
+    <string name="name">Name</string>
+    <string name="phone">Phone</string>
+    <string name="birthdate">Birthdate</string>
+    <string name="city">City</string>
+    <string name="my_account">My Account</string>
+    <string name="help_and_support">Help and Support</string>
+    <string name="about_app">About App</string>
 
 </resources>

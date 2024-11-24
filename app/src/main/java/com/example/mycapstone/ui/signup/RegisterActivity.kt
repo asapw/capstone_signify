@@ -10,11 +10,13 @@ import com.example.mycapstone.ui.login.LoginActivity
 import com.example.mycapstone.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: ActivityRegisterBinding
+    private val db = FirebaseFirestore.getInstance()
 
     companion object {
         private const val TAG = "RegisterActivity"
@@ -31,31 +33,30 @@ class RegisterActivity : AppCompatActivity() {
 
         // Register Button Click Listener
         binding.registerButton.setOnClickListener {
-            val email = binding.registerEmailEditText.text.toString()
-            val password = binding.registerPasswordEditText.text.toString()
+            val email = binding.registerEmailEditText.text.toString().trim()
+            val password = binding.registerPasswordEditText.text.toString().trim()
+            val name = binding.registerNameEditText.text.toString().trim()
+            val phone = binding.registerPhoneEditText.text.toString().trim()
+            val birthdate = binding.registerBirthdateEditText.text.toString().trim()
+            val city = binding.registerCityEditText.text.toString().trim()
+
+            if (email.isEmpty() || password.isEmpty() || name.isEmpty() || phone.isEmpty() || birthdate.isEmpty() || city.isEmpty()) {
+                Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
             // Show ProgressBar
             binding.progressBar.visibility = View.VISIBLE
 
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
-                    // Hide ProgressBar
                     binding.progressBar.visibility = View.GONE
-
                     if (task.isSuccessful) {
-                        // Registration success
-                        Log.d(TAG, "createUserWithEmail:success")
                         val user = auth.currentUser
-                        updateUI(user)
+                        saveUserData(user, name, email, phone, birthdate, city)
                     } else {
-                        // Registration failed
                         Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                        Toast.makeText(
-                            baseContext,
-                            "Registration failed.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        updateUI(null)
+                        Toast.makeText(this, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                     }
                 }
         }
@@ -68,18 +69,40 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    private fun saveUserData(user: FirebaseUser?, name: String, email: String, phone: String, birthdate: String, city: String) {
+        if (user == null) {
+            Toast.makeText(this, "User is null. Please try again.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val userId = user.uid
+        val userData = mapOf(
+            "name" to name,
+            "email" to email,
+            "phone" to phone,
+            "birthdate" to birthdate,
+            "city" to city
+        )
+
+        db.collection("users").document(userId)
+            .set(userData)
+            .addOnSuccessListener {
+                Log.d(TAG, "User data added to Firestore.")
+                updateUI(user)
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding user data to Firestore", e)
+                Toast.makeText(this, "Failed to save user data. Please try again.", Toast.LENGTH_SHORT).show()
+            }
+    }
+
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
-            // Registration successful, go to LoginActivity (no auto login to MainActivity)
             Toast.makeText(this, "Registration successful! Please login.", Toast.LENGTH_SHORT).show()
-
-            // Explicitly clear any existing session (force logout to prevent auto-login)
             auth.signOut()
-
-            // Intent to go to LoginActivity
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
-            finish() // Close RegisterActivity
+            finish()
         } else {
             Toast.makeText(this, "Please try again.", Toast.LENGTH_SHORT).show()
         }

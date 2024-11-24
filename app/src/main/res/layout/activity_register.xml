@@ -45,6 +45,33 @@
                 android:hint="@string/email"
                 android:inputType="textEmailAddress"
                 android:imeOptions="actionNext" />
+            <EditText
+                android:id="@+id/registerNameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/name"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/registerPhoneEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/phone"
+                android:inputType="phone" />
+
+            <EditText
+                android:id="@+id/registerBirthdateEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/birthdate"
+                android:inputType="date" />
+
+            <EditText
+                android:id="@+id/registerCityEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/city"
+                android:inputType="text" />
 
             <EditText
                 android:id="@+id/registerPasswordEditText"
