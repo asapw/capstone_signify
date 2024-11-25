@@ -32,63 +32,45 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
-        <!-- Username Label -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/email"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="14sp"
-            android:layout_marginBottom="4dp" />
-
-        <!-- email dan pw massi error karena input layout ny Field -->
+        <!-- Email Field with Custom EmailEditText -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             app:boxBackgroundMode="outline"
             app:boxBackgroundColor="@color/white"
-            app:boxStrokeColor="@color/white"
+            app:boxStrokeColor="@color/black"
+            app:hintTextColor="@color/black"
             android:layout_marginBottom="16dp">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <com.example.mycapstone.customview.EmailEditText
                 android:id="@+id/emailEditText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Type your username here..."
+                android:layout_height="60dp"
+                android:hint="Email"
                 android:textColor="@color/black"
                 android:textColorHint="@color/secondaryColorgrey"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Password Label -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/password"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="14sp"
-            android:layout_marginBottom="4dp" />
-
-        <!-- Password Field -->
+        <!-- Password Field with Custom PasswordEditText -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:boxBackgroundMode="outline"
             app:boxBackgroundColor="@color/white"
-            app:boxStrokeColor="@color/white"
+            app:boxStrokeColor="@color/black"
+            app:hintTextColor="@color/black"
             android:layout_marginBottom="16dp">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <com.example.mycapstone.customview.PasswordEditText
                 android:id="@+id/passwordEditText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Type your password here..."
+                android:layout_height="60dp"
+                android:hint=" Password"
                 android:textColor="@color/black"
                 android:textColorHint="@color/secondaryColorgrey"
                 android:inputType="textPassword" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Login Button -->
@@ -126,6 +108,4 @@
             app:strokeColor="@color/black"
             app:strokeWidth="4dp" />
     </LinearLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
