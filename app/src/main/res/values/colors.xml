@@ -4,6 +4,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="primaryColor">#595891</color>
     <color name="secondaryColor">#FFEFC9</color>
+    <color name="secondaryColorgrey">#B0B0B0</color> <!-- Adjusted grey for inactive dots -->
+    <color name="bgBlue">#0E3E76</color>
 
     <!-- Bottom Navigation Item Color -->
     <color name="bottom_navigation_item_color">#FF6200EE</color>
@@ -11,5 +13,14 @@
     <!-- Optional: You can define different states for your items -->
     <color name="bottom_navigation_item_color_selected">#FF6200EE</color> <!-- Color when selected -->
     <color name="bottom_navigation_item_color_unselected">#757575</color> <!-- Color when unselected -->
+
+
+    <!-- Accent Colors -->
+    <color name="buttonBackground">#FFFFFF</color> <!-- White background for buttons -->
+    <color name="buttonText">#0E3E76</color> <!-- Dark blue for button text -->
+
+    <!-- Optional UI Colors -->
+    <color name="dotsIndicatorActive">#28A0E5</color> <!-- Active dot color -->
+    <color name="dotsIndicatorInactive">#AABFD1</color> <!-- Inactive dot color -->
 
 </resources>

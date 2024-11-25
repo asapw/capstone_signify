@@ -42,6 +42,9 @@ android {
 }
 
 dependencies {
+    //color
+    implementation (libs.dotsindicator)
+
     implementation(libs.guava)
 
 

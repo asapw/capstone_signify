@@ -2,26 +2,21 @@ package com.example.mycapstone.ui.profile
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.mycapstone.R
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.mycapstone.databinding.FragmentProfileBinding
 import com.example.mycapstone.ui.login.LoginActivity
+import com.example.mycapstone.viewmodel.MainViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
-    private val db = FirebaseFirestore.getInstance()
-
-    companion object {
-        private const val TAG = "ProfileFragment"
-    }
+    private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,15 +25,25 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // Fetch the current user's name from Firestore
-        fetchUserName()
+        // Observe user name LiveData
+        mainViewModel.userName.observe(viewLifecycleOwner) { name ->
+            binding.profileName.text = name
+        }
 
-        // Handle My Account click
+        // Fetch the current user's name
+        mainViewModel.fetchUserName()
+
+        // Set up button listeners
+        setupListeners()
+
+        return root
+    }
+
+    private fun setupListeners() {
         binding.myAccountButton.setOnClickListener {
             // Navigate to the My Account section
         }
 
-        // Handle Logout click
         binding.logoutButton.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             val intent = Intent(activity, LoginActivity::class.java)
@@ -46,41 +51,12 @@ class ProfileFragment : Fragment() {
             activity?.finish()
         }
 
-        // Handle Help & Support click
         binding.helpSupportButton.setOnClickListener {
             // Open Help and Support page
         }
 
-        // Handle About App click
         binding.aboutAppButton.setOnClickListener {
             // Show info about the app
-        }
-
-        return root
-    }
-//ntr buat mvm masukin mvm func ny
-    private fun fetchUserName() {
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        val userId = currentUser?.uid
-
-        if (userId != null) {
-            db.collection("users").document(userId)
-                .get()
-                .addOnSuccessListener { document ->
-                    if (document != null && document.exists()) {
-                        val name = document.getString("name") ?: "User"
-                        binding.profileName.text = name
-                    } else {
-                        Log.d(TAG, "No user document found.")
-                        binding.profileName.text = "User"
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.e(TAG, "Error fetching user data: ", exception)
-                    binding.profileName.text = "User"
-                }
-        } else {
-            binding.profileName.text = "User"
         }
     }
 

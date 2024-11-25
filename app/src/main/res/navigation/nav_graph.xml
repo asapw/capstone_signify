@@ -11,7 +11,11 @@
         android:name="com.example.mycapstone.ui.home.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home" />
-
+    <fragment
+        android:id="@+id/nav_lesson"
+        android:name="com.example.mycapstone.ui.lesson.LessonFragment"
+        android:label="Lesson"
+        tools:layout="@layout/fragment_lesson" />
     <fragment
         android:id="@+id/nav_camera"
         android:name="com.example.mycapstone.ui.camera.CameraFragment"

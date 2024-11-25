@@ -18,5 +18,7 @@
     <string name="my_account">My Account</string>
     <string name="help_and_support">Help and Support</string>
     <string name="about_app">About App</string>
+    <string name="app_logo" />
+    <string name="signify">SIGNIFY</string>
 
 </resources>

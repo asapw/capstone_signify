@@ -1,6 +1,7 @@
 [versions]
 agp = "8.6.0"
 cameraCamera2 = "1.4.0"
+dotsindicator = "5.0"
 firebaseBom = "33.5.1"
 guava = "33.0.0-android"
 kotlin = "1.9.0"
@@ -27,6 +28,7 @@ cameraLifecycle = "1.4.0"
 androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraView" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCamera2" }
+dotsindicator = { module = "com.tbuonomo:dotsindicator", version.ref = "dotsindicator" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 google-firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
