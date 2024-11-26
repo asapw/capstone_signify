@@ -19,11 +19,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Set up NavController
         val navHostFragment = supportFragmentManager.findFragmentById(binding.navContainer.id) as NavHostFragment
         navController = navHostFragment.navController
 
+        // Set up BottomNavigationView with NavController
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController)
 
+        // Handle BottomNavigation item clicks
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
@@ -47,6 +50,20 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 else -> false
+            }
+        }
+
+        // Handle FloatingActionButton click
+        binding.fabCamera.setOnClickListener {
+            navController.navigate(R.id.nav_camera)
+        }
+
+        // Listen for navigation changes to hide/show the FloatingActionButton
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.nav_camera) {
+                binding.fabCamera.hide() // Hide the FAB when on CameraFragment
+            } else {
+                binding.fabCamera.show() // Show the FAB on other fragments
             }
         }
     }
