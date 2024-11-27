@@ -6,6 +6,8 @@
     <color name="secondaryColor">#FFEFC9</color>
     <color name="secondaryColorgrey">#B0B0B0</color> <!-- Adjusted grey for inactive dots -->
     <color name="bgBlue">#0E3E76</color>
+    <color name="light_gray">#D4D4D4</color>
+    <color name="purple_500">#a46ede</color>
 
     <!-- Bottom Navigation Item Color -->
     <color name="bottom_navigation_item_color">#FF6200EE</color>
