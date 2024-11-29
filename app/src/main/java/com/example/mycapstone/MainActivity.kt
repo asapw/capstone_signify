@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController)
 
         // Handle BottomNavigation item clicks
+        // In MainActivity, use the action ID
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
@@ -41,8 +42,8 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.nav_camera)
                     true
                 }
-                R.id.nav_learn -> {
-                    navController.navigate(R.id.nav_learn)
+                R.id.nav_quiz -> {
+                    navController.navigate(R.id.nav_quiz)
                     true
                 }
                 R.id.nav_profile -> {
@@ -52,6 +53,8 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
+
 
         // Handle FloatingActionButton click
         binding.fabCamera.setOnClickListener {

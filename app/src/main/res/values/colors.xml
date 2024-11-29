@@ -8,6 +8,7 @@
     <color name="bgBlue">#0E3E76</color>
     <color name="light_gray">#D4D4D4</color>
     <color name="purple_500">#a46ede</color>
+    <color name="red">#AA4A44</color>
 
     <!-- Bottom Navigation Item Color -->
     <color name="bottom_navigation_item_color">#FF6200EE</color>

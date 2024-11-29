@@ -1,4 +1,4 @@
-package com.example.mycapstone.ui.learn
+package com.example.mycapstone.ui.quiz
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mycapstone.R
 import com.example.mycapstone.adapter.QuizAdapter
 
-class LearnFragment : Fragment() {
+class QuizFragment : Fragment() {
 
     private lateinit var quizList: RecyclerView
     private val quizItems = listOf(
@@ -30,7 +30,7 @@ class LearnFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.fragment_learn, container, false)
+        val view = inflater.inflate(R.layout.fragment_quiz, container, false)
         quizList = view.findViewById(R.id.quiz_list)
         quizList.layoutManager = LinearLayoutManager(requireContext())
         quizList.adapter = QuizAdapter(quizItems)
