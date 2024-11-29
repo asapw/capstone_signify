@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
+    id("kotlin-parcelize")
 }
 
 android {
@@ -39,9 +40,15 @@ android {
         viewBinding = true
         mlModelBinding = true
     }
+
+
 }
 
 dependencies {
+
+
+    // MediaPipe
+    implementation("com.google.mediapipe:tasks-vision:0.20230731")
 
     //color
     implementation (libs.dotsindicator)
