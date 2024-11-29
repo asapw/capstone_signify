@@ -1,17 +1,25 @@
 package com.example.mycapstone.ui.camera
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageFormat
+import android.graphics.Matrix
 import android.graphics.Rect
 import android.graphics.YuvImage
 import android.os.Bundle
+import android.os.Looper
+import android.os.SystemClock
 import android.util.Log
+import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
@@ -19,226 +27,231 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.mycapstone.R
+import com.example.mycapstone.data.BoundingBox
 import com.example.mycapstone.databinding.FragmentCameraBinding
+import com.example.mycapstone.ui.camera.HandLandMarkerHelper.Companion.TAG
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.mediapipe.framework.image.BitmapImageBuilder
+import com.google.mediapipe.tasks.components.containers.Landmark
+import com.google.mediapipe.tasks.vision.core.RunningMode
+import com.google.mediapipe.tasks.vision.handlandmarker.HandLandmarkerResult
+import org.tensorflow.lite.Interpreter
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
+import java.nio.ByteOrder
+import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
-class CameraFragment : Fragment() {
+class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
 
-    private var _binding: FragmentCameraBinding? = null
-    private val binding get() = _binding!!
-    private val cameraViewModel: CameraViewModel by viewModels()
+
+    private  var _fragmentCameraBinding: FragmentCameraBinding? = null
+    private val fragmentCameraBinding get() = _fragmentCameraBinding!!
+
+    private val viewModel: CameraViewModel by viewModels()
+
+    private lateinit var handLandmarkerHelper: HandLandMarkerHelper
 
     private var preview: Preview? = null
     private var imageAnalyzer: ImageAnalysis? = null
     private var camera: Camera? = null
     private var cameraProvider: ProcessCameraProvider? = null
-    private lateinit var cameraExecutor: ExecutorService
+    private var cameraFacing = CameraSelector.LENS_FACING_FRONT
+    /** Blocking ML operations are performed using this executor */
+    private lateinit var backgroundExecutor: ExecutorService
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentCameraBinding.inflate(inflater, container, false)
-        cameraExecutor = Executors.newSingleThreadExecutor()
+    ): View? {
+        _fragmentCameraBinding =
+            FragmentCameraBinding.inflate(inflater, container, false)
 
-        // Initialize detector in ViewModel
-        cameraViewModel.initializeDetector(requireContext())
-
-        // Observe LiveData
-        setupObservers()
-
-        // Request camera permission and start camera
-        if (allPermissionsGranted()) {
-            startCamera()
-        } else {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                REQUIRED_PERMISSIONS,
-                REQUEST_CODE_PERMISSIONS
-            )
-        }
-
-        return binding.root
+        return fragmentCameraBinding.root
     }
 
+    @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Hide bottom navigation when camera fragment is displayed
-        val bottomNav = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        bottomNav.visibility = View.GONE
+        backgroundExecutor = Executors.newSingleThreadExecutor()
 
-        // Set up back button listener
-        binding.backButton.setOnClickListener {
-            // Navigate back using the NavController
-            findNavController().popBackStack()  // Pop the current fragment off the back stack
+        fragmentCameraBinding.viewFinder.post{
+            setupCamera()
+        }
+
+        backgroundExecutor.execute {
+            handLandmarkerHelper = HandLandMarkerHelper(
+                context = requireContext(),
+                runningMode = RunningMode.LIVE_STREAM,
+                minHandPresenceConfidence = viewModel.currentMinHandPresenceConfidence,
+                minHandTrackingConfidence = viewModel.currentMinHandTrackingConfidence,
+                maxNumHands = viewModel.currentMaxHands,
+                currentDelegate = viewModel.currentDelegate,
+                handLandmarkerHelperListener = this
+            )
+        }
+
+
+    }
+
+
+
+
+
+    override fun onError(error: String, errorCode: Int) {
+        Log.e(TAG, "Hand Landmarker Error ($errorCode): $error")
+    }
+
+    override fun onResults(resultBundle: HandLandMarkerHelper.ResultBundle) {
+        if (resultBundle.results.isNotEmpty()) {
+            val result = resultBundle.results[0]
+            Log.d("CameraOverlay", "Detected hands: ${result.landmarks().size}")
+
+            // Log detailed information about each hand
+            result.landmarks().forEachIndexed { index, landmarks ->
+                Log.d("CameraOverlay", "Hand $index landmarks count: ${landmarks.size}")
+
+                // Optional: Log a few key landmarks
+                if (landmarks.isNotEmpty()) {
+                    Log.d("CameraOverlay", "First landmark: ${landmarks[0]}")
+                }
+            }
+
+            fragmentCameraBinding.overlay.setResults(
+                result,
+                resultBundle.inputImageHeight,
+                resultBundle.inputImageWidth,
+                RunningMode.LIVE_STREAM
+            )
+            fragmentCameraBinding.overlay.invalidate()
+        } else {
+            Log.d("CameraOverlay", "No hand results detected.")
         }
     }
 
 
-    private fun setupObservers() {
-        cameraViewModel.detectionResults.observe(viewLifecycleOwner, Observer { results ->
-            // Handle detection results (e.g., display recognized sign language)
-            binding.textOutput.text = "Detected: ${results.joinToString()}"
-        })
 
-        cameraViewModel.inferenceTime.observe(viewLifecycleOwner, Observer { time ->
-            // Display inference time for performance monitoring
-            Log.d("InferenceTime", "Inference time: $time ms")
-        })
+    override fun onDestroyView() {
+        _fragmentCameraBinding = null
+        super.onDestroyView()
+
+        // Shut down our background executor
+        backgroundExecutor.shutdown()
+        backgroundExecutor.awaitTermination(
+            Long.MAX_VALUE, TimeUnit.NANOSECONDS
+        )
     }
 
-    private fun startCamera() {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
+    private fun setupCamera() {
+        val cameraProviderFuture =
+            ProcessCameraProvider.getInstance(requireContext())
         cameraProviderFuture.addListener({
             cameraProvider = cameraProviderFuture.get()
+
             bindCameraUseCases()
         }, ContextCompat.getMainExecutor(requireContext()))
     }
 
-    private fun bindCameraUseCases() {
-        val cameraProvider = cameraProvider ?: throw IllegalStateException("Camera initialization failed.")
-        val rotation = binding.viewFinder.display.rotation
+    override fun onPause() {
+        super.onPause()
+        if(this::handLandmarkerHelper.isInitialized) {
+            viewModel.setMaxHands(handLandmarkerHelper.maxNumHands)
+            viewModel.setMinHandDetectionConfidence(handLandmarkerHelper.minHandDetectionConfidence)
+            viewModel.setMinHandTrackingConfidence(handLandmarkerHelper.minHandTrackingConfidence)
+            viewModel.setMinHandPresenceConfidence(handLandmarkerHelper.minHandPresenceConfidence)
+            viewModel.setDelegate(handLandmarkerHelper.currentDelegate)
 
-        val cameraSelector = CameraSelector.Builder()
-            .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-            .build()
-
-        preview = Preview.Builder()
-            .setTargetRotation(rotation)
-            .build()
-
-        imageAnalyzer = ImageAnalysis.Builder()
-            .setTargetRotation(rotation)
-            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-            .build()
-
-        imageAnalyzer?.setAnalyzer(cameraExecutor) { imageProxy ->
-            processImage(imageProxy)
+            // Close the HandLandmarkerHelper and release resources
+            backgroundExecutor.execute { handLandmarkerHelper.clearHandLandmarker() }
         }
-
-        cameraProvider.unbindAll()
-
-        try {
-            camera = cameraProvider.bindToLifecycle(
-                this, cameraSelector, preview, imageAnalyzer
-            )
-            preview?.surfaceProvider = binding.viewFinder.surfaceProvider
-        } catch (exc: Exception) {
-            Log.e("CameraFragment", "Use case binding failed", exc)
-        }
-    }
-
-    private fun processImage(imageProxy: ImageProxy) {
-        try {
-            val bitmap = imageProxyToBitmap(imageProxy) // Safe conversion to Bitmap
-            cameraViewModel.detect(bitmap) // Send the Bitmap to the detection model
-        } catch (e: Exception) {
-            Log.e("CameraFragment", "Error processing image", e)
-        } finally {
-            // Close ImageProxy only after processing
-            imageProxy.close()
-        }
-    }
-
-
-    private fun imageProxyToBitmap(imageProxy: ImageProxy): Bitmap {
-        val format = imageProxy.format
-        Log.d("CameraFragment", "Image format: $format")
-
-        return when (format) {
-            ImageFormat.YUV_420_888 -> convertYUV420ToBitmap(imageProxy)
-            ImageFormat.NV21 -> convertNV21ToBitmap(imageProxy)
-            else -> throw IllegalStateException("Unsupported image format: $format")
-        }
-    }
-
-    // Convert NV21 to Bitmap (existing logic)
-    private fun convertNV21ToBitmap(imageProxy: ImageProxy): Bitmap {
-        val buffer: ByteBuffer = imageProxy.planes[0].buffer
-        val bytes = ByteArray(buffer.remaining())
-        buffer.get(bytes)
-
-        // Convert YUV to JPEG
-        val yuvImage = YuvImage(bytes, ImageFormat.NV21, imageProxy.width, imageProxy.height, null)
-        val outStream = ByteArrayOutputStream()
-        val rect = Rect(0, 0, imageProxy.width, imageProxy.height)
-        yuvImage.compressToJpeg(rect, 100, outStream)
-
-        // Convert JPEG byte array to Bitmap
-        val jpegByteArray = outStream.toByteArray()
-        return BitmapFactory.decodeByteArray(jpegByteArray, 0, jpegByteArray.size)
-    }
-
-    // Convert YUV_420_888 to Bitmap (as added earlier)
-    private fun convertYUV420ToBitmap(imageProxy: ImageProxy): Bitmap {
-        val planeY = imageProxy.planes[0]
-        val planeU = imageProxy.planes[1]
-        val planeV = imageProxy.planes[2]
-
-        val bufferY = planeY.buffer
-        val bufferU = planeU.buffer
-        val bufferV = planeV.buffer
-
-        // Process YUV_420_888 to NV21 or another format suitable for Bitmap conversion
-        val yuvData = ByteArray(bufferY.remaining() + bufferU.remaining() + bufferV.remaining())
-        bufferY.get(yuvData, 0, bufferY.remaining())
-        bufferU.get(yuvData, bufferY.remaining(), bufferU.remaining())
-        bufferV.get(yuvData, bufferY.remaining() + bufferU.remaining(), bufferV.remaining())
-
-        // Convert YUV to JPEG or directly to Bitmap using YUV data
-        val yuvImage = YuvImage(yuvData, ImageFormat.NV21, imageProxy.width, imageProxy.height, null)
-        val outStream = ByteArrayOutputStream()
-        val rect = Rect(0, 0, imageProxy.width, imageProxy.height)
-        yuvImage.compressToJpeg(rect, 100, outStream)
-
-        val jpegByteArray = outStream.toByteArray()
-        return BitmapFactory.decodeByteArray(jpegByteArray, 0, jpegByteArray.size)
-    }
-
-
-
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
     }
 
     override fun onResume() {
         super.onResume()
-        if (allPermissionsGranted()) {
-            startCamera()
-        } else {
-            requestPermissions(REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
+//        // Make sure that all permissions are still present, since the
+//        // user could have removed them while the app was in paused state.
+//        if (!PermissionsFragment.hasPermissions(requireContext())) {
+//            Navigation.findNavController(
+//                requireActivity(), R.id.fragment_container
+//            ).navigate(R.id.action_camera_to_permissions)
+//        }
+
+        // Start the HandLandmarkerHelper again when users come back
+        // to the foreground.
+        backgroundExecutor.execute {
+            if (handLandmarkerHelper.isClose()) {
+                handLandmarkerHelper.setupHandLandmarker()
+            }
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
 
-        // Restore the Bottom Navigation visibility
-        val bottomNav = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        bottomNav?.visibility = View.VISIBLE
+    @SuppressLint("UnsafeOptInUsageError")
+    private fun bindCameraUseCases() {
+        // CameraProvider
+        val cameraProvider = cameraProvider
+            ?: throw IllegalStateException("Camera initialization failed.")
 
-        // Clean up camera resources
-        cameraProvider?.unbindAll()
-        cameraExecutor.shutdown()
+        val cameraSelector =
+            CameraSelector.Builder().requireLensFacing(cameraFacing).build()
 
-        // Nullify the binding to avoid memory leaks
-        _binding = null
+        // Preview. Only using the 4:3 ratio because this is the closest to our models
+        preview = Preview.Builder().setTargetAspectRatio(AspectRatio.RATIO_4_3)
+            .setTargetRotation(fragmentCameraBinding.viewFinder.display.rotation)
+            .build()
+
+        // ImageAnalysis. Using RGBA 8888 to match how our models work
+        imageAnalyzer =
+            ImageAnalysis.Builder().setTargetAspectRatio(AspectRatio.RATIO_4_3)
+                .setTargetRotation(fragmentCameraBinding.viewFinder.display.rotation)
+                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888)
+                .build()
+                // The analyzer can then be assigned to the instance
+                .also {
+                    it.setAnalyzer(backgroundExecutor) { image ->
+                        detectHand(image)
+                    }
+                }
+
+        // Must unbind the use-cases before rebinding them
+        cameraProvider.unbindAll()
+
+        try {
+            // A variable number of use-cases can be passed here -
+            // camera provides access to CameraControl & CameraInfo
+            camera = cameraProvider.bindToLifecycle(
+                this, cameraSelector, preview, imageAnalyzer
+            )
+
+            // Attach the viewfinder's surface provider to preview use case
+            preview?.setSurfaceProvider(fragmentCameraBinding.viewFinder.surfaceProvider)
+        } catch (exc: Exception) {
+            Log.e(TAG, "Use case binding failed", exc)
+        }
+    }
+
+    private fun detectHand(imageProxy: ImageProxy) {
+        handLandmarkerHelper.detectLivestream(
+            imageProxy = imageProxy,
+            isFrontCamera = cameraFacing == CameraSelector.LENS_FACING_FRONT
+        )
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        imageAnalyzer?.targetRotation =
+            fragmentCameraBinding.viewFinder.display.rotation
     }
 
 
 
-
-
-    companion object {
-        private const val TAG = "Camera"
-        private const val REQUEST_CODE_PERMISSIONS = 10
-        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
-    }
 }

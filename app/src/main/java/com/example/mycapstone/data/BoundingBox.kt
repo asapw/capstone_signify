@@ -1,8 +1,9 @@
 package com.example.mycapstone.data
 
-import android.os.Parcel
 import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class BoundingBox(
     val x1: Float,
     val y1: Float,
@@ -15,47 +16,4 @@ data class BoundingBox(
     val cnf: Float,
     val cls: Int,
     val clsName: String
-) : Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readFloat(),
-        parcel.readFloat(),
-        parcel.readFloat(),
-        parcel.readFloat(),
-        parcel.readFloat(),
-        parcel.readFloat(),
-        parcel.readFloat(),
-        parcel.readFloat(),
-        parcel.readFloat(),
-        parcel.readInt(),
-        parcel.readString().toString()
-    ) {
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeFloat(x1)
-        parcel.writeFloat(y1)
-        parcel.writeFloat(x2)
-        parcel.writeFloat(y2)
-        parcel.writeFloat(cx)
-        parcel.writeFloat(cy)
-        parcel.writeFloat(w)
-        parcel.writeFloat(h)
-        parcel.writeFloat(cnf)
-        parcel.writeInt(cls)
-        parcel.writeString(clsName)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<BoundingBox> {
-        override fun createFromParcel(parcel: Parcel): BoundingBox {
-            return BoundingBox(parcel)
-        }
-
-        override fun newArray(size: Int): Array<BoundingBox?> {
-            return arrayOfNulls(size)
-        }
-    }
-}
+) : Parcelable
