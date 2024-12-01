@@ -50,8 +50,8 @@ class ModelHelper(
         tensorWidth = inputShape[1]
         tensorHeight = inputShape[2]
         numChannel = outputShape[1]
+<
         numElements = 4
-
         try {
             val inputStream: InputStream = context.assets.open(labelPath)
             val reader = BufferedReader(InputStreamReader(inputStream))

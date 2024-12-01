@@ -11,7 +11,10 @@ import com.example.mycapstone.R
 import com.example.mycapstone.data.MaterialItem
 
 
-class MaterialAdapter(private val items: List<MaterialItem>) : RecyclerView.Adapter<MaterialAdapter.MaterialViewHolder>() {
+class MaterialAdapter(
+    private val items: List<MaterialItem>,
+    private val onItemClick: (MaterialItem) -> Unit
+) : RecyclerView.Adapter<MaterialAdapter.MaterialViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MaterialViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_material, parent, false)
@@ -23,14 +26,22 @@ class MaterialAdapter(private val items: List<MaterialItem>) : RecyclerView.Adap
         holder.itemTitle.text = item.title
         holder.itemSubtitle.text = item.subtitle
         holder.itemImage.setImageResource(item.imageResource)
+        holder.markAsCompletedButton.apply {
+            text = if (item.isCompleted) "Completed" else "Not Completed"
+            setBackgroundColor(
+                if (item.isCompleted)
+                    context.getColor(R.color.bgBlue)
+                else
+                    context.getColor(R.color.red)
+            )
+        }
 
-        // Set the Mark as Completed button text based on isCompleted status
-        holder.markAsCompletedButton.text = if (item.isCompleted) "Completed" else "Mark as completed"
+        holder.itemView.setOnClickListener {
+            onItemClick(item)
+        }
     }
 
-    override fun getItemCount(): Int {
-        return items.size
-    }
+    override fun getItemCount(): Int = items.size
 
     inner class MaterialViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val itemImage: ImageView = view.findViewById(R.id.item_image)
@@ -39,3 +50,5 @@ class MaterialAdapter(private val items: List<MaterialItem>) : RecyclerView.Adap
         val markAsCompletedButton: Button = view.findViewById(R.id.mark_as_completed_button)
     }
 }
+
+

@@ -67,6 +67,10 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
         modelHelper.setup()
     }
 
+    fun detect(bitmap: Bitmap) {
+        modelHelper.detect(bitmap)
+    }
+
     fun detectHandSign(
         handLandmarkerResult: HandLandmarkerResult,
         inputBitmap: Bitmap
@@ -105,6 +109,11 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
         boundingBoxes.firstOrNull()?.let {
             _handSignResult.postValue(it.clsName)
         }
+    }
+
+    override fun onDetect(boundingBoxes: List<BoundingBox>, inferenceTime: Long) {
+        _detectionResults.postValue(boundingBoxes)
+        _inferenceTime.postValue(inferenceTime)
     }
 
     override fun onCleared() {

@@ -4,5 +4,6 @@ data class MaterialItem(
     val imageResource: Int,
     val title: String,
     val subtitle: String,
-    val isCompleted: Boolean
+    var isCompleted: Boolean,
+    val videoUrl: String
 )

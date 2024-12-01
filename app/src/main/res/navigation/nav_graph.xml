@@ -11,11 +11,27 @@
         android:name="com.example.mycapstone.ui.home.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home" />
+
+    <!-- Change lessonFragment to nav_lesson -->
     <fragment
         android:id="@+id/nav_lesson"
         android:name="com.example.mycapstone.ui.lesson.LessonFragment"
-        android:label="Lesson"
-        tools:layout="@layout/fragment_lesson" />
+        android:label="LessonFragment">
+        <action
+            android:id="@+id/action_lessonFragment_to_videoFragment"
+            app:destination="@id/videoFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/videoFragment"
+        android:name="com.example.mycapstone.ui.lesson.video.VideoFragment"
+        android:label="VideoFragment">
+        <argument
+            android:name="video_url"
+            app:argType="string" />
+    </fragment>
+
+
     <fragment
         android:id="@+id/nav_camera"
         android:name="com.example.mycapstone.ui.camera.CameraFragment"
@@ -23,14 +39,15 @@
         tools:layout="@layout/fragment_camera" />
 
     <fragment
-        android:id="@+id/nav_learn"
-        android:name="com.example.mycapstone.ui.learn.LearnFragment"
-        android:label="Learn"
-        tools:layout="@layout/fragment_learn" />
+        android:id="@+id/nav_quiz"
+        android:name="com.example.mycapstone.ui.quiz.QuizFragment"
+        android:label="quiz"
+        tools:layout="@layout/fragment_quiz" />
 
     <fragment
         android:id="@+id/nav_profile"
         android:name="com.example.mycapstone.ui.profile.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile" />
+
 </navigation>

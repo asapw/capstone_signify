@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
     id("kotlin-parcelize")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -17,6 +18,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a"))
+        }
     }
 
     buildTypes {
@@ -45,6 +49,11 @@ android {
 }
 
 dependencies {
+    implementation (libs.androidx.lifecycle.viewmodel.ktx)
+
+
+    // MediaPipe
+    implementation("com.google.mediapipe:tasks-vision:0.20230731")
 
 
     // MediaPipe

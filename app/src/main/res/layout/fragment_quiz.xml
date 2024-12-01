@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/bg_gradient"
-    tools:context=".ui.lesson.LessonFragment">
+    tools:context=".ui.quiz.QuizFragment">
 
     <!-- Header -->
     <LinearLayout
@@ -50,9 +51,9 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Frame Layout for Material Section and RecyclerView -->
+    <!-- Frame Layout for Quiz Section -->
     <FrameLayout
-        android:id="@+id/lesson_frame"
+        android:id="@+id/quiz_frame"
         android:layout_width="match_parent"
         android:layout_height="525dp"
         android:layout_margin="16dp"
@@ -68,9 +69,9 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Material Section -->
+            <!-- Quiz Section -->
             <LinearLayout
-                android:id="@+id/materialSection"
+                android:id="@+id/quizSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -88,7 +89,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Material"
+                    android:text="Quiz"
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
                     android:layout_marginHorizontal="8dp"
@@ -102,9 +103,9 @@
                     android:background="@android:color/black" />
             </LinearLayout>
 
-            <!-- Material List -->
+            <!-- Quiz List -->
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/materialRecyclerView"
+                android:id="@+id/quiz_list"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="16dp"
@@ -113,10 +114,4 @@
         </LinearLayout>
     </FrameLayout>
 
-    <!-- FragmentContainerView to hold the video fragment -->
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_container_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="16dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

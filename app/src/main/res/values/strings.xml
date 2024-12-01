@@ -22,9 +22,19 @@
     <string name="signify">SIGNIFY</string>
     <string name="material_title">Material Title</string>
     <string name="description_of_the_material">Description of the material.</string>
+
     <string name="mark_as_completed">Mark as completed</string>
     <string name="remember_me">Remember me</string>
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
+    <string name="mark_as_completed">Not Complete</string>
+    <string name="asl_aid">Sign Language Learning and Communication Aid</string>
+    <string name="video">Video</string>
+    <string name="beginner_lessons">Beginner | 6 Lessons</string>
+    <string name="learn_basic">Learn basic A-F</string>
+    <string name="material_image">Material Image</string>
+    <string name="mark_as_completed_btn">Mark as Completed</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="name_placeholder" />
 
 </resources>
