@@ -54,11 +54,15 @@ class LoginActivity : AppCompatActivity() {
                 }
         }
 
+
+        // btn Google Auth
+        binding.btnGoogleLogin.setOnClickListener {
+            // toDO()
+        }
         // Register
-        binding.registerNowButton.setOnClickListener {
+        binding.tvRegister.setOnClickListener{
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
-            finish()
         }
     }
 }

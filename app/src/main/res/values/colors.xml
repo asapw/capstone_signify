@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="primaryColor">#595891</color>
-    <color name="secondaryColor">#FFEFC9</color>
+    <!-- General Colors -->
+    <color name="primaryColor">#595891</color> <!-- Original purple for light mode -->
+    <color name="primaryColorLight">#7A7ABF</color> <!-- Lighter purple for better contrast in light mode -->
+    <color name="primaryColorDark">#3E3E71</color> <!-- Darker purple for better contrast in dark mode -->
+
+    <color name="secondaryColor">#FFEFC9</color> <!-- Light yellow (same for both modes) -->
+    <color name="secondaryColorDark">#D1C297</color> <!-- Muted yellow for dark mode -->
+
+    <!-- Background Colors -->
+    <color name="light_background">#F8F8F8</color> <!-- Off-white for light mode -->
+    <color name="dark_background">#121212</color> <!-- Dark background for dark mode -->
+
     <color name="secondaryColorgrey">#B0B0B0</color> <!-- Adjusted grey for inactive dots -->
     <color name="bgBlue">#0E3E76</color>
-    <color name="light_gray">#D4D4D4</color>
-    <color name="purple_500">#a46ede</color>
 
-    <!-- Bottom Navigation Item Color -->
-    <color name="bottom_navigation_item_color">#FF6200EE</color>
-
-    <!-- Optional: You can define different states for your items -->
-    <color name="bottom_navigation_item_color_selected">#FF6200EE</color> <!-- Color when selected -->
-    <color name="bottom_navigation_item_color_unselected">#757575</color> <!-- Color when unselected -->
-
-
-    <!-- Accent Colors -->
+    <!-- Other Colors -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
     <color name="buttonBackground">#FFFFFF</color> <!-- White background for buttons -->
     <color name="buttonText">#0E3E76</color> <!-- Dark blue for button text -->
-
-    <!-- Optional UI Colors -->
     <color name="dotsIndicatorActive">#28A0E5</color> <!-- Active dot color -->
     <color name="dotsIndicatorInactive">#AABFD1</color> <!-- Inactive dot color -->
-
 </resources>

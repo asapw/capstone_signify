@@ -11,7 +11,7 @@
     <!-- Background Layer -->
     <item android:right="2dp" android:left="2dp" android:top="2dp" android:bottom="2dp">
         <shape>
-            <solid android:color="@color/light_gray" />
+            <solid android:color="@color/secondaryColorgrey" />
             <corners android:radius="90dp" />
         </shape>
     </item>
