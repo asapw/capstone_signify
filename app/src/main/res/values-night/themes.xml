@@ -1,7 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.MyCapstone" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <!-- Dark Theme Customization -->
+    <style name="Base.Theme.MyCapstone.Dark" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primaryColorDark</item>
+        <item name="colorSecondary">@color/secondaryColorDark</item>
+        <item name="android:windowBackground">@color/dark_background</item>
+        <item name="colorSurface">@color/black</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:colorControlNormal">@color/primaryColorDark</item>
     </style>
+
+    <style name="Theme.MyCapstone" parent="Base.Theme.MyCapstone.Dark" />
 </resources>
