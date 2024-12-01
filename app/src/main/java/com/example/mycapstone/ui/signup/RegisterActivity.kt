@@ -36,11 +36,9 @@ class RegisterActivity : AppCompatActivity() {
             val email = binding.registerEmailEditText.text.toString().trim()
             val password = binding.registerPasswordEditText.text.toString().trim()
             val name = binding.registerNameEditText.text.toString().trim()
-            val phone = binding.registerPhoneEditText.text.toString().trim()
-            val birthdate = binding.registerBirthdateEditText.text.toString().trim()
-            val city = binding.registerCityEditText.text.toString().trim()
 
-            if (email.isEmpty() || password.isEmpty() || name.isEmpty() || phone.isEmpty() || birthdate.isEmpty() || city.isEmpty()) {
+
+            if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -53,7 +51,7 @@ class RegisterActivity : AppCompatActivity() {
                     binding.progressBar.visibility = View.GONE
                     if (task.isSuccessful) {
                         val user = auth.currentUser
-                        saveUserData(user, name, email, phone, birthdate, city)
+                        saveUserData(user, name, email)
                     } else {
                         Log.w(TAG, "createUserWithEmail:failure", task.exception)
                         Toast.makeText(this, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
@@ -62,14 +60,14 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         // Login Now Button Click Listener
-        binding.loginNowButton.setOnClickListener {
+        binding.tvLogin.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish() // Close RegisterActivity
         }
     }
 
-    private fun saveUserData(user: FirebaseUser?, name: String, email: String, phone: String, birthdate: String, city: String) {
+    private fun saveUserData(user: FirebaseUser?, name: String, email: String) {
         if (user == null) {
             Toast.makeText(this, "User is null. Please try again.", Toast.LENGTH_SHORT).show()
             return
@@ -79,9 +77,6 @@ class RegisterActivity : AppCompatActivity() {
         val userData = mapOf(
             "name" to name,
             "email" to email,
-            "phone" to phone,
-            "birthdate" to birthdate,
-            "city" to city
         )
 
         db.collection("users").document(userId)

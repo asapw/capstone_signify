@@ -1,5 +1,10 @@
 package com.example.mycapstone.ui.camera
 
+
+
+import android.annotation.SuppressLint
+import android.content.res.Configuration
+import android.graphics.Bitmap
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
@@ -10,22 +15,22 @@ import android.graphics.ImageFormat
 import android.graphics.Matrix
 import android.graphics.Rect
 import android.graphics.YuvImage
-import android.os.Bundle
-import android.os.Looper
-import android.os.SystemClock
-import android.util.Log
-import android.util.Size
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.Toast
-import androidx.camera.core.*
-import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+
+import com.example.mycapstone.databinding.FragmentCameraBinding
+import com.example.mycapstone.ui.camera.HandLandMarkerHelper.Companion.TAG
+import com.google.mediapipe.framework.image.BitmapImageBuilder
+import com.google.mediapipe.tasks.vision.core.RunningMode
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
+
+class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
+
+
+    private  var _fragmentCameraBinding: FragmentCameraBinding? = null
+    private val fragmentCameraBinding get() = _fragmentCameraBinding!!
+
+
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -53,6 +58,7 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
     private  var _fragmentCameraBinding: FragmentCameraBinding? = null
     private val fragmentCameraBinding get() = _fragmentCameraBinding!!
 
+
     private val viewModel: CameraViewModel by viewModels()
 
     private lateinit var handLandmarkerHelper: HandLandMarkerHelper
@@ -67,10 +73,14 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
 
 
 
+
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+
         _fragmentCameraBinding =
             FragmentCameraBinding.inflate(inflater, container, false)
 
@@ -87,6 +97,9 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
             setupCamera()
         }
 
+        viewModel.initializeDetector(requireContext())
+
+
         backgroundExecutor.execute {
             handLandmarkerHelper = HandLandMarkerHelper(
                 context = requireContext(),
@@ -101,7 +114,6 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
 
 
     }
-
 
 
 
@@ -124,6 +136,17 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
                     Log.d("CameraOverlay", "First landmark: ${landmarks[0]}")
                 }
             }
+
+
+            val originalBitmap = Bitmap.createBitmap(
+                    resultBundle.inputImageWidth,
+            resultBundle.inputImageHeight,
+            Bitmap.Config.ARGB_8888
+            )
+
+
+
+            viewModel.detectHandSign(result, originalBitmap)
 
             fragmentCameraBinding.overlay.setResults(
                 result,
@@ -233,7 +256,9 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
             )
 
             // Attach the viewfinder's surface provider to preview use case
-            preview?.setSurfaceProvider(fragmentCameraBinding.viewFinder.surfaceProvider)
+
+            preview?.surfaceProvider = fragmentCameraBinding.viewFinder.surfaceProvider
+
         } catch (exc: Exception) {
             Log.e(TAG, "Use case binding failed", exc)
         }
