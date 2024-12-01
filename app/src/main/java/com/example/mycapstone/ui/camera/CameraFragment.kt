@@ -5,52 +5,27 @@ package com.example.mycapstone.ui.camera
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.Manifest
-import android.annotation.SuppressLint
-import android.content.pm.PackageManager
-import android.content.res.Configuration
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ImageFormat
-import android.graphics.Matrix
-import android.graphics.Rect
-import android.graphics.YuvImage
-
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.camera.core.AspectRatio
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageProxy
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.mycapstone.databinding.FragmentCameraBinding
 import com.example.mycapstone.ui.camera.HandLandMarkerHelper.Companion.TAG
-import com.google.mediapipe.framework.image.BitmapImageBuilder
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
-
-
-    private  var _fragmentCameraBinding: FragmentCameraBinding? = null
-    private val fragmentCameraBinding get() = _fragmentCameraBinding!!
-
-
-import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
-import com.example.mycapstone.R
-import com.example.mycapstone.data.BoundingBox
-import com.example.mycapstone.databinding.FragmentCameraBinding
-import com.example.mycapstone.ui.camera.HandLandMarkerHelper.Companion.TAG
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.mediapipe.framework.image.BitmapImageBuilder
-import com.google.mediapipe.tasks.components.containers.Landmark
-import com.google.mediapipe.tasks.vision.core.RunningMode
-import com.google.mediapipe.tasks.vision.handlandmarker.HandLandmarkerResult
-import org.tensorflow.lite.Interpreter
-import java.io.ByteArrayOutputStream
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
-import java.util.Locale
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
 
@@ -65,7 +40,7 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
 
     private var preview: Preview? = null
     private var imageAnalyzer: ImageAnalysis? = null
-    private var camera: Camera? = null
+    private var camera: androidx.camera.core.Camera? = null
     private var cameraProvider: ProcessCameraProvider? = null
     private var cameraFacing = CameraSelector.LENS_FACING_FRONT
     /** Blocking ML operations are performed using this executor */

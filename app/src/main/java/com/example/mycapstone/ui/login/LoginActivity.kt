@@ -45,12 +45,14 @@ class LoginActivity : AppCompatActivity() {
 
                     if (task.isSuccessful) {
                         val userId = auth.currentUser?.uid ?: ""
-                        sessionManager.saveLoginState(userId) // Save session
+                        sessionManager.saveLoginState(userId)
+                        sessionManager.completeOnboarding() // Mark onboarding as complete
                         navigateToMainActivity()
                     } else {
                         Toast.makeText(this, "Authentication failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                     }
                 }
+
         }
 
 

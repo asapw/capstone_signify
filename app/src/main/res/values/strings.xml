@@ -27,7 +27,6 @@
     <string name="remember_me">Remember me</string>
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
-    <string name="mark_as_completed">Not Complete</string>
     <string name="asl_aid">Sign Language Learning and Communication Aid</string>
     <string name="video">Video</string>
     <string name="beginner_lessons">Beginner | 6 Lessons</string>
@@ -36,5 +35,6 @@
     <string name="mark_as_completed_btn">Mark as Completed</string>
     <string name="profile_image">Profile Image</string>
     <string name="name_placeholder" />
+    <string name="quiz">Quiz</string>
 
 </resources>

@@ -111,10 +111,6 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
         }
     }
 
-    override fun onDetect(boundingBoxes: List<BoundingBox>, inferenceTime: Long) {
-        _detectionResults.postValue(boundingBoxes)
-        _inferenceTime.postValue(inferenceTime)
-    }
 
     override fun onCleared() {
         super.onCleared()
