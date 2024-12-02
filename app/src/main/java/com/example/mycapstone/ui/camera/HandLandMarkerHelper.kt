@@ -153,17 +153,19 @@ class HandLandMarkerHelper(
         // Convert the input Bitmap object to an MPImage object to run inference
         val mpImage = BitmapImageBuilder(rotatedBitmap).build()
 
-        detectAsync(mpImage, frameTime)
+        detectAsync(mpImage, frameTime, rotatedBitmap)  // Pass rotatedBitmap here
     }
 
     @VisibleForTesting
-    fun detectAsync(mpImage: MPImage, frameTime: Long){
+    fun detectAsync(mpImage: MPImage, frameTime: Long, bitmap: Bitmap){  // Add bitmap parameter
         handLandmarker?.detectAsync(mpImage, frameTime)
+        currentBitmap = bitmap  // Store the bitmap
         Log.d("HandLandmarkerHelper", "Running inference")
     }
 
+    // Add property to store current bitmap
+    private var currentBitmap: Bitmap? = null
 
-    // Return the landmark result to this HandLandmarkerHelper's caller
     private fun returnLivestreamResult(
         result: HandLandmarkerResult,
         input: MPImage
@@ -171,14 +173,17 @@ class HandLandMarkerHelper(
         val finishTimeMs = SystemClock.uptimeMillis()
         val inferenceTime = finishTimeMs - result.timestampMs()
 
-        handLandmarkerHelperListener?.onResults(
-            ResultBundle(
-                listOf(result),
-                inferenceTime,
-                input.height,
-                input.width
+        currentBitmap?.let { bitmap ->
+            handLandmarkerHelperListener?.onResults(
+                ResultBundle(
+                    listOf(result),
+                    inferenceTime,
+                    input.height,
+                    input.width,
+                    bitmap
+                )
             )
-        )
+        }
     }
 
     // Return errors thrown during detection to this HandLandmarkerHelper's
@@ -209,6 +214,8 @@ class HandLandMarkerHelper(
         val inferenceTime: Long,
         val inputImageHeight: Int,
         val inputImageWidth: Int,
+        val inputBitmap: Bitmap
+
     )
 
     interface LandmarkerListener {

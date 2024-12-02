@@ -32,7 +32,7 @@ class MaterialAdapter(
                 if (item.isCompleted)
                     context.getColor(R.color.bgBlue)
                 else
-                    context.getColor(R.color.red)
+                    context.getColor(R.color.primaryColorDark)
             )
         }
 
