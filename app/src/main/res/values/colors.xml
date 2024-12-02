@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!-- General Colors -->
     <color name="primaryColor">#595891</color> <!-- Original purple for light mode -->
     <color name="primaryColorLight">#7A7ABF</color> <!-- Lighter purple for better contrast in light mode -->
     <color name="primaryColorDark">#3E3E71</color> <!-- Darker purple for better contrast in dark mode -->
+
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="secondaryColorgrey">#B0B0B0</color> <!-- Adjusted grey for inactive dots -->
+    <color name="bgBlue">#0E3E76</color>
+    <color name="light_gray">#D4D4D4</color>
+    <color name="purple_500">#a46ede</color>
+    <color name="red">#AA4A44</color>
+
 
     <color name="secondaryColor">#FFEFC9</color> <!-- Light yellow (same for both modes) -->
     <color name="secondaryColorDark">#D1C297</color> <!-- Muted yellow for dark mode -->

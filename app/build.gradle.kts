@@ -44,10 +44,16 @@ android {
         viewBinding = true
         mlModelBinding = true
     }
+
+
 }
 
 dependencies {
     implementation (libs.androidx.lifecycle.viewmodel.ktx)
+
+
+    // MediaPipe
+    implementation("com.google.mediapipe:tasks-vision:0.20230731")
 
 
     // MediaPipe
