@@ -43,7 +43,9 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setupUI() {
-        binding.progressBar.visibility = View.VISIBLE
+        // Show loading for profile image and name
+        binding.profileImageProgressBar.visibility = View.VISIBLE
+        binding.profileNameProgressBar.visibility = View.VISIBLE
         binding.profileContentLayout.visibility = View.GONE
 
         // Get the current user
@@ -61,19 +63,23 @@ class ProfileFragment : Fragment() {
                         Log.e("ProfileFragment", "No user data found")
                         binding.profileName.text = "User"
                     }
-                    binding.progressBar.visibility = View.GONE
+                    // Hide progress and show profile content
+                    binding.profileImageProgressBar.visibility = View.GONE
+                    binding.profileNameProgressBar.visibility = View.GONE
                     binding.profileContentLayout.visibility = View.VISIBLE
                 }
                 .addOnFailureListener { exception ->
                     Log.e("ProfileFragment", "Error fetching user data", exception)
                     binding.profileName.text = "User"
-                    binding.progressBar.visibility = View.GONE
+                    binding.profileImageProgressBar.visibility = View.GONE
+                    binding.profileNameProgressBar.visibility = View.GONE
                     binding.profileContentLayout.visibility = View.VISIBLE
                 }
         } else {
             Log.e("ProfileFragment", "No authenticated user found")
             binding.profileName.text = "User"
-            binding.progressBar.visibility = View.GONE
+            binding.profileImageProgressBar.visibility = View.GONE
+            binding.profileNameProgressBar.visibility = View.GONE
             binding.profileContentLayout.visibility = View.VISIBLE
         }
 
@@ -97,7 +103,6 @@ class ProfileFragment : Fragment() {
         binding.myAccountButton.setOnClickListener {
             findNavController().navigate(R.id.action_profileFragment_to_myAccountFragment)
         }
-
 
         binding.helpSupportButton.setOnClickListener {
             // Open Help & Support section

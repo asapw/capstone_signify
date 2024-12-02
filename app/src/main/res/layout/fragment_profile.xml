@@ -61,46 +61,66 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- ProgressBar for loading -->
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="gone" />
-
-        <!-- Profile Content Layout (hidden until data is loaded) -->
+        <!-- Profile Content Layout -->
         <LinearLayout
             android:id="@+id/profileContentLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="16dp"
-            android:visibility="gone">
+            android:padding="16dp">
 
-            <!-- Profile Image -->
-            <ImageView
-                android:id="@+id/profileImage"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_profile_placeholder"
-                android:contentDescription="@string/profile_image"
-                android:layout_marginBottom="16dp" />
-
-            <!-- Profile Name -->
-            <TextView
-                android:id="@+id/profileName"
-                android:layout_width="wrap_content"
+            <!-- Profile Image with ProgressBar -->
+            <FrameLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/name_placeholder"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:layout_marginBottom="24dp" />
+                android:layout_gravity="center">
 
-            <!-- My Account Button -->
+                <ImageView
+                    android:id="@+id/profileImage"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_default_profile_image"
+                    android:contentDescription="@string/profile_image"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Profile Image ProgressBar -->
+                <ProgressBar
+                    android:id="@+id/profileImageProgressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <!-- Profile Name with ProgressBar -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:id="@+id/profileName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/name_placeholder"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="24dp"
+                    android:layout_marginTop="10dp"/>
+
+                <!-- Profile Name ProgressBar -->
+                <ProgressBar
+                    android:id="@+id/profileNameProgressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <!-- Other buttons (no changes, no progress bar) -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/myAccountButton"
                 android:layout_width="match_parent"
@@ -110,7 +130,6 @@
                 app:icon="@drawable/ic_account"
                 android:layout_marginBottom="16dp" />
 
-            <!-- Logout Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/logoutButton"
                 android:layout_width="match_parent"
@@ -120,7 +139,6 @@
                 app:icon="@drawable/ic_logout"
                 android:layout_marginBottom="16dp" />
 
-            <!-- Help and Support Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/helpSupportButton"
                 android:layout_width="match_parent"
@@ -130,7 +148,6 @@
                 app:icon="@drawable/ic_help"
                 android:layout_marginBottom="16dp" />
 
-            <!-- About App Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/aboutAppButton"
                 android:layout_width="match_parent"

@@ -49,6 +49,16 @@ android {
 }
 
 dependencies {
+    // Firebase Storage for image upload
+    implementation (libs.firebase.storage)
+
+    // Glide for image loading
+    implementation (libs.glide)
+    annotationProcessor (libs.compiler)
+
+    // Activity Result API for handling image selection
+    implementation (libs.androidx.activity.ktx)
+
     implementation (libs.androidx.lifecycle.viewmodel.ktx)
 
 

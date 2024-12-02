@@ -76,10 +76,13 @@ class MainActivity : AppCompatActivity() {
 
         // Listen for navigation changes to hide/show the FloatingActionButton
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.nav_camera) {
-                binding.fabCamera.hide() // Hide the FAB when on CameraFragment
-            } else {
-                binding.fabCamera.show() // Show the FAB on other fragments
+            when (destination.id) {
+                R.id.nav_camera, R.id.nav_my_account -> {
+                    binding.fabCamera.hide() // Hide the FAB for Camera and MyAccount fragments
+                }
+                else -> {
+                    binding.fabCamera.show() // Show the FAB for other fragments
+                }
             }
         }
     }

@@ -29,4 +29,5 @@
     <color name="buttonText">#0E3E76</color> <!-- Dark blue for button text -->
     <color name="dotsIndicatorActive">#28A0E5</color> <!-- Active dot color -->
     <color name="dotsIndicatorInactive">#AABFD1</color> <!-- Inactive dot color -->
+
 </resources>

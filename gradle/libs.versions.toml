@@ -1,8 +1,11 @@
 [versions]
+activityKtx = "1.9.3"
 agp = "8.6.0"
 cameraCamera2 = "1.4.0"
+compiler = "4.16.0"
 dotsindicator = "5.0"
 firebaseBom = "33.5.1"
+firebaseStorage = "21.0.1"
 guava = "33.0.0-android"
 kotlin = "1.9.0"
 coreKtx = "1.15.0"
@@ -26,13 +29,17 @@ cameraLifecycle = "1.4.0"
 
 
 [libraries]
+androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
 androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraView" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCamera2" }
+compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
 dotsindicator = { module = "com.tbuonomo:dotsindicator", version.ref = "dotsindicator" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
+firebase-storage = { module = "com.google.firebase:firebase-storage", version.ref = "firebaseStorage" }
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "compiler" }
 google-firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

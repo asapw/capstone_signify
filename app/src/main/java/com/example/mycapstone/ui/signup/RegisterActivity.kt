@@ -74,11 +74,18 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         val userId = user.uid
+
+        // Initialize user data with default values
         val userData = mapOf(
             "name" to name,
             "email" to email,
+            "profileImageUrl" to "",
+            "phone" to "",
+            "birthdate" to "",
+            "city" to ""
         )
 
+        // Save user data to Firestore
         db.collection("users").document(userId)
             .set(userData)
             .addOnSuccessListener {
@@ -90,6 +97,7 @@ class RegisterActivity : AppCompatActivity() {
                 Toast.makeText(this, "Failed to save user data. Please try again.", Toast.LENGTH_SHORT).show()
             }
     }
+
 
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
