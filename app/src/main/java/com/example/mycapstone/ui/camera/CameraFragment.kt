@@ -1,7 +1,6 @@
 package com.example.mycapstone.ui.camera
 
 
-
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.graphics.Bitmap
@@ -10,15 +9,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.camera.core.AspectRatio
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageAnalysis
-import androidx.camera.core.ImageProxy
-import androidx.camera.core.Preview
+import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.example.mycapstone.databinding.FragmentCameraBinding
 import com.example.mycapstone.ui.camera.HandLandMarkerHelper.Companion.TAG
 import com.google.mediapipe.tasks.vision.core.RunningMode
@@ -26,13 +22,11 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-
 class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
 
 
     private  var _fragmentCameraBinding: FragmentCameraBinding? = null
     private val fragmentCameraBinding get() = _fragmentCameraBinding!!
-
 
     private val viewModel: CameraViewModel by viewModels()
 
@@ -40,22 +34,17 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
 
     private var preview: Preview? = null
     private var imageAnalyzer: ImageAnalysis? = null
-    private var camera: androidx.camera.core.Camera? = null
+    private var camera: Camera? = null
     private var cameraProvider: ProcessCameraProvider? = null
     private var cameraFacing = CameraSelector.LENS_FACING_FRONT
     /** Blocking ML operations are performed using this executor */
     private lateinit var backgroundExecutor: ExecutorService
 
 
-
-
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _fragmentCameraBinding =
             FragmentCameraBinding.inflate(inflater, container, false)
 
@@ -73,6 +62,8 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
         }
 
         viewModel.initializeDetector(requireContext())
+
+        setupObservers()
 
 
         backgroundExecutor.execute {
@@ -93,6 +84,7 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
 
 
 
+
     override fun onError(error: String, errorCode: Int) {
         Log.e(TAG, "Hand Landmarker Error ($errorCode): $error")
     }
@@ -102,6 +94,12 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
             val result = resultBundle.results[0]
             Log.d("CameraOverlay", "Detected hands: ${result.landmarks().size}")
 
+
+            val landmarks = result.landmarks().firstOrNull()
+            if (landmarks != null) {
+                val bitmap = resultBundle.inputBitmap
+                viewModel.detect(bitmap, landmarks)
+            }
             // Log detailed information about each hand
             result.landmarks().forEachIndexed { index, landmarks ->
                 Log.d("CameraOverlay", "Hand $index landmarks count: ${landmarks.size}")
@@ -113,15 +111,6 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
             }
 
 
-            val originalBitmap = Bitmap.createBitmap(
-                    resultBundle.inputImageWidth,
-            resultBundle.inputImageHeight,
-            Bitmap.Config.ARGB_8888
-            )
-
-
-
-            viewModel.detectHandSign(result, originalBitmap)
 
             fragmentCameraBinding.overlay.setResults(
                 result,
@@ -133,6 +122,15 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
         } else {
             Log.d("CameraOverlay", "No hand results detected.")
         }
+    }
+
+    private fun setupObservers() {
+        viewModel.detectionResults.observe(viewLifecycleOwner, Observer { boundingBoxes ->
+            fragmentCameraBinding.overlayBounding.apply {
+                setResults(boundingBoxes)
+                invalidate()
+            }
+        })
     }
 
 
@@ -217,6 +215,7 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
                 .also {
                     it.setAnalyzer(backgroundExecutor) { image ->
                         detectHand(image)
+
                     }
                 }
 
@@ -231,9 +230,7 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
             )
 
             // Attach the viewfinder's surface provider to preview use case
-
             preview?.surfaceProvider = fragmentCameraBinding.viewFinder.surfaceProvider
-
         } catch (exc: Exception) {
             Log.e(TAG, "Use case binding failed", exc)
         }
@@ -244,6 +241,7 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
             imageProxy = imageProxy,
             isFrontCamera = cameraFacing == CameraSelector.LENS_FACING_FRONT
         )
+
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
