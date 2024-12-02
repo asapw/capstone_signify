@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.example.mycapstone.R
 import com.example.mycapstone.databinding.FragmentProfileBinding
 import com.example.mycapstone.ui.login.LoginActivity
 import com.example.mycapstone.ui.login.manager.SessionManager
@@ -93,8 +95,9 @@ class ProfileFragment : Fragment() {
         }
 
         binding.myAccountButton.setOnClickListener {
-            // Navigate to "My Account" section
+            findNavController().navigate(R.id.action_profileFragment_to_myAccountFragment)
         }
+
 
         binding.helpSupportButton.setOnClickListener {
             // Open Help & Support section

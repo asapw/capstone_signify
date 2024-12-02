@@ -6,13 +6,14 @@
     android:label="app_name"
     app:startDestination="@id/nav_home">
 
+    <!-- Home Fragment -->
     <fragment
         android:id="@+id/nav_home"
         android:name="com.example.mycapstone.ui.home.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home" />
 
-    <!-- Change lessonFragment to nav_lesson -->
+    <!-- Lesson Fragment -->
     <fragment
         android:id="@+id/nav_lesson"
         android:name="com.example.mycapstone.ui.lesson.LessonFragment"
@@ -22,6 +23,7 @@
             app:destination="@id/videoFragment" />
     </fragment>
 
+    <!-- Video Fragment -->
     <fragment
         android:id="@+id/videoFragment"
         android:name="com.example.mycapstone.ui.lesson.video.VideoFragment"
@@ -31,23 +33,35 @@
             app:argType="string" />
     </fragment>
 
-
+    <!-- Camera Fragment -->
     <fragment
         android:id="@+id/nav_camera"
         android:name="com.example.mycapstone.ui.camera.CameraFragment"
         android:label="Camera"
         tools:layout="@layout/fragment_camera" />
 
+    <!-- Quiz Fragment -->
     <fragment
         android:id="@+id/nav_quiz"
         android:name="com.example.mycapstone.ui.quiz.QuizFragment"
         android:label="quiz"
         tools:layout="@layout/fragment_quiz" />
 
+    <!-- Profile Fragment -->
     <fragment
         android:id="@+id/nav_profile"
         android:name="com.example.mycapstone.ui.profile.ProfileFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_myAccountFragment"
+            app:destination="@id/nav_my_account" />
+    </fragment>
 
+    <!-- My Account Fragment -->
+    <fragment
+        android:id="@+id/nav_my_account"
+        android:name="com.example.mycapstone.ui.profile.myaccount.MyAccountFragment"
+        android:label="My Account"
+        tools:layout="@layout/fragment_my_account" />
 </navigation>

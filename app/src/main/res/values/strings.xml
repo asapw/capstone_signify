@@ -36,5 +36,7 @@
     <string name="name_placeholder" />
     <string name="quiz">Quiz</string>
     <string name="btnOnboardingStart">Start Now</string>
+    <string name="back_button" />
+    <string name="update_profile">update profile</string>
 
 </resources>
