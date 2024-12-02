@@ -36,7 +36,7 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
     private var imageAnalyzer: ImageAnalysis? = null
     private var camera: Camera? = null
     private var cameraProvider: ProcessCameraProvider? = null
-    private var cameraFacing = CameraSelector.LENS_FACING_FRONT
+    private var cameraFacing = CameraSelector.LENS_FACING_BACK
     /** Blocking ML operations are performed using this executor */
     private lateinit var backgroundExecutor: ExecutorService
 
@@ -59,6 +59,10 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
 
         fragmentCameraBinding.viewFinder.post{
             setupCamera()
+        }
+
+        fragmentCameraBinding.switchCameraButton.setOnClickListener {
+            switchCamera()
         }
 
         viewModel.initializeDetector(requireContext())
@@ -90,40 +94,43 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
     }
 
     override fun onResults(resultBundle: HandLandMarkerHelper.ResultBundle) {
-        if (resultBundle.results.isNotEmpty()) {
-            val result = resultBundle.results[0]
-            Log.d("CameraOverlay", "Detected hands: ${result.landmarks().size}")
-
-
-            val landmarks = result.landmarks().firstOrNull()
-            if (landmarks != null) {
-                val bitmap = resultBundle.inputBitmap
-                viewModel.detect(bitmap, landmarks)
-            }
-            // Log detailed information about each hand
-            result.landmarks().forEachIndexed { index, landmarks ->
-                Log.d("CameraOverlay", "Hand $index landmarks count: ${landmarks.size}")
-
-                // Optional: Log a few key landmarks
-                if (landmarks.isNotEmpty()) {
-                    Log.d("CameraOverlay", "First landmark: ${landmarks[0]}")
-                }
-            }
-
-
-
-            fragmentCameraBinding.overlay.setResults(
-                result,
-                resultBundle.inputImageHeight,
-                resultBundle.inputImageWidth,
-                RunningMode.LIVE_STREAM
-            )
+        if (resultBundle.results.isEmpty()) {
+            // Clear any previous results
+            fragmentCameraBinding.overlay.clear()
             fragmentCameraBinding.overlay.invalidate()
-        } else {
+            fragmentCameraBinding.overlayBounding.clear() // Make sure to add clear() method to your overlay view
+            fragmentCameraBinding.overlayBounding.invalidate()
             Log.d("CameraOverlay", "No hand results detected.")
+            return
         }
-    }
 
+        val result = resultBundle.results[0]
+        Log.d("CameraOverlay", "Detected hands: ${result.landmarks().size}")
+
+        val landmarks = result.landmarks().firstOrNull()
+        if (landmarks != null) {
+            val bitmap = resultBundle.inputBitmap
+            viewModel.detect(bitmap, landmarks)
+        }
+
+        // Log detailed information about each hand
+        result.landmarks().forEachIndexed { index, landmarks ->
+            Log.d("CameraOverlay", "Hand $index landmarks count: ${landmarks.size}")
+
+            // Optional: Log a few key landmarks
+            if (landmarks.isNotEmpty()) {
+                Log.d("CameraOverlay", "First landmark: ${landmarks[0]}")
+            }
+        }
+
+        fragmentCameraBinding.overlay.setResults(
+            result,
+            resultBundle.inputImageHeight,
+            resultBundle.inputImageWidth,
+            RunningMode.LIVE_STREAM
+        )
+        fragmentCameraBinding.overlay.invalidate()
+    }
     private fun setupObservers() {
         viewModel.detectionResults.observe(viewLifecycleOwner, Observer { boundingBoxes ->
             fragmentCameraBinding.overlayBounding.apply {
@@ -133,6 +140,15 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
         })
     }
 
+    private fun switchCamera() {
+        cameraFacing = if (cameraFacing == CameraSelector.LENS_FACING_BACK) {
+            CameraSelector.LENS_FACING_FRONT
+        } else {
+            CameraSelector.LENS_FACING_BACK
+        }
+        // Re-bind use cases to update selected camera
+        bindCameraUseCases()
+    }
 
 
     override fun onDestroyView() {

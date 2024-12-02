@@ -35,5 +35,6 @@
     <string name="profile_image">Profile Image</string>
     <string name="name_placeholder" />
     <string name="quiz">Quiz</string>
+    <string name="btnOnboardingStart">Start Now</string>
 
 </resources>

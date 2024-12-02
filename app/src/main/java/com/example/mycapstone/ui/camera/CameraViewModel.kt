@@ -66,24 +66,28 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
         modelHelper.setup()
     }
 
+    private fun clearDetection() {
+        _detectionResults.postValue(emptyList())
+        _inferenceTime.postValue(0)
+    }
+
     fun detect(bitmap: Bitmap, landmarks: List<NormalizedLandmark>) {
         try {
             if (::modelHelper.isInitialized) {
                 modelHelper.detect(bitmap, landmarks)
             } else {
                 Log.e(TAG, "ModelHelper not initialized")
+                clearDetection() // Clear results if detector isn't initialized
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error during detection: ${e.message}")
-            onEmptyDetect()
+            clearDetection() // Clear results on error
         }
     }
 
-
     override fun onEmptyDetect() {
-        _detectionResults.postValue(emptyList())
+        clearDetection() // Use the new clearDetection method
     }
-
     override fun onDetect(boundingBoxes: List<BoundingBox>, inferenceTime: Long) {
         _detectionResults.postValue(boundingBoxes)
         _inferenceTime.postValue(inferenceTime)
