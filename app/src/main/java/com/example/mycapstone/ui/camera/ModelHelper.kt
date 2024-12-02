@@ -3,7 +3,9 @@ package com.example.mycapstone.ui.camera
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.SystemClock
+import android.util.Log
 import com.example.mycapstone.data.BoundingBox
+import com.google.mediapipe.tasks.components.containers.NormalizedLandmark
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.common.FileUtil
@@ -30,13 +32,19 @@ class ModelHelper(
     private var tensorWidth = 0
     private var tensorHeight = 0
     private var numChannel = 0
-    private var numElements = 0
-
 
     private val imageProcessor = ImageProcessor.Builder()
         .add(NormalizeOp(INPUT_MEAN, INPUT_STANDARD_DEVIATION))
         .add(CastOp(INPUT_IMAGE_TYPE))
         .build()
+
+    init {
+        try {
+            Log.d("ModelHelper", "Model loaded successfully.")
+        } catch (e: Exception) {
+            Log.e("ModelHelper", "Failed to load model: ${e.message}")
+        }
+    }
 
     fun setup() {
         val model = FileUtil.loadMappedFile(context, modelPath)
@@ -50,8 +58,8 @@ class ModelHelper(
         tensorWidth = inputShape[1]
         tensorHeight = inputShape[2]
         numChannel = outputShape[1]
-        numElements = 4
 
+        // Load labels from asset file
         try {
             val inputStream: InputStream = context.assets.open(labelPath)
             val reader = BufferedReader(InputStreamReader(inputStream))
@@ -74,91 +82,160 @@ class ModelHelper(
         interpreter = null
     }
 
-    fun detect(frame: Bitmap) {
+
+
+    fun detect(frame: Bitmap, landmarks: List<NormalizedLandmark>) {
         interpreter ?: return
-        if (tensorWidth == 0) return
-        if (tensorHeight == 0) return
-        if (numChannel == 0) return
-        if (numElements == 0) return
 
         var inferenceTime = SystemClock.uptimeMillis()
 
-        val resizedBitmap = Bitmap.createScaledBitmap(frame, tensorWidth, tensorHeight, false)
+        try {
+            // Crop the hand region first before resizing
+            val handRegion = cropHandRegion(frame, landmarks)
 
-        val tensorImage = TensorImage(DataType.FLOAT32)
-        tensorImage.load(resizedBitmap)
-        val processedImage = imageProcessor.process(tensorImage)
-        val imageBuffer = processedImage.buffer
+            // Resize the cropped region to model input size
+            val resizedBitmap = Bitmap.createScaledBitmap(handRegion, 32, 32, true)
 
-        val output = TensorBuffer.createFixedSize(intArrayOf(1 , numChannel, numElements), OUTPUT_IMAGE_TYPE)
-        interpreter?.run(imageBuffer, output.buffer)
+            // Convert the bitmap into TensorImage
+            val tensorImage = TensorImage(DataType.FLOAT32)
+            tensorImage.load(resizedBitmap)
 
+            // Adjust normalization parameters if needed
+            val processedImage = imageProcessor.process(tensorImage)
 
-        val bestBoxes = bestBox(output.floatArray)
-        inferenceTime = SystemClock.uptimeMillis() - inferenceTime
+            val output = TensorBuffer.createFixedSize(intArrayOf(1, 26), DataType.FLOAT32)
+            interpreter?.run(processedImage.buffer, output.buffer)
 
+            val bestBoxes = bestBox(landmarks, output.floatArray)
+            inferenceTime = SystemClock.uptimeMillis() - inferenceTime
 
-        if (bestBoxes == null) {
-            detectorListener.onEmptyDetect()
-            return
-        }
-
-        detectorListener.onDetect(bestBoxes, inferenceTime)
-    }
-
-    private fun bestBox(array: FloatArray) : List<BoundingBox>? {
-
-        val boundingBoxes = mutableListOf<BoundingBox>()
-
-        for (c in 0 until numElements) {
-            var maxConf = -1.0f
-            var maxIdx = -1
-            var j = 4
-            var arrayIdx = c + numElements * j
-            while (j < numChannel){
-                if (array[arrayIdx] > maxConf) {
-                    maxConf = array[arrayIdx]
-                    maxIdx = j - 4
-                }
-                j++
-                arrayIdx += numElements
+            if (bestBoxes == null) {
+                detectorListener.onEmptyDetect()
+                return
             }
 
-            if (maxConf > CONFIDENCE_THRESHOLD) {
+            detectorListener.onDetect(bestBoxes, inferenceTime)
+        } catch (e: Exception) {
+            Log.e("ModelHelper", "Error during detection: ${e.message}")
+            detectorListener.onEmptyDetect()
+        }
+    }
+
+    private fun cropHandRegion(frame: Bitmap, landmarks: List<NormalizedLandmark>): Bitmap {
+        // Calculate hand bounding box with padding
+        var minX = Float.MAX_VALUE
+        var minY = Float.MAX_VALUE
+        var maxX = Float.MIN_VALUE
+        var maxY = Float.MIN_VALUE
+
+        for (landmark in landmarks) {
+            minX = minOf(minX, landmark.x())
+            minY = minOf(minY, landmark.y())
+            maxX = maxOf(maxX, landmark.x())
+            maxY = maxOf(maxY, landmark.y())
+        }
+
+        // Add padding (20%)
+        val padding = 0.2f
+        val width = maxX - minX
+        val height = maxY - minY
+        val paddingX = width * padding
+        val paddingY = height * padding
+
+        // Convert normalized coordinates to pixel coordinates
+        val frameWidth = frame.width
+        val frameHeight = frame.height
+
+        val x1 = maxOf(0f, (minX - paddingX) * frameWidth).toInt()
+        val y1 = maxOf(0f, (minY - paddingY) * frameHeight).toInt()
+        val x2 = minOf(frameWidth.toFloat(), (maxX + paddingX) * frameWidth).toInt()
+        val y2 = minOf(frameHeight.toFloat(), (maxY + paddingY) * frameHeight).toInt()
+
+        // Crop the hand region
+        return Bitmap.createBitmap(
+            frame,
+            x1, y1,
+            x2 - x1, y2 - y1
+        )
+    }
+
+    private fun bestBox(
+        landmarks: List<NormalizedLandmark>,
+        array: FloatArray
+    ): List<BoundingBox>? {
+        val boundingBoxes = mutableListOf<BoundingBox>()
+
+        try {
+            // Use palm center (landmark 0) as the center point
+            val palmCenter = landmarks[0]
+
+            // Calculate the bounding box dimensions by finding min/max coordinates
+            var minX = Float.MAX_VALUE
+            var minY = Float.MAX_VALUE
+            var maxX = Float.MIN_VALUE
+            var maxY = Float.MIN_VALUE
+
+            // Check all landmarks to find the extremes
+            for (landmark in landmarks) {
+                minX = minOf(minX, landmark.x())
+                minY = minOf(minY, landmark.y())
+                maxX = maxOf(maxX, landmark.x())
+                maxY = maxOf(maxY, landmark.y())
+            }
+
+            // Find the class with maximum confidence from the 26 outputs
+            var maxConf = -1.0f
+            var maxIdx = -1
+
+            // Iterate through the 26 class probabilities
+            for (i in array.indices) {
+                if (array[i] > maxConf) {
+                    maxConf = array[i]
+                    maxIdx = i
+                }
+            }
+
+            if (maxConf > CONFIDENCE_THRESHOLD && maxIdx < labels.size) {
                 val clsName = labels[maxIdx]
-                val cx = array[c] // 0
-                val cy = array[c + numElements] // 1
-                val w = array[c + numElements * 2]
-                val h = array[c + numElements * 3]
-                val x1 = cx - (w/2F)
-                val y1 = cy - (h/2F)
-                val x2 = cx + (w/2F)
-                val y2 = cy + (h/2F)
-                if (x1 < 0F || x1 > 1F) continue
-                if (y1 < 0F || y1 > 1F) continue
-                if (x2 < 0F || x2 > 1F) continue
-                if (y2 < 0F || y2 > 1F) continue
+
+                // Add padding to the box (20% of width/height)
+                val padding = 0.2f
+                val width = maxX - minX
+                val height = maxY - minY
+                val paddingX = width * padding
+                val paddingY = height * padding
+
+                val x1 = maxOf(0f, minX - paddingX)
+                val y1 = maxOf(0f, minY - paddingY)
+                val x2 = minOf(1f, maxX + paddingX)
+                val y2 = minOf(1f, maxY + paddingY)
+
+                // Calculate final width and height
+                val w = x2 - x1
+                val h = y2 - y1
 
                 boundingBoxes.add(
                     BoundingBox(
                         x1 = x1, y1 = y1, x2 = x2, y2 = y2,
-                        cx = cx, cy = cy, w = w, h = h,
+                        cx = palmCenter.x(), cy = palmCenter.y(),
+                        w = w, h = h,
                         cnf = maxConf, cls = maxIdx, clsName = clsName
                     )
                 )
             }
+
+            return boundingBoxes.ifEmpty { null }
+
+        } catch (e: Exception) {
+            Log.e("ModelHelper", "Error in bestBox: ${e.message}")
+            return null
         }
-
-        if (boundingBoxes.isEmpty()) return null
-
-        return applyNMS(boundingBoxes)
     }
-
-    private fun applyNMS(boxes: List<BoundingBox>) : MutableList<BoundingBox> {
+    private fun applyNMS(boxes: List<BoundingBox>): MutableList<BoundingBox> {
         val sortedBoxes = boxes.sortedByDescending { it.cnf }.toMutableList()
         val selectedBoxes = mutableListOf<BoundingBox>()
 
-        while(sortedBoxes.isNotEmpty()) {
+        while (sortedBoxes.isNotEmpty()) {
             val first = sortedBoxes.first()
             selectedBoxes.add(first)
             sortedBoxes.remove(first)
