@@ -30,23 +30,20 @@ class SplashActivity : AppCompatActivity() {
         val firebaseAuth = FirebaseAuth.getInstance()
 
         lifecycleScope.launch {
-            delay(3000) // Show splash screen for 3 seconds
+            delay(2000) // Show splash screen for 2 seconds
 
-            // Check onboarding completion and login status
             val isOnboardingCompleted = sessionManager.isOnboardingCompleted()
             val isUserLoggedIn = firebaseAuth.currentUser != null
 
-            // Log the values for debugging
-            Log.d("SplashActivity", "isOnboardingCompleted: $isOnboardingCompleted, isUserLoggedIn: $isUserLoggedIn")
+            Log.d("SplashActivity", "Onboarding Completed: $isOnboardingCompleted, User Logged In: $isUserLoggedIn")
 
-            // Determine the next activity
+            // Decide next activity based on conditions
             val nextActivity = when {
                 !isOnboardingCompleted -> OnBoardingActivity::class.java
                 isUserLoggedIn -> MainActivity::class.java
                 else -> LoginActivity::class.java
             }
 
-            // Start the next activity
             startActivity(Intent(this@SplashActivity, nextActivity))
             finish()
         }

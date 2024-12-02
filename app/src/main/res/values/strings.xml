@@ -34,5 +34,6 @@
     <string name="mark_as_completed_btn">Mark as Completed</string>
     <string name="profile_image">Profile Image</string>
     <string name="name_placeholder" />
+    <string name="quiz">Quiz</string>
 
 </resources>
