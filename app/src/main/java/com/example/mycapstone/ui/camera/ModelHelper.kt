@@ -91,6 +91,8 @@ class ModelHelper(
 
         try {
             // Resize the input bitmap to 32x32
+
+//            Input menggunakan buffer
             val resizedBitmap = Bitmap.createScaledBitmap(frame, 32, 32, true)
 
             // Convert the bitmap into TensorImage

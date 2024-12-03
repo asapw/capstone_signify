@@ -138,6 +138,12 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
                 invalidate()
             }
         })
+
+        viewModel.signLanguangeWords.observe(viewLifecycleOwner) { word ->
+            Log.d("CameraFragment", "Detected word: $word")
+            fragmentCameraBinding.predictedTextView.text =
+                word.ifEmpty { "No word detected" }
+        }
     }
 
     private fun switchCamera() {
@@ -216,13 +222,13 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
             CameraSelector.Builder().requireLensFacing(cameraFacing).build()
 
         // Preview. Only using the 4:3 ratio because this is the closest to our models
-        preview = Preview.Builder().setTargetAspectRatio(AspectRatio.RATIO_4_3)
+        preview = Preview.Builder().setTargetAspectRatio(AspectRatio.RATIO_16_9)
             .setTargetRotation(fragmentCameraBinding.viewFinder.display.rotation)
             .build()
 
         // ImageAnalysis. Using RGBA 8888 to match how our models work
         imageAnalyzer =
-            ImageAnalysis.Builder().setTargetAspectRatio(AspectRatio.RATIO_4_3)
+            ImageAnalysis.Builder().setTargetAspectRatio(AspectRatio.RATIO_16_9)
                 .setTargetRotation(fragmentCameraBinding.viewFinder.display.rotation)
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888)

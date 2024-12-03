@@ -12,6 +12,9 @@ import com.google.mediapipe.tasks.components.containers.NormalizedLandmark
 import com.google.mediapipe.tasks.vision.handlandmarker.HandLandmarkerResult
 
 class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
+    private var _signLanguangeWords = MutableLiveData<String>()
+    val signLanguangeWords: LiveData<String> = _signLanguangeWords
+
     private var _delegate: Int = HandLandMarkerHelper.DELEGATE_CPU
     private var _minHandDetectionConfidence: Float =
         HandLandMarkerHelper.DEFAULT_HAND_DETECTION_CONFIDENCE
@@ -66,9 +69,12 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
         modelHelper.setup()
     }
 
+
+
     private fun clearDetection() {
         _detectionResults.postValue(emptyList())
         _inferenceTime.postValue(0)
+        _signLanguangeWords.postValue("No detection")
     }
 
     fun detect(bitmap: Bitmap, landmarks: List<NormalizedLandmark>) {
@@ -77,21 +83,27 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
                 modelHelper.detect(bitmap, landmarks)
             } else {
                 Log.e(TAG, "ModelHelper not initialized")
-                clearDetection() // Clear results if detector isn't initialized
+                clearDetection()
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error during detection: ${e.message}")
-            clearDetection() // Clear results on error
+            clearDetection()
         }
     }
 
+
+
     override fun onEmptyDetect() {
         clearDetection() // Use the new clearDetection method
+        _signLanguangeWords.postValue("")
     }
     override fun onDetect(boundingBoxes: List<BoundingBox>, inferenceTime: Long) {
         _detectionResults.postValue(boundingBoxes)
         _inferenceTime.postValue(inferenceTime)
 
+        val detectedWord = boundingBoxes.firstOrNull()?.clsName ?: ""
+        Log.d(TAG, "Sending detected word: $detectedWord")
+        _signLanguangeWords.postValue(detectedWord)
     }
 
     override fun onCleared() {
@@ -104,5 +116,6 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
         private const val MODEL_PATH = "model_v2.tflite"
         private const val LABEL_PATH = "labels.txt"
         private const val TAG = "CameraViewModel"
+        private const val DETECTION_DELAY = 1L
     }
 }

@@ -49,6 +49,14 @@ android {
 }
 
 dependencies {
+
+
+    // CardView
+    implementation ("androidx.cardview:cardview:1.0.0")
+
+    // Lottie Animation
+    implementation("com.airbnb.android:lottie:6.6.0")
+
     // Firebase Storage for image upload
     implementation (libs.firebase.storage)
 
