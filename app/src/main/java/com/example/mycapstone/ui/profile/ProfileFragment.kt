@@ -7,14 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.mycapstone.R
 import com.example.mycapstone.databinding.FragmentProfileBinding
 import com.example.mycapstone.ui.login.LoginActivity
 import com.example.mycapstone.ui.login.manager.SessionManager
-import com.example.mycapstone.viewmodel.MainViewModel
-import com.example.mycapstone.viewmodel.MainViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -42,47 +40,93 @@ class ProfileFragment : Fragment() {
         return binding.root
     }
 
-    private fun setupUI() {
-        // Show loading for profile image and name
-        binding.profileImageProgressBar.visibility = View.VISIBLE
-        binding.profileNameProgressBar.visibility = View.VISIBLE
-        binding.profileContentLayout.visibility = View.GONE
+    override fun onResume() {
+        super.onResume()
+        refreshUserData() // Refresh user data when fragment resumes
+    }
 
-        // Get the current user
+    private fun refreshUserData() {
+        binding.profileImageProgressBar.visibility = View.VISIBLE
+
         val currentUser = auth.currentUser
         if (currentUser != null) {
             val userId = currentUser.uid
 
-            // Fetch user data from Firestore
             db.collection("users").document(userId).get()
                 .addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
                         val name = document.getString("name") ?: "User"
+                        val profileImageUrl = document.getString("profileImageUrl") ?: ""
+
                         binding.profileName.text = name
+
+                        // Load profile image using Glide
+                        Glide.with(this)
+                            .load(profileImageUrl)
+                            .placeholder(R.drawable.default_profile_image)
+                            .error(R.drawable.default_profile_image)
+                            .into(binding.profileImage)
                     } else {
                         Log.e("ProfileFragment", "No user data found")
                         binding.profileName.text = "User"
+                        binding.profileImage.setImageResource(R.drawable.default_profile_image)
                     }
-                    // Hide progress and show profile content
                     binding.profileImageProgressBar.visibility = View.GONE
-                    binding.profileNameProgressBar.visibility = View.GONE
-                    binding.profileContentLayout.visibility = View.VISIBLE
                 }
                 .addOnFailureListener { exception ->
                     Log.e("ProfileFragment", "Error fetching user data", exception)
                     binding.profileName.text = "User"
+                    binding.profileImage.setImageResource(R.drawable.default_profile_image)
                     binding.profileImageProgressBar.visibility = View.GONE
-                    binding.profileNameProgressBar.visibility = View.GONE
-                    binding.profileContentLayout.visibility = View.VISIBLE
                 }
         } else {
             Log.e("ProfileFragment", "No authenticated user found")
             binding.profileName.text = "User"
+            binding.profileImage.setImageResource(R.drawable.default_profile_image)
             binding.profileImageProgressBar.visibility = View.GONE
-            binding.profileNameProgressBar.visibility = View.GONE
-            binding.profileContentLayout.visibility = View.VISIBLE
         }
+    }
 
+    private fun setupUI() {
+        binding.profileImageProgressBar.visibility = View.VISIBLE
+
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            val userId = currentUser.uid
+
+            db.collection("users").document(userId).get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        val name = document.getString("name") ?: "User"
+                        val profileImageUrl = document.getString("profileImageUrl") ?: ""
+
+                        binding.profileName.text = name
+
+                        // Load profile image using Glide
+                        Glide.with(this)
+                            .load(profileImageUrl)
+                            .placeholder(R.drawable.default_profile_image)
+                            .error(R.drawable.default_profile_image)
+                            .into(binding.profileImage)
+                    } else {
+                        Log.e("ProfileFragment", "No user data found")
+                        binding.profileName.text = "User"
+                        binding.profileImage.setImageResource(R.drawable.default_profile_image)
+                    }
+                    binding.profileImageProgressBar.visibility = View.GONE
+                }
+                .addOnFailureListener { exception ->
+                    Log.e("ProfileFragment", "Error fetching user data", exception)
+                    binding.profileName.text = "User"
+                    binding.profileImage.setImageResource(R.drawable.default_profile_image)
+                    binding.profileImageProgressBar.visibility = View.GONE
+                }
+        } else {
+            Log.e("ProfileFragment", "No authenticated user found")
+            binding.profileName.text = "User"
+            binding.profileImage.setImageResource(R.drawable.default_profile_image)
+            binding.profileImageProgressBar.visibility = View.GONE
+        }
         setupListeners()
     }
 

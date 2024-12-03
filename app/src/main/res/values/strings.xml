@@ -38,5 +38,8 @@
     <string name="btnOnboardingStart">Start Now</string>
     <string name="back_button" />
     <string name="update_profile">update profile</string>
+    <string name="add_image_icon" />
+    <string name="quiz_title">Quiz Title</string>
+    <string name="play_quiz" />
 
 </resources>
