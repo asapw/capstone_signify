@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
@@ -68,6 +69,7 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
         viewModel.initializeDetector(requireContext())
 
         setupObservers()
+        finishButton()
 
 
         backgroundExecutor.execute {
@@ -130,6 +132,13 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
             RunningMode.LIVE_STREAM
         )
         fragmentCameraBinding.overlay.invalidate()
+    }
+
+    private fun finishButton(){
+        fragmentCameraBinding.btnFinishDetecting.setOnClickListener {
+            Toast.makeText(requireContext(),"Button clicked ${fragmentCameraBinding.predictedTextView.text}",
+                Toast.LENGTH_LONG).show()
+        }
     }
     private fun setupObservers() {
         viewModel.detectionResults.observe(viewLifecycleOwner, Observer { boundingBoxes ->

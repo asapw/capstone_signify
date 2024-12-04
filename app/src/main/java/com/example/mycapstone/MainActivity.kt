@@ -2,6 +2,7 @@ package com.example.mycapstone
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -77,11 +78,13 @@ class MainActivity : AppCompatActivity() {
         // Listen for navigation changes to hide/show the FloatingActionButton
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.nav_camera, R.id.nav_my_account -> {
-                    binding.fabCamera.hide() // Hide the FAB for Camera and MyAccount fragments
+                R.id.nav_camera -> {
+                    binding.bottomNavigation.visibility = View.GONE
+                    binding.fabCamera.hide()
                 }
                 else -> {
-                    binding.fabCamera.show() // Show the FAB for other fragments
+                    binding.bottomNavigation.visibility = View.VISIBLE
+                    binding.fabCamera.show()
                 }
             }
         }

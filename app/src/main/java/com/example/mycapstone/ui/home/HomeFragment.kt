@@ -23,13 +23,15 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         auth = FirebaseAuth.getInstance()
         fetchUserData()
         return binding.root
     }
 
+
+//    masukin ke VM
     private fun fetchUserData() {
         val currentUser = auth.currentUser
         if (currentUser != null) {

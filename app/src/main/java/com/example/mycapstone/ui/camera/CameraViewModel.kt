@@ -7,13 +7,18 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.mycapstone.data.BoundingBox
 import com.google.mediapipe.tasks.components.containers.NormalizedLandmark
 import com.google.mediapipe.tasks.vision.handlandmarker.HandLandmarkerResult
+import kotlinx.coroutines.launch
 
 class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
     private var _signLanguangeWords = MutableLiveData<String>()
     val signLanguangeWords: LiveData<String> = _signLanguangeWords
+
+    private val words = StringBuilder()
+    private var lastDetectionTime = 0L
 
     private var _delegate: Int = HandLandMarkerHelper.DELEGATE_CPU
     private var _minHandDetectionConfidence: Float =
@@ -43,7 +48,7 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
     val inferenceTime: LiveData<Long> = _inferenceTime
 
 
-
+    private var isProcessing = false
     private lateinit var modelHelper: ModelHelper
 
     fun setDelegate(delegate: Int) {
@@ -74,16 +79,25 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
     private fun clearDetection() {
         _detectionResults.postValue(emptyList())
         _inferenceTime.postValue(0)
-        _signLanguangeWords.postValue("No detection")
+        words.clear()
+        _signLanguangeWords.postValue("")
+        lastDetectionTime = 0L
     }
 
     fun detect(bitmap: Bitmap, landmarks: List<NormalizedLandmark>) {
         try {
-            if (::modelHelper.isInitialized) {
-                modelHelper.detect(bitmap, landmarks)
-            } else {
-                Log.e(TAG, "ModelHelper not initialized")
-                clearDetection()
+            if (::modelHelper.isInitialized && !isProcessing) {
+                val currTime = System.currentTimeMillis()
+                if(currTime - lastDetectionTime >= DETECTION_DELAY){
+                    isProcessing = true
+                    viewModelScope.launch {
+                        modelHelper.detect(bitmap, landmarks)
+                        isProcessing = false
+                        lastDetectionTime = currTime
+                    }
+                }
+            } else if(!::modelHelper.isInitialized){
+                Log.e(TAG,"ModelHelper is not initialized")
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error during detection: ${e.message}")
@@ -94,16 +108,23 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
 
 
     override fun onEmptyDetect() {
-        clearDetection() // Use the new clearDetection method
-        _signLanguangeWords.postValue("")
     }
     override fun onDetect(boundingBoxes: List<BoundingBox>, inferenceTime: Long) {
         _detectionResults.postValue(boundingBoxes)
         _inferenceTime.postValue(inferenceTime)
 
         val detectedWord = boundingBoxes.firstOrNull()?.clsName ?: ""
-        Log.d(TAG, "Sending detected word: $detectedWord")
-        _signLanguangeWords.postValue(detectedWord)
+        if (detectedWord.isNotEmpty()) {
+            // Append new word with space
+            if (words.isNotEmpty()) {
+                words.append(" ")
+            }
+
+            words.append(detectedWord)
+
+            Log.d(TAG, "Accumulated words: $words")
+            _signLanguangeWords.postValue(words.toString())
+        }
     }
 
     override fun onCleared() {
@@ -116,6 +137,6 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
         private const val MODEL_PATH = "model_v2.tflite"
         private const val LABEL_PATH = "labels.txt"
         private const val TAG = "CameraViewModel"
-        private const val DETECTION_DELAY = 1L
+        private const val DETECTION_DELAY = 1000L
     }
 }
