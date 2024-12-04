@@ -49,7 +49,12 @@ android {
 }
 
 dependencies {
+    implementation (libs.gson)
+    // Retrofit for networking
+    implementation(libs.retrofit)
 
+    // Gson Converter for JSON serialization/deserialization
+    implementation(libs.converter.gson)
 
     // CardView
     implementation ("androidx.cardview:cardview:1.0.0")

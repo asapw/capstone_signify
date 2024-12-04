@@ -7,48 +7,55 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.mycapstone.R
-import com.example.mycapstone.data.MaterialItem
-
+import com.example.mycapstone.data.LessonResponseItem
 
 class MaterialAdapter(
-    private val items: List<MaterialItem>,
-    private val onItemClick: (MaterialItem) -> Unit
-) : RecyclerView.Adapter<MaterialAdapter.MaterialViewHolder>() {
+    private val items: MutableList<LessonResponseItem>,
+    private val onClick: (LessonResponseItem) -> Unit
+) : RecyclerView.Adapter<MaterialAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MaterialViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_material, parent, false)
-        return MaterialViewHolder(view)
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val title: TextView = view.findViewById(R.id.item_title)
+        val subtitle: TextView = view.findViewById(R.id.item_subtitle)
+        val image: ImageView = view.findViewById(R.id.item_image)
+        val button: Button = view.findViewById(R.id.mark_as_completed_button)
     }
 
-    override fun onBindViewHolder(holder: MaterialViewHolder, position: Int) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val view = inflater.inflate(R.layout.item_material, parent, false)
+        return ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
-        holder.itemTitle.text = item.title
-        holder.itemSubtitle.text = item.subtitle
-        holder.itemImage.setImageResource(item.imageResource)
-        holder.markAsCompletedButton.apply {
-            text = if (item.isCompleted) "Completed" else "Not Completed"
-            setBackgroundColor(
-                if (item.isCompleted)
-                    context.getColor(R.color.bgBlue)
-                else
-                    context.getColor(R.color.primaryColorDark)
-            )
+
+        holder.title.text = item.title
+        holder.subtitle.text = item.subTitle
+        Glide.with(holder.image.context).load(item.photoUrl).into(holder.image)
+
+        holder.button.text = if (item.completed == true) {
+            holder.button.context.getString(R.string.mark_as_completed)
+        } else {
+            holder.button.context.getString(R.string.mark_as_not_completed)
+        }
+
+        holder.button.setOnClickListener {
+            onClick(item)
         }
 
         holder.itemView.setOnClickListener {
-            onItemClick(item)
+            onClick(item)
         }
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount() = items.size
 
-    inner class MaterialViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val itemImage: ImageView = view.findViewById(R.id.item_image)
-        val itemTitle: TextView = view.findViewById(R.id.item_title)
-        val itemSubtitle: TextView = view.findViewById(R.id.item_subtitle)
-        val markAsCompletedButton: Button = view.findViewById(R.id.mark_as_completed_button)
+    fun updateItems(newItems: List<LessonResponseItem>) {
+        items.clear()
+        items.addAll(newItems)
+        notifyDataSetChanged()
     }
 }
-
-

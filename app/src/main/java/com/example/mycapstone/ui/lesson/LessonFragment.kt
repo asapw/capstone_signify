@@ -1,59 +1,57 @@
 package com.example.mycapstone.ui.lesson
 
-import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.mycapstone.R
 import com.example.mycapstone.adapter.MaterialAdapter
-import com.example.mycapstone.data.MaterialItem
+import com.example.mycapstone.data.LessonResponseItem
+import com.example.mycapstone.databinding.FragmentLessonBinding
+import com.example.mycapstone.viewmodel.LessonViewModel
 
 class LessonFragment : Fragment() {
 
-    private lateinit var sharedPreferences: SharedPreferences
+    private var _binding: FragmentLessonBinding? = null
+    private val binding get() = _binding!!
+    private val lessonViewModel: LessonViewModel by viewModels()
     private lateinit var adapter: MaterialAdapter
-    private val items = mutableListOf(
-        MaterialItem(R.drawable.star_wars_logo, "Learn basic A-F", "Beginner | 6 Lessons", false, "rH5n2Q2RZrM"),
-        MaterialItem(R.drawable.logosignify, "Learn basic G-L", "Beginner | 6 Lessons", false, "2jYa6Wcy53k"),
-        MaterialItem(R.drawable.ic_profile_placeholder, "Learn basic M-R", "Intermediate | 6 Lessons", false, "sample3"),
-        MaterialItem(R.drawable.ic_profile_placeholder, "Learn basic S-Z", "Advanced | 6 Lessons", false, "sample4")
-    )
+    private val items = mutableListOf<LessonResponseItem>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_lesson, container, false)
+    ): View {
+        _binding = FragmentLessonBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        sharedPreferences = requireActivity().getSharedPreferences("VideoCompletionPrefs", 0)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.materialRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        // Initialize RecyclerView and Adapter
         adapter = MaterialAdapter(items, ::onItemClick)
-        recyclerView.adapter = adapter
+        binding.materialRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.materialRecyclerView.adapter = adapter
 
-        return view
-    }
-
-    override fun onResume() {
-        super.onResume()
-        refreshCompletionStatuses()
-    }
-
-    private fun refreshCompletionStatuses() {
-        for (item in items) {
-            item.isCompleted = sharedPreferences.getBoolean(item.videoUrl, false)
+        // Observe lessons from the ViewModel and update the adapter
+        lessonViewModel.lessons.observe(viewLifecycleOwner) { lessonList ->
+            // Directly update the items in the adapter
+            adapter.updateItems(lessonList)
         }
-        adapter.notifyDataSetChanged()
     }
 
-    private fun onItemClick(item: MaterialItem) {
-        val action = LessonFragmentDirections.actionLessonFragmentToVideoFragment(item.videoUrl)
+    private fun onItemClick(item: LessonResponseItem) {
+        val action = LessonFragmentDirections.actionLessonFragmentToVideoFragment(item.id ?: "")
         findNavController().navigate(action)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
