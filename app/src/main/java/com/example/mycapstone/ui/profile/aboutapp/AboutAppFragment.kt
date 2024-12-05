@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.activity.OnBackPressedCallback
+import com.example.mycapstone.R
 import com.example.mycapstone.databinding.FragmentAboutAppBinding
 
 class AboutAppFragment : Fragment() {
@@ -20,24 +23,56 @@ class AboutAppFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentAboutAppBinding.inflate(inflater, container, false)
 
-        // Set up the UI (text, app version, developer info, etc.)
+        // Set up the UI
         setupUI()
 
-        // Set up the back button click listener
+        // Back button listener
         binding.btnBack.setOnClickListener {
-            requireActivity().onBackPressed() // Calls the activity's onBackPressed() to go back
+            requireActivity().onBackPressed()
         }
 
         return binding.root
     }
 
     private fun setupUI() {
-        // Set app description and other details here
-        binding.aboutAppDescription.text = "This app is a great example of how to use Firebase, navigate through fragments, and much more!"
+        // App details
+        binding.aboutAppDescription.text =
+            "Signify App: Revolutionizing mobile applications with cutting-edge technologies."
         binding.aboutAppVersion.text = "Version: 1.0.0"
-        binding.aboutAppDeveloper.text = "Developer: Your Name"
-        binding.aboutAppContact.text = "Contact: your.email@example.com"
+
+        // Team information with corresponding profile images
+        val teamMembers = listOf(
+            Triple("Septian Wijaya", "Mobile Development", R.drawable.septian_w),
+            Triple("Daniel Alexander", "Mobile Development", R.drawable.daniel_a),
+            Triple("Agnes Valerie Khoe", "Machine Learning", R.drawable.agnes_k),
+            Triple("Natasha Anabela", "Machine Learning", R.drawable.natasha_a),
+            Triple("Nicholas Febrian Liswanto", "Machine Learning", R.drawable.septian_h),
+            Triple("Akmal Muzakki Bakir", "Cloud Computing", R.drawable.akmal_m),
+            Triple("Septian Hari Sabarno", "Cloud Computing", R.drawable.septian_h)
+        )
+
+        // Dynamically add team member views
+        for ((name, role, imageRes) in teamMembers) {
+            val teamMemberView = createTeamMemberView(name, role, imageRes)
+            binding.teamContainer.addView(teamMemberView)
+        }
     }
+
+    private fun createTeamMemberView(name: String, role: String, imageRes: Int): View {
+        val view = layoutInflater.inflate(R.layout.item_team_member, null)
+
+        val profileImage = view.findViewById<ImageView>(R.id.profileImage)
+        val nameTextView = view.findViewById<TextView>(R.id.nameTextView)
+        val roleTextView = view.findViewById<TextView>(R.id.roleTextView)
+
+        // Set team member details
+        profileImage.setImageResource(imageRes)
+        nameTextView.text = name
+        roleTextView.text = role
+
+        return view
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

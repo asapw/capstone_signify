@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
@@ -10,8 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:orientation="vertical">
 
         <!-- Back Button and Title -->
         <LinearLayout
@@ -43,6 +41,7 @@
             android:id="@+id/aboutAppDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="Signify App: Revolutionizing mobile applications with cutting-edge technologies."
             android:textSize="16sp"
             android:textColor="@color/black"
             android:layout_marginBottom="16dp"/>
@@ -52,26 +51,27 @@
             android:id="@+id/aboutAppVersion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="Version: 1.0.0"
             android:textSize="14sp"
             android:textColor="@color/light_gray"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Developer Info -->
+        <!-- Team Section -->
         <TextView
-            android:id="@+id/aboutAppDeveloper"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:text="Meet the Team"
+            android:textSize="18sp"
+            android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Contact -->
-        <TextView
-            android:id="@+id/aboutAppContact"
+        <!-- Team Members -->
+        <LinearLayout
+            android:id="@+id/teamContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="@color/black"/>
+            android:orientation="vertical" />
 
     </LinearLayout>
 </ScrollView>
