@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         // Listen for navigation changes to hide/show the FloatingActionButton
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.nav_camera -> {
+                R.id.nav_camera,R.id.nav_my_account,R.id.nav_about_app, R.id.nav_help_support -> {
                     binding.bottomNavigation.visibility = View.GONE
                     binding.fabCamera.hide()
                 }

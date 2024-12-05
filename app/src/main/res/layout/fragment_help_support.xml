@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Back Button and Title -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="16dp">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_back_arrow"
+                android:contentDescription="@string/back_button"
+                android:layout_marginEnd="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Help and Support"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <!-- Help and Support Description -->
+        <TextView
+            android:id="@+id/helpSupportDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="If you have any questions or need assistance, please contact support."
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Contact Support -->
+        <TextView
+            android:id="@+id/contactSupport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Contact Support: support@example.com"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- FAQ -->
+        <TextView
+            android:id="@+id/helpFAQ"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FAQ: Visit our website for frequently asked questions."
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="16dp"/>
+
+    </LinearLayout>
+</ScrollView>

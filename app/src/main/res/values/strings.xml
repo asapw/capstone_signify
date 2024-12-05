@@ -22,7 +22,9 @@
     <string name="signify">SIGNIFY</string>
     <string name="material_title">Material Title</string>
     <string name="description_of_the_material">Description of the material.</string>
-    <string name="mark_as_completed">Mark as completed</string>
+    <string name="mark_as_completed">Completed</string>
+    <string name="mark_as_not_completed">Not Completed</string>
+
     <string name="remember_me">Remember me</string>
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
@@ -42,5 +44,6 @@
     <string name="quiz_title">Quiz Title</string>
     <string name="play_quiz" />
     <string name="forward_arrow">forward_arrow</string>
+    <string name="material">Material</string>
 
 </resources>
