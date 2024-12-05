@@ -41,5 +41,6 @@
     <string name="add_image_icon" />
     <string name="quiz_title">Quiz Title</string>
     <string name="play_quiz" />
+    <string name="forward_arrow">forward_arrow</string>
 
 </resources>

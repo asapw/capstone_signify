@@ -4,119 +4,73 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/bg_gradient"
+    android:backgroundTint="@color/secondaryColorgrey"
+    android:padding="16dp"
     tools:context=".ui.lesson.LessonFragment">
 
-    <!-- Header -->
-    <LinearLayout
-        android:id="@+id/header"
+
+    <com.google.android.material.search.SearchView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <com.google.android.material.search.SearchBar
+        android:id="@+id/searchBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:gravity="center_vertical"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/materialSection"
+        android:layout_marginBottom="32dp"/>
 
-        <!-- Logo -->
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/logosignify"
-            android:contentDescription="App Logo"
-            android:layout_marginEnd="16dp" />
 
-        <!-- Texts -->
+        <!-- Material Section -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/materialSection"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toBottomOf="@id/searchBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/materialRecyclerView">
 
-            <!-- App Name -->
+            <!-- Line Before Text -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="0.1"
+                android:background="@android:color/black" />
+
+            <!-- Text -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/signify"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
+                android:text="Material"
+                android:textColor="@android:color/black"
+                android:fontFamily="@font/poppins_semibold"
+                android:textSize="16sp"
+                android:layout_marginHorizontal="8dp"
                 android:textStyle="bold" />
 
-            <!-- App Description -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sign Language Learning and Communication Aid"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <!-- Frame Layout for Material Section and RecyclerView -->
-    <FrameLayout
-        android:id="@+id/lesson_frame"
-        android:layout_width="match_parent"
-        android:layout_height="525dp"
-        android:layout_margin="16dp"
-        android:background="@drawable/rounded_frame_white"
-        app:layout_constraintTop_toBottomOf="@id/header"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <!-- Vertical Layout inside FrameLayout -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <!-- Material Section -->
-            <LinearLayout
-                android:id="@+id/materialSection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="16dp">
-
-                <!-- Line Before Text -->
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="0.1"
-                    android:background="@android:color/black" />
-
-                <!-- Text -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Material"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:layout_marginHorizontal="8dp"
-                    android:textStyle="bold" />
-
-                <!-- Line After Text -->
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/black" />
-            </LinearLayout>
-
-            <!-- Material List -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/materialRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="16dp"
+            <!-- Line After Text -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
                 android:layout_weight="1"
-                android:padding="8dp" />
+                android:background="@android:color/black" />
         </LinearLayout>
-    </FrameLayout>
 
-    <!-- FragmentContainerView to hold the video fragment -->
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_container_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="16dp" />
+        <!-- Material List -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/materialRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="16dp"
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@id/materialSection"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

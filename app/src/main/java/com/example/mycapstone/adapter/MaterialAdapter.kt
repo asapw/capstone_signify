@@ -26,7 +26,7 @@ class MaterialAdapter(
         holder.itemTitle.text = item.title
         holder.itemSubtitle.text = item.subtitle
         holder.itemImage.setImageResource(item.imageResource)
-        holder.markAsCompletedButton.apply {
+        holder.statusText.apply {
             text = if (item.isCompleted) "Completed" else "Not Completed"
             setBackgroundColor(
                 if (item.isCompleted)
@@ -47,7 +47,7 @@ class MaterialAdapter(
         val itemImage: ImageView = view.findViewById(R.id.item_image)
         val itemTitle: TextView = view.findViewById(R.id.item_title)
         val itemSubtitle: TextView = view.findViewById(R.id.item_subtitle)
-        val markAsCompletedButton: Button = view.findViewById(R.id.mark_as_completed_button)
+        val statusText: TextView = view.findViewById(R.id.status_text)
     }
 }
 
