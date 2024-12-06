@@ -9,7 +9,6 @@ data class LessonResponse(
 )
 
 data class LessonResponseItem(
-
 	@field:SerializedName("photoUrl")
 	val photoUrl: String? = null,
 
@@ -26,5 +25,8 @@ data class LessonResponseItem(
 	val completed: Boolean? = null,
 
 	@field:SerializedName("title")
-	val title: String? = null
+	val title: String? = null,
+
+	var isCompleted: Boolean = completed ?: false
 )
+

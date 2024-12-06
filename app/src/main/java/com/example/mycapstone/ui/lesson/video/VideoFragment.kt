@@ -13,7 +13,7 @@ import com.example.mycapstone.R
 
 class VideoFragment : Fragment() {
 
-    private val args: VideoFragmentArgs by navArgs() // SafeArgs to access `yt_url`
+    private val args: VideoFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,20 +31,22 @@ class VideoFragment : Fragment() {
         }
 
         webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                return if (url != null && (url.contains("youtube.com") || url.contains("youtu.be"))) {
+                    false
+                } else {
+                    true
+                }
+            }
+
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                println("Page loaded: $url")
                 injectJsToDetectVideoCompletion(webView)
             }
         }
 
-        // Get and process the URL
         val videoUrl = args.ytUrl
-        if (videoUrl.isNullOrEmpty()) {
-            println("Error: Received empty or null video URL")
-        } else {
-            println("Loading video: $videoUrl")
-        }
+        println("Loading video: $videoUrl")
 
         val secureUrl = when {
             videoUrl.contains("youtube.com/shorts/") -> videoUrl.replace("youtube.com/shorts/", "youtube.com/embed/")
@@ -55,13 +57,13 @@ class VideoFragment : Fragment() {
 
         webView.loadUrl(secureUrl)
 
-        // Set up Javascript Interface to interact with the video
         webView.addJavascriptInterface(object {
             @android.webkit.JavascriptInterface
+            @Suppress("unused")
             fun onVideoCompleted() {
-                val videoUrl = args.ytUrl
-                println("Video completed: $videoUrl")
-                markAsCompleted(videoUrl)
+                val completedVideoUrl = args.ytUrl
+                println("Video completed: $completedVideoUrl")
+                markAsCompleted(completedVideoUrl)
             }
         }, "Android")
 
@@ -73,7 +75,6 @@ class VideoFragment : Fragment() {
             var video = document.querySelector('video');
             if (video) {
                 video.onended = function() {
-                    // Notify Android when the video ends
                     Android.onVideoCompleted();
                 }
             }
@@ -84,10 +85,11 @@ class VideoFragment : Fragment() {
     private fun markAsCompleted(videoUrl: String) {
         val sharedPreferences = requireActivity().getSharedPreferences("VideoCompletionPrefs", 0)
         with(sharedPreferences.edit()) {
-            putBoolean(videoUrl, true)  // Mark the video as completed
+            putBoolean(videoUrl, true)
             apply()
         }
-        findNavController().navigateUp()  // Navigate back to the previous fragment
-    }
 
+        val action = VideoFragmentDirections.actionVideoFragmentToLessonFragment()
+        findNavController().navigate(action)
+    }
 }

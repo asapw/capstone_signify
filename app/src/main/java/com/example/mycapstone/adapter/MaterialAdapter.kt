@@ -1,6 +1,7 @@
 package com.example.mycapstone.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,17 +41,23 @@ class MaterialAdapter(
         Glide.with(holder.image.context).load(item.photoUrl).into(holder.image)
 
         // Check completion status from SharedPreferences (or item.completed flag)
-        val sharedPreferences = holder.itemView.context.getSharedPreferences("VideoCompletionPrefs", Context.MODE_PRIVATE)
-        val isCompleted = sharedPreferences.getBoolean(item.ytUrl, false)
+        holder.itemView.context.getSharedPreferences("VideoCompletionPrefs", Context.MODE_PRIVATE)
+        val isCompleted = item.isCompleted
 
-        // Update status text based on completion status
-        if (isCompleted) {
-            holder.statusText.text = holder.itemView.context.getString(R.string.mark_as_completed)
-            holder.statusText.setTextColor(holder.itemView.context.getColor(R.color.primaryColor)) // Completed color
+        // Debugging: Check completion status
+        Log.d("MaterialAdapter", "Item: ${item.title}, Completed: $isCompleted")
+
+        holder.statusText.text = if (isCompleted) {
+            holder.itemView.context.getString(R.string.mark_as_completed)
         } else {
-            holder.statusText.text = holder.itemView.context.getString(R.string.mark_as_not_completed)
-            holder.statusText.setTextColor(holder.itemView.context.getColor(R.color.red)) // Not completed color
+            holder.itemView.context.getString(R.string.mark_as_not_completed)
         }
+
+        holder.statusText.setTextColor(
+            if (isCompleted) holder.itemView.context.getColor(R.color.primaryColor)
+            else holder.itemView.context.getColor(R.color.red)
+        )
+
 
         // Set click listeners
         holder.itemView.setOnClickListener {

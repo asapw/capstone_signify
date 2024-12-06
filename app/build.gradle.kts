@@ -1,6 +1,3 @@
-import com.android.build.api.variant.BuildConfigField
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)

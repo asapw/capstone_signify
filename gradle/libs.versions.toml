@@ -5,7 +5,7 @@ cameraCamera2 = "1.4.0"
 compiler = "4.16.0"
 converterGson = "2.11.0"
 dotsindicator = "5.0"
-firebaseBom = "33.5.1"
+firebaseBom = "33.7.0"
 firebaseStorage = "21.0.1"
 gson = "2.10.1"
 guava = "33.0.0-android"
@@ -23,6 +23,7 @@ googleGmsGoogleServices = "4.4.2"
 firebaseAuth = "23.1.0"
 navigationFragmentKtx = "2.8.4"
 navigationUiKtx = "2.8.4"
+playServicesVersion = "17.0.0"
 retrofit = "2.11.0"
 tensorflowLite = "2.13.0"
 tensorflowLiteSupport = "0.1.0"
@@ -44,6 +45,7 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 firebase-storage = { module = "com.google.firebase:firebase-storage", version.ref = "firebaseStorage" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "compiler" }
+gms-play-services = { module = "com.google.android.gms:play-services", version.ref = "playServicesVersion" }
 google-firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
