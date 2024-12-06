@@ -111,17 +111,4 @@
         </LinearLayout>
     </FrameLayout>
 
-    <!-- Button to mark the video as completed, outside the video frame and centered at the bottom -->
-    <Button
-        android:id="@+id/video_complete_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="130dp"
-        android:background="@drawable/rounded_black_background"
-        android:text="@string/mark_as_completed_btn"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/video_frame" />
 </androidx.constraintlayout.widget.ConstraintLayout>

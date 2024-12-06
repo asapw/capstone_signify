@@ -1,13 +1,11 @@
 package com.example.mycapstone.ui.lesson.video
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -15,8 +13,7 @@ import com.example.mycapstone.R
 
 class VideoFragment : Fragment() {
 
-    private val args: VideoFragmentArgs by navArgs()  // SafeArgs to get the videoUrl
-    private lateinit var sharedPreferences: SharedPreferences
+    private val args: VideoFragmentArgs by navArgs() // SafeArgs to access `yt_url`
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,34 +21,73 @@ class VideoFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_video, container, false)
 
-        sharedPreferences = requireActivity().getSharedPreferences("VideoCompletionPrefs", 0)
-
-        // Retrieve the video URL from SafeArgs
-        val videoUrl = args.videoUrl
-
         val webView = view.findViewById<WebView>(R.id.youtubeWebView)
-        webView.settings.javaScriptEnabled = true
-        webView.webViewClient = WebViewClient()
-
-        // Load the video using YouTube embed URL format
-        webView.loadUrl("https://www.youtube.com/embed/$videoUrl")
-
-        // Setup button click listener
-        view.findViewById<Button>(R.id.video_complete_button).setOnClickListener {
-            markAsCompleted(videoUrl)
+        webView.settings.apply {
+            javaScriptEnabled = true
+            domStorageEnabled = true
+            loadWithOverviewMode = true
+            useWideViewPort = true
+            mediaPlaybackRequiresUserGesture = false
         }
+
+        webView.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                println("Page loaded: $url")
+                injectJsToDetectVideoCompletion(webView)
+            }
+        }
+
+        // Get and process the URL
+        val videoUrl = args.ytUrl
+        if (videoUrl.isNullOrEmpty()) {
+            println("Error: Received empty or null video URL")
+        } else {
+            println("Loading video: $videoUrl")
+        }
+
+        val secureUrl = when {
+            videoUrl.contains("youtube.com/shorts/") -> videoUrl.replace("youtube.com/shorts/", "youtube.com/embed/")
+            videoUrl.contains("youtube.com/watch?v=") -> videoUrl.replace("youtube.com/watch?v=", "youtube.com/embed/")
+            videoUrl.contains("youtu.be/") -> videoUrl.replace("youtu.be/", "youtube.com/embed/")
+            else -> videoUrl
+        }
+
+        webView.loadUrl(secureUrl)
+
+        // Set up Javascript Interface to interact with the video
+        webView.addJavascriptInterface(object {
+            @android.webkit.JavascriptInterface
+            fun onVideoCompleted() {
+                val videoUrl = args.ytUrl
+                println("Video completed: $videoUrl")
+                markAsCompleted(videoUrl)
+            }
+        }, "Android")
 
         return view
     }
 
+    private fun injectJsToDetectVideoCompletion(webView: WebView) {
+        val js = """
+            var video = document.querySelector('video');
+            if (video) {
+                video.onended = function() {
+                    // Notify Android when the video ends
+                    Android.onVideoCompleted();
+                }
+            }
+        """.trimIndent()
+        webView.evaluateJavascript(js, null)
+    }
+
     private fun markAsCompleted(videoUrl: String) {
-        // Mark as completed in SharedPreferences
+        val sharedPreferences = requireActivity().getSharedPreferences("VideoCompletionPrefs", 0)
         with(sharedPreferences.edit()) {
-            putBoolean(videoUrl, true)  // Store completion status based on video URL
+            putBoolean(videoUrl, true)  // Mark the video as completed
             apply()
         }
-
-        // After completion, navigate back to the LessonFragment
-        findNavController().navigateUp()  // This will navigate back to the previous fragment
+        findNavController().navigateUp()  // Navigate back to the previous fragment
     }
+
 }

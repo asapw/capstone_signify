@@ -2,6 +2,12 @@ package com.example.mycapstone.data
 
 import com.google.gson.annotations.SerializedName
 
+data class LessonResponse(
+
+	@field:SerializedName("LessonResponse")
+	val lessonResponse: List<LessonResponseItem?>? = null
+)
+
 data class LessonResponseItem(
 
 	@field:SerializedName("photoUrl")
@@ -12,6 +18,9 @@ data class LessonResponseItem(
 
 	@field:SerializedName("id")
 	val id: String? = null,
+
+	@field:SerializedName("ytUrl")
+	val ytUrl: String? = null,
 
 	@field:SerializedName("completed")
 	val completed: Boolean? = null,
