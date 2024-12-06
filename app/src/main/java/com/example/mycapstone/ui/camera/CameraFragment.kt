@@ -16,9 +16,12 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.example.mycapstone.databinding.FragmentCameraBinding
 import com.example.mycapstone.ui.camera.HandLandMarkerHelper.Companion.TAG
+import com.google.ai.client.generativeai.GenerativeModel
 import com.google.mediapipe.tasks.vision.core.RunningMode
+import kotlinx.coroutines.launch
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -138,8 +141,27 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
         fragmentCameraBinding.btnFinishDetecting.setOnClickListener {
             Toast.makeText(requireContext(),"Button clicked ${fragmentCameraBinding.predictedTextView.text}",
                 Toast.LENGTH_LONG).show()
+
+            lifecycleScope.launch {
+                 val res = gemini(fragmentCameraBinding.predictedTextView.text.toString())
+                Toast.makeText(requireContext(),res,Toast.LENGTH_LONG).show()
+                Log.d("CameraFragment", "From gemini revised: $res")
+            }
         }
     }
+
+    private suspend fun gemini(text: String): String? {
+        val generativeModel = GenerativeModel(
+            modelName = "gemini-pro",
+            apiKey = ""
+        )
+
+        val prompt = "Revisi kesalahan penulisan ini: $text"
+        val response = generativeModel.generateContent(prompt)
+
+        return response.text
+    }
+
     private fun setupObservers() {
         viewModel.detectionResults.observe(viewLifecycleOwner, Observer { boundingBoxes ->
             fragmentCameraBinding.overlayBounding.apply {

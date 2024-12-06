@@ -20,7 +20,7 @@ class MaterialAdapter(
         val title: TextView = view.findViewById(R.id.item_title)
         val subtitle: TextView = view.findViewById(R.id.item_subtitle)
         val image: ImageView = view.findViewById(R.id.item_image)
-        val button: Button = view.findViewById(R.id.mark_as_completed_button)
+        val button: TextView = view.findViewById(R.id.status_text)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
