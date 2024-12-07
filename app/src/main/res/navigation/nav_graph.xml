@@ -38,7 +38,6 @@
             android:defaultValue=""/>
     </fragment>
 
-
     <!-- Camera Fragment -->
     <fragment
         android:id="@+id/nav_camera"
@@ -51,7 +50,52 @@
         android:id="@+id/nav_quiz"
         android:name="com.example.mycapstone.ui.quiz.QuizFragment"
         android:label="quiz"
-        tools:layout="@layout/fragment_quiz" />
+        tools:layout="@layout/fragment_quiz">
+        <action
+            android:id="@+id/action_quizFragment_to_questionFragment"
+            app:destination="@id/nav_question">
+            <!-- Pass quizId and checkQuestion arguments to QuestionFragment -->
+            <argument
+                android:name="quizId"
+                app:argType="string" />
+            <argument
+                android:name="checkQuestion"
+                app:argType="boolean" />
+        </action>
+    </fragment>
+
+    <!-- Question Fragment -->
+    <fragment
+        android:id="@+id/nav_question"
+        android:name="com.example.mycapstone.ui.quiz.question.QuestionFragment"
+        android:label="Question"
+        tools:layout="@layout/fragment_question">
+        <argument
+            android:name="question"
+            app:argType="string" />
+        <argument
+            android:name="optionA"
+            app:argType="string" />
+        <argument
+            android:name="optionB"
+            app:argType="string" />
+        <argument
+            android:name="optionC"
+            app:argType="string" />
+        <argument
+            android:name="optionD"
+            app:argType="string" />
+        <argument
+            android:name="correctOption"
+            app:argType="string" />
+        <!-- Added missing arguments -->
+        <argument
+            android:name="quizId"
+            app:argType="string" />
+        <argument
+            android:name="checkQuestion"
+            app:argType="boolean" />
+    </fragment>
 
     <!-- Profile Fragment -->
     <fragment

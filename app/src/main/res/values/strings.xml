@@ -46,14 +46,14 @@
     <string name="forward_arrow">forward_arrow</string>
     <string name="material">Material</string>
 
-        <string name="greeting">Hello,\n%s</string>
-        <string name="default_username">User</string>
-        <string name="default_email">Email not available</string>
-        <string name="progress">Progress</string>
-        <string name="your_lessons_progress">Your Lessons Progress</string>
-        <string name="your_quiz_progress">Your Quiz Progress</string>
-        <string name="progress_value">%1$d/%2$d</string>
-        <string name="error_fetch_progress">Failed to fetch progress data.</string>
+    <string name="greeting">Hello,\n%s</string>
+    <string name="default_username">User</string>
+    <string name="default_email">Email not available</string>
+    <string name="progress">Progress</string>
+    <string name="your_lessons_progress">Your Lessons Progress</string>
+    <string name="your_quiz_progress">Your Quiz Progress</string>
+    <string name="progress_value">%1$d/%2$d</string>
+    <string name="error_fetch_progress">Failed to fetch progress data.</string>
 
 
 </resources>
