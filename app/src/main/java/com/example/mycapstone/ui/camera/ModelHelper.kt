@@ -18,6 +18,8 @@ import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 
 class ModelHelper(
     private val context: Context,
@@ -28,10 +30,6 @@ class ModelHelper(
 
     private var interpreter: Interpreter? = null
     private val labels = mutableListOf<String>()
-
-    private var tensorWidth = 0
-    private var tensorHeight = 0
-    private var numChannel = 0
 
     private val imageProcessor = ImageProcessor.Builder()
         .add(NormalizeOp(INPUT_MEAN, INPUT_STANDARD_DEVIATION))
@@ -51,13 +49,6 @@ class ModelHelper(
         val options = Interpreter.Options()
         options.numThreads = 4
         interpreter = Interpreter(model, options)
-
-        val inputShape = interpreter?.getInputTensor(0)?.shape() ?: return
-        val outputShape = interpreter?.getOutputTensor(0)?.shape() ?: return
-
-        tensorWidth = inputShape[1]
-        tensorHeight = inputShape[2]
-        numChannel = outputShape[1]
 
         // Load labels from asset file
         try {
@@ -82,7 +73,22 @@ class ModelHelper(
         interpreter = null
     }
 
+    private fun landmarksToByteBuffer(landmarks: List<NormalizedLandmark>): ByteBuffer {
+        // Create a ByteBuffer for 63 float values (21 landmarks × 3 coordinates)
+        val buffer = ByteBuffer.allocateDirect(63 * 4) // 4 bytes per float
+        buffer.order(ByteOrder.nativeOrder())
 
+        // Fill buffer with landmark coordinates
+        landmarks.forEach { landmark ->
+            buffer.putFloat(landmark.x())
+            buffer.putFloat(landmark.y())
+            buffer.putFloat(landmark.z())
+        }
+
+        // Reset position to beginning for reading
+        buffer.rewind()
+        return buffer
+    }
 
     fun detect(frame: Bitmap, landmarks: List<NormalizedLandmark>) {
         interpreter ?: return
@@ -90,26 +96,37 @@ class ModelHelper(
         var inferenceTime = SystemClock.uptimeMillis()
 
         try {
-            // Resize the input bitmap to 32x32
+            // Prepare landmark input (input0)
+            val landmarkBuffer = landmarksToByteBuffer(landmarks)
+            val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 63), DataType.FLOAT32)
+            inputFeature0.loadBuffer(landmarkBuffer)
 
-//            Input menggunakan buffer
+            // Prepare image input (input1)
             val resizedBitmap = Bitmap.createScaledBitmap(frame, 32, 32, true)
-
-            // Convert the bitmap into TensorImage
             val tensorImage = TensorImage(DataType.FLOAT32)
             tensorImage.load(resizedBitmap)
-
-            // Normalize the image
             val processedImage = imageProcessor.process(tensorImage)
+            val inputFeature1 = TensorBuffer.createFixedSize(intArrayOf(1, 32, 32, 3), DataType.FLOAT32)
+            inputFeature1.loadBuffer(processedImage.buffer)
 
-            // Prepare the output buffer for 26 classes
-            val output = TensorBuffer.createFixedSize(intArrayOf(1, 26), DataType.FLOAT32)
+            // Prepare output buffer for 26 classes
+            val outputBuffer = TensorBuffer.createFixedSize(intArrayOf(1, 26), DataType.FLOAT32)
+
+            // Create input and output maps properly
+            val inputs = arrayOf(
+                inputFeature0.buffer,
+                inputFeature1.buffer
+            )
+            val outputs = hashMapOf<Int, Any>()
+            outputs[0] = outputBuffer.buffer
+
+            Log.d("ModelHelper", "Running inference with inputs: ${inputs.size} buffers")
 
             // Run inference
-            interpreter?.run(processedImage.buffer, output.buffer)
+            interpreter?.runForMultipleInputsOutputs(inputs, outputs)
 
             // Process the output to find bounding boxes
-            val bestBoxes = bestBox(landmarks, output.floatArray)
+            val bestBoxes = bestBox(landmarks, outputBuffer.floatArray)
             inferenceTime = SystemClock.uptimeMillis() - inferenceTime
 
             if (bestBoxes == null) {
@@ -120,6 +137,7 @@ class ModelHelper(
             detectorListener.onDetect(bestBoxes, inferenceTime)
         } catch (e: Exception) {
             Log.e("ModelHelper", "Error during detection: ${e.message}")
+            e.printStackTrace() // Add this to get more detailed error information
             detectorListener.onEmptyDetect()
         }
     }
@@ -239,7 +257,7 @@ class ModelHelper(
         private const val INPUT_STANDARD_DEVIATION = 1f
         private val INPUT_IMAGE_TYPE = DataType.FLOAT32
         private val OUTPUT_IMAGE_TYPE = DataType.FLOAT32
-        private const val CONFIDENCE_THRESHOLD = 0.3F
+        private const val CONFIDENCE_THRESHOLD = 0.1F
         private const val IOU_THRESHOLD = 0.5F
     }
 }

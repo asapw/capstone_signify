@@ -134,7 +134,7 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
 
 
     companion object {
-        private const val MODEL_PATH = "model_v2.tflite"
+        private const val MODEL_PATH = "model_v4.tflite"
         private const val LABEL_PATH = "labels.txt"
         private const val TAG = "CameraViewModel"
         private const val DETECTION_DELAY = 1000L
