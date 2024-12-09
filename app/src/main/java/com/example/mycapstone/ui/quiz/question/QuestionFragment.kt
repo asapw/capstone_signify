@@ -65,6 +65,7 @@ class QuestionFragment : Fragment() {
                         findNavController().navigateUp()
                     }, 2000) // 2 seconds delay
                 } else {
+                    showIncorrectIndicator()
                     Toast.makeText(requireContext(), "Wrong Answer!", Toast.LENGTH_SHORT).show()
                 }
             } else {
@@ -79,14 +80,36 @@ class QuestionFragment : Fragment() {
         // Show the green "Correct!" text
         binding.correctIndicator.visibility = View.VISIBLE
 
+        // Hide the incorrect indicator if it's visible
+        binding.incorrectIndicator.visibility = View.GONE
+
         // Play the "clink" sound
         val mediaPlayer = MediaPlayer.create(requireContext(), R.raw.clink)
         mediaPlayer.start()
 
-        // Trigger vibration
+        // Trigger vibration for correct answer
         val vibrator = requireContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         if (vibrator.hasVibrator()) {
             val vibrationEffect = VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE)
+            vibrator.vibrate(vibrationEffect)
+        }
+    }
+
+    private fun showIncorrectIndicator() {
+        // Show the red "Incorrect!" text
+        binding.incorrectIndicator.visibility = View.VISIBLE
+
+        // Hide the correct indicator if it's visible
+        binding.correctIndicator.visibility = View.GONE
+
+        // Play the "wrong" sound
+        val mediaPlayer = MediaPlayer.create(requireContext(), R.raw.wrong) // Ensure "wrong.mp3" is in res/raw
+        mediaPlayer.start()
+
+        // Trigger vibration for incorrect answer (different pattern or effect)
+        val vibrator = requireContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        if (vibrator.hasVibrator()) {
+            val vibrationEffect = VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE)
             vibrator.vibrate(vibrationEffect)
         }
     }

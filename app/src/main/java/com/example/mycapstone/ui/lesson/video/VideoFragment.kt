@@ -13,6 +13,7 @@ import com.example.mycapstone.databinding.FragmentVideoBinding
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.mycapstone.R
+import com.google.android.material.snackbar.Snackbar
 
 class VideoFragment : Fragment() {
 
@@ -35,6 +36,9 @@ class VideoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Show a warning message when the fragment's view is created
+        showWarningMessage()
 
         // Adjust the bottom margin of the PlayerView to account for the BottomNavigationView
         val bottomNavigationHeight = requireActivity().findViewById<View>(R.id.bottom_navigation)?.height ?: 0
@@ -75,6 +79,11 @@ class VideoFragment : Fragment() {
         // Navigate to the next fragment or back
         val action = VideoFragmentDirections.actionVideoFragmentToLessonFragment()
         findNavController().navigate(action)
+    }
+
+    private fun showWarningMessage() {
+        // Ensure the view is fully initialized before showing the Snackbar
+        Snackbar.make(binding.root, "You need to watch the video until the end to complete it!", Snackbar.LENGTH_LONG).show()
     }
 
     override fun onDestroyView() {
