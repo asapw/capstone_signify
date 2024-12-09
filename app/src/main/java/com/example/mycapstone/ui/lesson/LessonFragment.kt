@@ -25,6 +25,9 @@ class LessonFragment : Fragment() {
     private lateinit var adapter: MaterialAdapter
     private val items = mutableListOf<LessonResponseItem>()
 
+    private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
+    private val db: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,24 +39,26 @@ class LessonFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize RecyclerView and Adapter
-        adapter = MaterialAdapter(items, ::onItemClick)
-        binding.materialRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.materialRecyclerView.adapter = adapter
+        setupRecyclerView()
 
-        // Check completed state from SharedPreferences
+        // Observe lessons from ViewModel
         lessonViewModel.lessons.observe(viewLifecycleOwner) { lessonList ->
             val sharedPreferences = requireActivity().getSharedPreferences("VideoCompletionPrefs", 0)
 
             lessonList.forEach { lesson ->
+                // Check completion status from SharedPreferences
                 lesson.isCompleted = sharedPreferences.getBoolean(lesson.ytUrl ?: "", false)
                 Log.d("LessonFragment", "Lesson: ${lesson.title}, isCompleted: ${lesson.isCompleted}")
             }
 
             adapter.updateItems(lessonList)
         }
+    }
 
-
+    private fun setupRecyclerView() {
+        adapter = MaterialAdapter(items, ::onItemClick)
+        binding.materialRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.materialRecyclerView.adapter = adapter
     }
 
     private fun onItemClick(item: LessonResponseItem) {
@@ -62,45 +67,50 @@ class LessonFragment : Fragment() {
             return
         }
 
-        // Ensure the lesson ID is not null
-        item.id?.let { lessonId ->
-            markLessonAsCompleted(lessonId) // Only call if lessonId is not null
-
-            val action = LessonFragmentDirections.actionLessonFragmentToVideoFragment(item.ytUrl)
-            findNavController().navigate(action)
-        } ?: run {
-            // Handle case where the ID is null
+        val lessonId = item.id
+        if (lessonId.isNullOrEmpty()) {
             Toast.makeText(context, "Lesson ID is missing for ${item.title}.", Toast.LENGTH_SHORT).show()
+            return
         }
-    }
 
+        markLessonAsCompleted(lessonId)
+        val action = LessonFragmentDirections.actionLessonFragmentToVideoFragment(item.ytUrl)
+        findNavController().navigate(action)
+    }
 
     private fun markLessonAsCompleted(lessonId: String) {
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        if (currentUser != null) {
-            val userId = currentUser.uid
-            val userDocRef = FirebaseFirestore.getInstance().collection("users").document(userId)
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            Log.e("LessonFragment", "No authenticated user")
+            return
+        }
 
-            userDocRef.get().addOnSuccessListener { document ->
-                if (document != null) {
-                    val completedLessons = (document.get("completedLessons") as? List<*>)?.toMutableList() ?: mutableListOf()
+        val userDocRef = db.collection("users").document(currentUser.uid)
 
-                    // Debugging: Check if lesson already exists
-                    Log.d("LessonFragment", "Existing completed lessons: $completedLessons")
+        userDocRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                val completedLessons =
+                    (document.get("completedLessons") as? List<String>)?.toMutableList() ?: mutableListOf()
 
-                    if (!completedLessons.contains(lessonId)) {
-                        completedLessons.add(lessonId)
-                        userDocRef.update("completedLessons", completedLessons)
-                        Log.d("LessonFragment", "Added lessonId: $lessonId to completedLessons")
-                    } else {
-                        Log.d("LessonFragment", "LessonId: $lessonId is already marked as completed")
-                    }
+                if (!completedLessons.contains(lessonId)) {
+                    completedLessons.add(lessonId)
+                    userDocRef.update("completedLessons", completedLessons)
+                        .addOnSuccessListener {
+                            Log.d("LessonFragment", "Lesson $lessonId marked as completed")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("LessonFragment", "Failed to update completed lessons", e)
+                        }
+                } else {
+                    Log.d("LessonFragment", "Lesson $lessonId is already marked as completed")
                 }
+            } else {
+                Log.e("LessonFragment", "User document does not exist")
             }
+        }.addOnFailureListener { e ->
+            Log.e("LessonFragment", "Error fetching user document", e)
         }
     }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()
