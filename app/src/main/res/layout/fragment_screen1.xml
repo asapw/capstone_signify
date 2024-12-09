@@ -14,7 +14,7 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginTop="130dp"
-        android:src="@drawable/logosignify"
+        android:src="@drawable/ic_capstone"
         android:contentDescription="@string/app_logo"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,20 +51,6 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Next Button -->
-    <Button
-        android:id="@+id/btnNext"
-        android:layout_width="120dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="28dp"
-        android:backgroundTint="?attr/colorSurface"
-        android:elevation="4dp"
-        android:text="@string/next"
-        android:textColor="@color/primaryColor"
-        app:cornerRadius="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.945"
-        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

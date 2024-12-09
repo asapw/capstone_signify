@@ -8,17 +8,26 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mycapstone.api.ApiConfig
+import com.example.mycapstone.api.ModelConfig
 import com.example.mycapstone.data.BoundingBox
+import com.example.mycapstone.utils.ImageConvert
 import com.google.mediapipe.tasks.components.containers.NormalizedLandmark
 import com.google.mediapipe.tasks.vision.handlandmarker.HandLandmarkerResult
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
-class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
+class CameraViewModel : ViewModel(), ModelHelper.DetectorListener {
     private var _signLanguangeWords = MutableLiveData<String>()
     val signLanguangeWords: LiveData<String> = _signLanguangeWords
 
     private val words = StringBuilder()
     private var lastDetectionTime = 0L
+    private var isProcessing = false
 
     private var _delegate: Int = HandLandMarkerHelper.DELEGATE_CPU
     private var _minHandDetectionConfidence: Float =
@@ -31,14 +40,11 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
 
     val currentDelegate: Int get() = _delegate
     val currentMinHandDetectionConfidence: Float
-        get() =
-            _minHandDetectionConfidence
+        get() = _minHandDetectionConfidence
     val currentMinHandTrackingConfidence: Float
-        get() =
-            _minHandTrackingConfidence
+        get() = _minHandTrackingConfidence
     val currentMinHandPresenceConfidence: Float
-        get() =
-            _minHandPresenceConfidence
+        get() = _minHandPresenceConfidence
     val currentMaxHands: Int get() = _maxHands
 
     private val _detectionResults = MutableLiveData<List<BoundingBox>>()
@@ -47,8 +53,6 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
     private val _inferenceTime = MutableLiveData<Long>()
     val inferenceTime: LiveData<Long> = _inferenceTime
 
-
-    private var isProcessing = false
     private lateinit var modelHelper: ModelHelper
 
     fun setDelegate(delegate: Int) {
@@ -74,8 +78,6 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
         modelHelper.setup()
     }
 
-
-
     private fun clearDetection() {
         _detectionResults.postValue(emptyList())
         _inferenceTime.postValue(0)
@@ -88,16 +90,16 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
         try {
             if (::modelHelper.isInitialized && !isProcessing) {
                 val currTime = System.currentTimeMillis()
-                if(currTime - lastDetectionTime >= DETECTION_DELAY){
+                if (currTime - lastDetectionTime >= DETECTION_DELAY) {
                     isProcessing = true
                     viewModelScope.launch {
-                        modelHelper.detect(bitmap, landmarks)
+                        detectWithCloudModel(bitmap)
                         isProcessing = false
                         lastDetectionTime = currTime
                     }
                 }
-            } else if(!::modelHelper.isInitialized){
-                Log.e(TAG,"ModelHelper is not initialized")
+            } else if (!::modelHelper.isInitialized) {
+                Log.e(TAG, "ModelHelper is not initialized")
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error during detection: ${e.message}")
@@ -105,23 +107,59 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
         }
     }
 
+    private suspend fun detectWithCloudModel(bitmap: Bitmap) {
+        try {
+            val tempFile = ImageConvert.bitmapToMultipart(bitmap)
 
+            val startTime = System.currentTimeMillis()
+            val res = withContext(Dispatchers.IO) {
+                ModelConfig.getModelService().detectSignLanguange(tempFile)
+            }
 
-    override fun onEmptyDetect() {
+            val inferenceTime = System.currentTimeMillis() - startTime
+
+            if (res.isSuccessful) {
+                val resBody = res.body()
+                val detectedWord = resBody?.prediction ?: ""
+                val message = resBody?.message ?: ""
+                val timestampString = resBody?.timestamp ?: ""
+
+                val timestamp = try {
+                    val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy, HH:mm:ss")
+                    LocalDateTime.parse(timestampString.toString(), formatter).toEpochSecond(ZoneOffset.UTC)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error parsing timestamp: $e")
+                    0L
+                }
+
+                if (detectedWord.isNotEmpty()) {
+                    _signLanguangeWords.postValue(detectedWord)
+                }
+
+                Log.d(TAG, "API Message: $message")
+                Log.d(TAG, "API Timestamp: $timestamp")
+            } else {
+                Log.e(TAG, "API Error:  ${res.code()} - ${res.message()}")
+                clearDetection()
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Cloud API detection Error: ${e.message}")
+            clearDetection()
+        }
     }
+
+    override fun onEmptyDetect() {}
+
     override fun onDetect(boundingBoxes: List<BoundingBox>, inferenceTime: Long) {
         _detectionResults.postValue(boundingBoxes)
         _inferenceTime.postValue(inferenceTime)
 
         val detectedWord = boundingBoxes.firstOrNull()?.clsName ?: ""
         if (detectedWord.isNotEmpty()) {
-            // Append new word with space
             if (words.isNotEmpty()) {
                 words.append(" ")
             }
-
             words.append(detectedWord)
-
             Log.d(TAG, "Accumulated words: $words")
             _signLanguangeWords.postValue(words.toString())
         }
@@ -131,7 +169,6 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener{
         super.onCleared()
         modelHelper.clear()
     }
-
 
     companion object {
         private const val MODEL_PATH = "model_v4.tflite"

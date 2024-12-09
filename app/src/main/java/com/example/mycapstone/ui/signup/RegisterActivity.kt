@@ -1,11 +1,16 @@
 package com.example.mycapstone.ui.signup
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.Window
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
+import com.example.mycapstone.R
 import com.example.mycapstone.ui.login.LoginActivity
 import com.example.mycapstone.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -17,6 +22,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: ActivityRegisterBinding
     private val db = FirebaseFirestore.getInstance()
+    private var loadingDialog: Dialog? = null
 
     companion object {
         private const val TAG = "RegisterActivity"
@@ -44,11 +50,11 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             // Show ProgressBar
-            binding.progressBar.visibility = View.VISIBLE
+           showLoadingDialog()
 
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
-                    binding.progressBar.visibility = View.GONE
+                    hideLoadingDialog()
                     if (task.isSuccessful) {
                         val user = auth.currentUser
                         saveUserData(user, name, email)
@@ -59,11 +65,14 @@ class RegisterActivity : AppCompatActivity() {
                 }
         }
 
-        // Login Now Button Click Listener
-        binding.tvLogin.setOnClickListener {
+        binding.tvLogin.setOnClickListener{
             val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            finish() // Close RegisterActivity
+            val options = ActivityOptionsCompat.makeCustomAnimation(
+                this,
+                R.anim.slide_in_right,  // Enter animation (from right to left)
+                R.anim.slide_out_left   // Exit animation (left to right)
+            )
+            startActivity(intent, options.toBundle())
         }
     }
 
@@ -109,5 +118,20 @@ class RegisterActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "Please try again.", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun showLoadingDialog() {
+        if (loadingDialog == null) {
+            loadingDialog = Dialog(this).apply {
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
+                setContentView(R.layout.loading_dialog)
+                setCancelable(false)
+            }
+        }
+        loadingDialog?.show()
+    }
+
+    private fun hideLoadingDialog() {
+        loadingDialog?.dismiss()
     }
 }
