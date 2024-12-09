@@ -57,6 +57,7 @@ dependencies {
     implementation (libs.gson)
     // Retrofit for networking
     implementation(libs.retrofit)
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     // Gson Converter for JSON serialization/deserialization
     implementation(libs.converter.gson)
@@ -66,6 +67,9 @@ dependencies {
 
     // Lottie Animation
     implementation("com.airbnb.android:lottie:6.6.0")
+
+    // Blur View
+    implementation ("com.github.Dimezis:BlurView:version-2.0.5")
 
     // Firebase Storage for image upload
     implementation (libs.firebase.storage)
@@ -78,10 +82,6 @@ dependencies {
     implementation (libs.androidx.activity.ktx)
 
     implementation (libs.androidx.lifecycle.viewmodel.ktx)
-
-
-    // MediaPipe
-    implementation("com.google.mediapipe:tasks-vision:0.20230731")
 
 
     // MediaPipe

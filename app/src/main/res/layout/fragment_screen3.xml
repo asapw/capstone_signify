@@ -7,18 +7,17 @@
     tools:context=".ui.onboarding.screen.Screen3"
     android:padding="16dp">
 
-    <!-- Logo -->
-    <ImageView
-        android:id="@+id/ivLogo"
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/screen3Lottie"
         android:layout_width="224dp"
         android:layout_height="216dp"
         android:layout_marginTop="130dp"
-        android:contentDescription="@string/app_logo"
-        android:src="@drawable/onboarding_illustration_1"
+        app:lottie_url="https://lottie.host/316a2b90-0ae5-43dc-a0dd-8e0685eeb0ca/RBMUVzeejx.lottie"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <!-- Subtitle -->
     <LinearLayout
@@ -27,7 +26,7 @@
         android:layout_marginTop="32dp"
         android:orientation="vertical"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/ivLogo"
+        app:layout_constraintTop_toBottomOf="@id/screen3Lottie"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -58,19 +57,5 @@
 
 
     <!-- Next Button -->
-    <Button
-        android:id="@+id/btnStart"
-        android:layout_width="120dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="28dp"
-        android:backgroundTint="?attr/colorSurface"
-        android:elevation="4dp"
-        android:text="@string/btnOnboardingStart"
-        android:textColor="@color/primaryColor"
-        app:cornerRadius="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.945"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

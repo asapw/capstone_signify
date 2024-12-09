@@ -172,8 +172,7 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
 
         viewModel.signLanguangeWords.observe(viewLifecycleOwner) { word ->
             Log.d("CameraFragment", "Detected word: $word")
-            fragmentCameraBinding.predictedTextView.text =
-                word.ifEmpty { "No word detected" }
+            fragmentCameraBinding.predictedTextView.text = word
         }
     }
 
