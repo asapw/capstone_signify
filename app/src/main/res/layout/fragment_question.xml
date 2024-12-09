@@ -50,4 +50,14 @@
         android:layout_height="wrap_content"
         android:text="Submit" />
 
+    <!-- Correct Answer Indicator -->
+    <TextView
+        android:id="@+id/correct_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Correct!"
+        android:textSize="16sp"
+        android:textColor="@android:color/holo_green_dark"
+        android:visibility="gone" /> <!-- Initially hidden -->
+
 </LinearLayout>

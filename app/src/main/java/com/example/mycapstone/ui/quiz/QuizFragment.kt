@@ -15,6 +15,8 @@ import com.example.mycapstone.adapter.QuizAdapter
 import com.example.mycapstone.api.ApiConfig
 import com.example.mycapstone.api.ApiService
 import com.example.mycapstone.data.QuizResponseItem
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -24,6 +26,7 @@ class QuizFragment : Fragment() {
     private lateinit var quizList: RecyclerView
     private lateinit var adapter: QuizAdapter
     private val quizItems = mutableListOf<QuizResponseItem>()
+    private val completedQuizIds = mutableListOf<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,16 +37,47 @@ class QuizFragment : Fragment() {
         // Initialize RecyclerView
         quizList = view.findViewById(R.id.quiz_list)
         quizList.layoutManager = LinearLayoutManager(requireContext())
-        adapter = QuizAdapter(quizItems) { quizItem ->
+        adapter = QuizAdapter(quizItems, completedQuizIds) { quizItem ->
             // Navigate to QuestionFragment with quiz details
             navigateToQuestionFragment(quizItem)
         }
         quizList.adapter = adapter
 
-        // Fetch quizzes from the API
-        fetchQuizzes()
+        // Fetch completed quizzes and quizzes from API
+        fetchCompletedQuizzes()
 
         return view
+    }
+
+    private fun fetchCompletedQuizzes() {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            val userId = currentUser.uid
+            val userDocRef = FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(userId)
+
+            userDocRef.get().addOnSuccessListener { document ->
+                if (document != null) {
+                    val completedQuizzes = document.get("completedQuizzes") as? List<String> ?: emptyList()
+                    completedQuizIds.clear()
+                    completedQuizIds.addAll(completedQuizzes)
+
+                    // Once completed quizzes are fetched, fetch quizzes from the API
+                    fetchQuizzes()
+                } else {
+                    Toast.makeText(requireContext(), "No user data found", Toast.LENGTH_SHORT).show()
+                    fetchQuizzes() // Fallback: Fetch quizzes even if user data is unavailable
+                }
+            }.addOnFailureListener { exception ->
+                Toast.makeText(requireContext(), "Failed to fetch user data", Toast.LENGTH_SHORT).show()
+                exception.printStackTrace()
+                fetchQuizzes() // Fallback
+            }
+        } else {
+            Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show()
+            fetchQuizzes() // Fallback
+        }
     }
 
     private fun fetchQuizzes() {

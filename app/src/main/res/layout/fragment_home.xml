@@ -124,7 +124,7 @@
                     style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:progress="25"
+                    android:progress="0"
                     android:max="100"
                     android:paddingHorizontal="16dp" />
 
@@ -132,7 +132,7 @@
                     android:id="@+id/lesson_progress_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1/4"
+                    android:text="0/4"
                     android:textColor="@android:color/white"
                     android:padding="8dp"
                     android:textStyle="bold" />
@@ -164,7 +164,7 @@
                     style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:progress="40"
+                    android:progress="0"
                     android:max="100"
                     android:paddingHorizontal="16dp" />
 
@@ -172,7 +172,7 @@
                     android:id="@+id/quiz_progress_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4/10"
+                    android:text="0/4"
                     android:textColor="@android:color/white"
                     android:padding="8dp"
                     android:textStyle="bold" />

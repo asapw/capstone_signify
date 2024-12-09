@@ -97,32 +97,44 @@ class HomeFragment : Fragment() {
             db.collection("users").document(userId).get()
                 .addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
-                        // Safely fetch completed lessons
+                        // Fetch completed lessons
                         val completedLessons = (document.get("completedLessons") as? List<String>) ?: emptyList()
+                        val totalLessons = 4 // Replace with the actual lesson count
+                        val completedLessonCount = completedLessons.size
 
-                        // Debugging: Log completed lessons
-                        Log.d("HomeFragment", "Completed lessons: $completedLessons")
-
-                        // Example: Total lessons count
-                        val totalLessons = 4 // Replace with actual lesson count
-
-                        // Check if all lessons are marked as incomplete
-                        val completedCount = completedLessons.size
-                        Log.d("HomeFragment", "Completed count: $completedCount, Total: $totalLessons")
-
-                        // Calculate progress
-                        val progress = if (totalLessons > 0) {
-                            (completedCount.toFloat() / totalLessons) * 100
+                        // Calculate lesson progress
+                        val lessonProgress = if (totalLessons > 0) {
+                            (completedLessonCount.toFloat() / totalLessons) * 100
                         } else {
                             0f
                         }
 
-                        // Update UI on the main thread
-                        binding.lessonProgressBar.progress = progress.toInt()
+                        // Update UI for lessons
+                        binding.lessonProgressBar.progress = lessonProgress.toInt()
                         binding.lessonProgressValue.text = getString(
                             R.string.progress_value,
-                            completedCount,
+                            completedLessonCount,
                             totalLessons
+                        )
+
+                        // Fetch completed quizzes
+                        val completedQuizzes = (document.get("completedQuizzes") as? List<String>) ?: emptyList()
+                        val totalQuizzes = 4 // Replace with the actual quiz count
+                        val completedQuizCount = completedQuizzes.size
+
+                        // Calculate quiz progress
+                        val quizProgress = if (totalQuizzes > 0) {
+                            (completedQuizCount.toFloat() / totalQuizzes) * 100
+                        } else {
+                            0f
+                        }
+
+                        // Update UI for quizzes
+                        binding.quizProgressBar.progress = quizProgress.toInt()
+                        binding.quizProgressValue.text = getString(
+                            R.string.progress_value,
+                            completedQuizCount,
+                            totalQuizzes
                         )
                     }
                 }
@@ -132,6 +144,7 @@ class HomeFragment : Fragment() {
                 }
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
