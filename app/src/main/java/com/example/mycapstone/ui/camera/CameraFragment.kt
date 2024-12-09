@@ -2,6 +2,7 @@ package com.example.mycapstone.ui.camera
 
 
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -10,6 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
@@ -44,6 +47,15 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
     /** Blocking ML operations are performed using this executor */
     private lateinit var backgroundExecutor: ExecutorService
 
+    private val cameraPermissionReqLauncher: ActivityResultLauncher<String> =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if(isGranted) {
+                setupCamera()
+            } else {
+                Toast.makeText(requireContext(), "Camera permission required", Toast.LENGTH_LONG).show()
+            }
+        }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,6 +70,13 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
     @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (shouldRequestCameraPermission()) {
+            cameraPermissionReqLauncher.launch(android.Manifest.permission.CAMERA)
+        } else {
+            // If permission is already granted, set up the camera
+            setupCamera()
+        }
 
         backgroundExecutor = Executors.newSingleThreadExecutor()
 
@@ -89,6 +108,11 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
 
 
     }
+
+    private fun shouldRequestCameraPermission(): Boolean {
+        return requireContext().checkSelfPermission(android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+    }
+
 
 
 

@@ -57,6 +57,7 @@
     <string name="google_login">Google</string>
     <string name="dont_have_account">dont have account?</string>
     <string name="or">or</string>
+    <string name="search">Search...</string>
 
 
 </resources>
