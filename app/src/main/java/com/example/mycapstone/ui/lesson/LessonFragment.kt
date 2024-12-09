@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mycapstone.R
 import com.example.mycapstone.adapter.MaterialAdapter
 import com.example.mycapstone.data.LessonResponseItem
 import com.example.mycapstone.databinding.FragmentLessonBinding
@@ -40,6 +41,12 @@ class LessonFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
+
+        // Dynamically adjust the RecyclerView's bottom margin for the BottomNavigationView
+        val bottomNavigationHeight = requireActivity().findViewById<View>(R.id.bottom_navigation)?.height ?: 0
+        val params = binding.materialRecyclerView.layoutParams as ViewGroup.MarginLayoutParams
+        params.bottomMargin = bottomNavigationHeight
+        binding.materialRecyclerView.layoutParams = params
 
         // Observe lessons from ViewModel
         lessonViewModel.lessons.observe(viewLifecycleOwner) { lessonList ->

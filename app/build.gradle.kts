@@ -50,6 +50,10 @@ android {
 }
 
 dependencies {
+    implementation (libs.androidx.media3.exoplayer)
+    implementation (libs.androidx.media3.ui)
+    implementation (libs.androidx.media3.common)
+
     // Gemini
     implementation("com.google.ai.client.generativeai:generativeai:0.4.0")
 
@@ -76,6 +80,7 @@ dependencies {
 
     // Glide for image loading
     implementation (libs.glide)
+    implementation(libs.androidx.media3.exoplayer)
     annotationProcessor (libs.compiler)
 
     // Activity Result API for handling image selection

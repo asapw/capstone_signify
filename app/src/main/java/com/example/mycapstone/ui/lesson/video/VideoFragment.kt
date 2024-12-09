@@ -1,12 +1,15 @@
 package com.example.mycapstone.ui.lesson.video
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
+import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.common.Player
+import com.example.mycapstone.databinding.FragmentVideoBinding
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.mycapstone.R
@@ -14,82 +17,71 @@ import com.example.mycapstone.R
 class VideoFragment : Fragment() {
 
     private val args: VideoFragmentArgs by navArgs()
+    private var _binding: FragmentVideoBinding? = null
+    private val binding get() = _binding!!
+    private var player: ExoPlayer? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_video, container, false)
+    ): View {
+        _binding = FragmentVideoBinding.inflate(inflater, container, false)
 
-        val webView = view.findViewById<WebView>(R.id.youtubeWebView)
-        webView.settings.apply {
-            javaScriptEnabled = true
-            domStorageEnabled = true
-            loadWithOverviewMode = true
-            useWideViewPort = true
-            mediaPlaybackRequiresUserGesture = false
-        }
+        // Set up the video player
+        setupVideoPlayer(args.ytUrl)
 
-        webView.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                return if (url != null && (url.contains("youtube.com") || url.contains("youtu.be"))) {
-                    false
-                } else {
-                    true
-                }
-            }
-
-            override fun onPageFinished(view: WebView?, url: String?) {
-                super.onPageFinished(view, url)
-                injectJsToDetectVideoCompletion(webView)
-            }
-        }
-
-        val videoUrl = args.ytUrl
-        println("Loading video: $videoUrl")
-
-        val secureUrl = when {
-            videoUrl.contains("youtube.com/shorts/") -> videoUrl.replace("youtube.com/shorts/", "youtube.com/embed/")
-            videoUrl.contains("youtube.com/watch?v=") -> videoUrl.replace("youtube.com/watch?v=", "youtube.com/embed/")
-            videoUrl.contains("youtu.be/") -> videoUrl.replace("youtu.be/", "youtube.com/embed/")
-            else -> videoUrl
-        }
-
-        webView.loadUrl(secureUrl)
-
-        webView.addJavascriptInterface(object {
-            @android.webkit.JavascriptInterface
-            @Suppress("unused")
-            fun onVideoCompleted() {
-                val completedVideoUrl = args.ytUrl
-                println("Video completed: $completedVideoUrl")
-                markAsCompleted(completedVideoUrl)
-            }
-        }, "Android")
-
-        return view
+        return binding.root
     }
 
-    private fun injectJsToDetectVideoCompletion(webView: WebView) {
-        val js = """
-            var video = document.querySelector('video');
-            if (video) {
-                video.onended = function() {
-                    Android.onVideoCompleted();
-                }
-            }
-        """.trimIndent()
-        webView.evaluateJavascript(js, null)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Adjust the bottom margin of the PlayerView to account for the BottomNavigationView
+        val bottomNavigationHeight = requireActivity().findViewById<View>(R.id.bottom_navigation)?.height ?: 0
+        val params = binding.videoView.layoutParams as ViewGroup.MarginLayoutParams
+        params.bottomMargin = bottomNavigationHeight
+        binding.videoView.layoutParams = params
     }
 
-    private fun markAsCompleted(videoUrl: String) {
+    private fun setupVideoPlayer(videoUrl: String) {
+        // Initialize ExoPlayer
+        player = ExoPlayer.Builder(requireContext()).build()
+        binding.videoView.player = player
+
+        // Create a MediaItem
+        val mediaItem = MediaItem.fromUri(Uri.parse(videoUrl))
+        player?.setMediaItem(mediaItem)
+        player?.prepare()
+        player?.playWhenReady = true
+
+        // Listen for video completion
+        player?.addListener(object : Player.Listener {
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                if (playbackState == Player.STATE_ENDED) {
+                    onVideoCompleted(videoUrl)
+                }
+            }
+        })
+    }
+
+    private fun onVideoCompleted(videoUrl: String) {
+        // Mark the video as completed in SharedPreferences
         val sharedPreferences = requireActivity().getSharedPreferences("VideoCompletionPrefs", 0)
         with(sharedPreferences.edit()) {
             putBoolean(videoUrl, true)
             apply()
         }
 
+        // Navigate to the next fragment or back
         val action = VideoFragmentDirections.actionVideoFragmentToLessonFragment()
         findNavController().navigate(action)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Release the player when the view is destroyed
+        player?.release()
+        player = null
+        _binding = null
     }
 }

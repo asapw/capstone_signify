@@ -60,8 +60,8 @@ class HomeFragment : Fragment() {
                         if (profileImageUrl.isNotEmpty()) {
                             Glide.with(this)
                                 .load(profileImageUrl)
-                                .placeholder(R.drawable.ic_profile_placeholder)
-                                .error(R.drawable.ic_profile_placeholder)
+                                .placeholder(R.drawable.default_profile_image)
+                                .error(R.drawable.default_profile_image)
                                 .circleCrop()
                                 .into(binding.profilePicture)
                         } else {
