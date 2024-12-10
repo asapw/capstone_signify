@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.mycapstone.R
 import com.example.mycapstone.databinding.FragmentHomeBinding
@@ -38,6 +39,15 @@ class HomeFragment : Fragment() {
         fetchUserProgress()
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btnScan.setOnClickListener {
+            findNavController().navigate(R.id.action_nav_home_to_nav_camera)
+        }
+
     }
 
     // Fetch user data

@@ -5,6 +5,8 @@
     <color name="primaryColor">#595891</color> <!-- Original purple for light mode -->
     <color name="primaryColorLight">#7A7ABF</color> <!-- Lighter purple for better contrast in light mode -->
     <color name="primaryColorDark">#3E3E71</color> <!-- Darker purple for better contrast in dark mode -->
+    <color name="backgroundHome">#F0E8F0</color>
+
 
     <color name="secondaryColorgrey">#B0B0B0</color>
     <color name="bgBlue">#0E3E76</color>
