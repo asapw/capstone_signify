@@ -120,8 +120,13 @@ class QuizFragment : Fragment() {
                 quizItem.cOption ?: "Option C",
                 quizItem.dOption ?: "Option D",
                 correctOption ?: "Option A",  // Passing the correct answer
+                quizItem.imageQuestion ?: "" // Provide a default value if null
             )
 
         findNavController().navigate(action)
     }
+
+
+
+
 }

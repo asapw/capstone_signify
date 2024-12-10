@@ -14,6 +14,7 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.mycapstone.R
 import com.example.mycapstone.databinding.FragmentQuestionBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -45,6 +46,19 @@ class QuestionFragment : Fragment() {
         binding.optionB.text = args.optionB
         binding.optionC.text = args.optionC
         binding.optionD.text = args.optionD
+
+        // Load question image if available
+        val imageUrl = args.imageQuestion
+        if (!imageUrl.isNullOrEmpty()) {
+            binding.questionImage.visibility = View.VISIBLE
+            Glide.with(this)
+                .load(imageUrl)
+                .placeholder(R.drawable.ic_profile_placeholder) // Add a placeholder image in res/drawable
+                .error(R.drawable.ic_profile_placeholder) // Add an error image in res/drawable
+                .into(binding.questionImage)
+        } else {
+            binding.questionImage.visibility = View.GONE
+        }
 
         // Set the correct answer, quizId, and checkQuestion
         correctOption = args.correctOption

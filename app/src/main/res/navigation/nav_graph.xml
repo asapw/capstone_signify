@@ -79,6 +79,12 @@
         android:label="Question"
         tools:layout="@layout/fragment_question">
         <argument
+            android:name="imageQuestion"
+            app:argType="string"
+            android:defaultValue=""
+            app:nullable="true" />
+
+        <argument
             android:name="question"
             app:argType="string" />
         <argument
