@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/bg_gradient"
-    tools:context=".ui.lesson.video.VideoFragment">
+    android:background="@drawable/bg_gradient">
 
     <!-- Header -->
     <LinearLayout
@@ -50,65 +49,17 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Frame Layout for Video Section -->
-    <FrameLayout
-        android:id="@+id/video_frame"
-        android:layout_width="match_parent"
+    <!-- PlayerView -->
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/videoView"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="16dp"
-        android:background="@drawable/rounded_frame_white"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:use_artwork="false"
+        app:show_buffering="when_playing"
+        app:layout_constraintTop_toBottomOf="@id/header"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header">
-
-        <!-- Video Section -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <!-- Video Section Title -->
-            <LinearLayout
-                android:id="@+id/videoSection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="16dp">
-
-                <!-- Line Before Text -->
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="0.1"
-                    android:background="@android:color/black" />
-
-                <!-- Text -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="8dp"
-                    android:text="@string/video"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <!-- Line After Text -->
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/black" />
-            </LinearLayout>
-
-            <!-- Video Display (WebView for YouTube) -->
-            <WebView
-                android:id="@+id/youtubeWebView"
-                android:layout_width="match_parent"
-                android:layout_height="380dp"
-                android:padding="8dp" />
-        </LinearLayout>
-    </FrameLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="72dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
