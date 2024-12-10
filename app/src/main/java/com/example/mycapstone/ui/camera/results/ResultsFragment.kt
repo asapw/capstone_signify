@@ -1,6 +1,7 @@
 package com.example.mycapstone.ui.camera.results
 
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,8 @@ class ResultsFragment : Fragment() {
     private var _binding: FragmentResultsBinding? = null
     private val binding get() = _binding!!
 
+    private var textToSpeech: TextToSpeech? = null
+    private var isTtsReady = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,6 +45,23 @@ class ResultsFragment : Fragment() {
         binding.imageViewBackArrow.setOnClickListener{
             findNavController().popBackStack()
         }
+
+        textToSpeech = TextToSpeech(requireContext()) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                isTtsReady = true
+                textToSpeech?.language = Locale.getDefault()
+            } else {
+                isTtsReady = false
+            }
+        }
+
+        binding.btnSpeech.setOnClickListener {
+            if (isTtsReady) {
+                textToSpeech?.speak(generatedText, TextToSpeech.QUEUE_FLUSH, null, null)
+            }
+        }
+
+
     }
 
     override fun onDestroyView() {
