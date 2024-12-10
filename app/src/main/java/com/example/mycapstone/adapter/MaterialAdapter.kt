@@ -1,12 +1,12 @@
 package com.example.mycapstone.adapter
 
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.mycapstone.R
@@ -40,13 +40,13 @@ class MaterialAdapter(
         // Load image with Glide
         Glide.with(holder.image.context).load(item.photoUrl).into(holder.image)
 
-        // Check completion status from SharedPreferences (or item.completed flag)
-        holder.itemView.context.getSharedPreferences("VideoCompletionPrefs", Context.MODE_PRIVATE)
+        // Determine the lesson completion status
         val isCompleted = item.isCompleted
 
-        // Debugging: Check completion status
+        // Debugging: Log the completion status
         Log.d("MaterialAdapter", "Item: ${item.title}, Completed: $isCompleted")
 
+        // Update the status text and color based on the completion status
         holder.statusText.text = if (isCompleted) {
             holder.itemView.context.getString(R.string.mark_as_completed)
         } else {
@@ -54,24 +54,21 @@ class MaterialAdapter(
         }
 
         holder.statusText.setTextColor(
-            if (isCompleted) holder.itemView.context.getColor(R.color.primaryColor)
-            else holder.itemView.context.getColor(R.color.red)
+            ContextCompat.getColor(
+                holder.itemView.context,
+                if (isCompleted) R.color.primaryColor else R.color.red
+            )
         )
-
 
         // Set click listeners
         holder.itemView.setOnClickListener {
-            onClick(item)
-        }
-
-        holder.statusText.setOnClickListener {
             onClick(item)
         }
     }
 
     override fun getItemCount() = items.size
 
-    // Update the adapter data and notify the change
+    // Update the adapter data and notify the changes
     fun updateItems(newItems: List<LessonResponseItem>) {
         items.clear()
         items.addAll(newItems)

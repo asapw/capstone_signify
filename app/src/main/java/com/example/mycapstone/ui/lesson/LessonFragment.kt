@@ -48,17 +48,16 @@ class LessonFragment : Fragment() {
         params.bottomMargin = bottomNavigationHeight
         binding.materialRecyclerView.layoutParams = params
 
-        // Observe lessons from ViewModel
+        // Load lessons and fetch completed status
         lessonViewModel.lessons.observe(viewLifecycleOwner) { lessonList ->
-            val sharedPreferences = requireActivity().getSharedPreferences("VideoCompletionPrefs", 0)
-
-            lessonList.forEach { lesson ->
-                // Check completion status from SharedPreferences
-                lesson.isCompleted = sharedPreferences.getBoolean(lesson.ytUrl ?: "", false)
-                Log.d("LessonFragment", "Lesson: ${lesson.title}, isCompleted: ${lesson.isCompleted}")
+            fetchCompletedLessons { completedLessons ->
+                lessonList.forEach { lesson ->
+                    // Check if this lesson is in the completedLessons list
+                    lesson.isCompleted = completedLessons.contains(lesson.id)
+                    Log.d("LessonFragment", "Lesson: ${lesson.title}, isCompleted: ${lesson.isCompleted}")
+                }
+                adapter.updateItems(lessonList)
             }
-
-            adapter.updateItems(lessonList)
         }
     }
 
@@ -116,6 +115,30 @@ class LessonFragment : Fragment() {
             }
         }.addOnFailureListener { e ->
             Log.e("LessonFragment", "Error fetching user document", e)
+        }
+    }
+
+    private fun fetchCompletedLessons(callback: (List<String>) -> Unit) {
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            Log.e("LessonFragment", "No authenticated user")
+            callback(emptyList())
+            return
+        }
+
+        val userDocRef = db.collection("users").document(currentUser.uid)
+        userDocRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                val completedLessons = document.get("completedLessons") as? List<String> ?: emptyList()
+                Log.d("LessonFragment", "Fetched completedLessons: $completedLessons")
+                callback(completedLessons)
+            } else {
+                Log.e("LessonFragment", "User document does not exist")
+                callback(emptyList())
+            }
+        }.addOnFailureListener { e ->
+            Log.e("LessonFragment", "Error fetching user document", e)
+            callback(emptyList())
         }
     }
 
