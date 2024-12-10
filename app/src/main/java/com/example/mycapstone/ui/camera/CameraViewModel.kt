@@ -15,6 +15,7 @@ import com.example.mycapstone.utils.ImageConvert
 import com.google.mediapipe.tasks.components.containers.NormalizedLandmark
 import com.google.mediapipe.tasks.vision.handlandmarker.HandLandmarkerResult
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
@@ -28,6 +29,7 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener {
     private val words = StringBuilder()
     private var lastDetectionTime = 0L
     private var isProcessing = false
+    private var counter = 0
 
     private var _delegate: Int = HandLandMarkerHelper.DELEGATE_CPU
     private var _minHandDetectionConfidence: Float =
@@ -93,7 +95,11 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener {
                 if (currTime - lastDetectionTime >= DETECTION_DELAY) {
                     isProcessing = true
                     viewModelScope.launch {
-                        detectWithCloudModel(bitmap)
+                        counter++
+                        if (counter == 2) {
+                            detectWithCloudModel(bitmap)
+                            counter = 0
+                        }
                         isProcessing = false
                         lastDetectionTime = currTime
                     }
@@ -109,6 +115,7 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener {
 
     private suspend fun detectWithCloudModel(bitmap: Bitmap) {
         try {
+            delay(2000)
             val tempFile = ImageConvert.bitmapToMultipart(bitmap)
 
             val startTime = System.currentTimeMillis()
@@ -141,6 +148,8 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener {
 
                 Log.d(TAG, "API Message: $message")
                 Log.d(TAG, "API Timestamp: $timestampString")
+
+
             } else {
                 Log.e(TAG, "API Error:  ${res.code()} - ${res.message()}")
                 clearDetection()

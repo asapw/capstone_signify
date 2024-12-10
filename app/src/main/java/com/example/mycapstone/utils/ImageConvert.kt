@@ -12,11 +12,11 @@ import java.io.File
 object ImageConvert {
     fun bitmapToMultipart(bitmap: Bitmap, fieldName: String = "file"): MultipartBody.Part {
         // Create a temporary file
-        val tempFile = File.createTempFile("temp_image", ".jpg")
+        val tempFile = File.createTempFile("temp_image", ".jpeg")
 
         // Convert the Bitmap to a ByteArray
         val byteArrayOutputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, byteArrayOutputStream)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
         val byteArray = byteArrayOutputStream.toByteArray()
 
         // Write the ByteArray to the temporary file

@@ -2,7 +2,7 @@
 <resources>
     <style name="Theme.MyCapstone.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/white</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_cp_32</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_capstone</item>
         <item name="postSplashScreenTheme">@style/Theme.MyCapstone</item>
     </style>
     <style name="ShapeAppearanceOverlay.App.Circle" parent="">
@@ -14,5 +14,4 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>
     </style>
-
 </resources>
