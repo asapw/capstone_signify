@@ -44,4 +44,4 @@ Thank you to everyone supporting inclusivity and accessibility for the hearing-i
 ---
 
 ### 📞 Contact
-For questions or collaboration, reach out via [->](a195b4ky4107@bangkit.academy).
+For questions or collaboration, reach out via [a195b4ky4107@bangkit.academy](mailto:a195b4ky4107@bangkit.academy).
