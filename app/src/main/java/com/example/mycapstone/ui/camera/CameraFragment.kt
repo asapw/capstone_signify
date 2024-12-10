@@ -103,6 +103,10 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
         setupObservers()
         finishButton()
 
+        fragmentCameraBinding.backButton.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
 
         backgroundExecutor.execute {
             handLandmarkerHelper = HandLandMarkerHelper(
