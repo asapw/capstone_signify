@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -38,11 +39,7 @@ class HomeFragment : Fragment() {
         adapter = NewsAdapter(newsList)
         setupNewsRV()
 
-        homeViewModel.news.observe(viewLifecycleOwner) { articles ->
-            newsList.clear()
-            newsList.addAll(articles)
-            adapter.notifyDataSetChanged()
-        }
+
 
         // Observe LiveData from ViewModel
         homeViewModel.username.observe(viewLifecycleOwner, Observer { username ->
@@ -87,6 +84,7 @@ class HomeFragment : Fragment() {
         // Fetch data
         homeViewModel.fetchUserData()
         homeViewModel.fetchUserProgress()
+        homeViewModel.fetchNews()
 
         // Navigate to scan
         binding.btnScan.setOnClickListener {
@@ -95,13 +93,26 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupNewsRV() {
-        binding.newsRv.layoutManager = LinearLayoutManager(
-            requireContext(),
-            LinearLayoutManager.HORIZONTAL,
-            false
-        )
         binding.newsRv.adapter = adapter
-        homeViewModel.fetchNews()
+        binding.newsRv.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        // Show loading state
+        binding.newsLoadingProgress.isVisible = true
+
+        // Observe news data
+        homeViewModel.news.observe(viewLifecycleOwner) { articles ->
+            // Hide loading when data arrives
+            binding.newsLoadingProgress.isVisible = false
+
+            // Update RecyclerView data
+            newsList.clear()
+            newsList.addAll(articles)
+            adapter.notifyDataSetChanged()
+        }
+
+        // Handle loading state from ViewModel
+        homeViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.newsLoadingProgress.isVisible = isLoading
+        }
     }
 
     override fun onDestroyView() {

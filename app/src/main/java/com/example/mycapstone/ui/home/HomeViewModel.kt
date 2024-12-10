@@ -35,6 +35,9 @@ class HomeViewModel : ViewModel() {
     private val _news = MutableLiveData<List<Article>>()
     val news: LiveData<List<Article>> = _news
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = _isLoading
+
     private val totalLessons = 4 // Replace with actual count
     private val totalQuizzes = 4 // Replace with actual count
 
@@ -103,9 +106,11 @@ class HomeViewModel : ViewModel() {
 
     fun fetchNews() {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 val response = NewsConfig.getModelService().getNews("hand sign", BuildConfig.NEWS_API_KEY)
                 _news.value = response.articles // Assuming your API returns articles
+                _isLoading.value = false
             } catch (e: Exception) {
                 Log.e("HomeViewModel", "Error fetching news: ${e.message}")
             }
