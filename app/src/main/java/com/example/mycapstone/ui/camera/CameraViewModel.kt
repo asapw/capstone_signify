@@ -82,7 +82,7 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener {
         _detectionResults.postValue(emptyList())
         _inferenceTime.postValue(0)
         words.clear()
-        _signLanguangeWords.postValue("")
+        _signLanguangeWords.postValue("Waiting for hand Detection...")
         lastDetectionTime = 0L
     }
 
@@ -122,7 +122,7 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener {
                 val resBody = res.body()
                 val detectedWord = resBody?.detection ?: ""
                 val message = resBody?.message ?: ""
-                val timestampString = resBody?.timestamp?.toString() ?: ""
+                val timestampString = resBody?.timestamp ?: ""
                 val image = resBody?.image ?: ""
 
                 Log.d(TAG, "Detected word from API: $detectedWord")

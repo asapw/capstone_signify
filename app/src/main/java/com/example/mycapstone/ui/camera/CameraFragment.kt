@@ -23,6 +23,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.mycapstone.BuildConfig
 import com.example.mycapstone.R
 import com.example.mycapstone.databinding.FragmentCameraBinding
 import com.example.mycapstone.ui.camera.HandLandMarkerHelper.Companion.TAG
@@ -40,6 +41,9 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
     private val fragmentCameraBinding get() = _fragmentCameraBinding!!
 
     private val viewModel: CameraViewModel by viewModels()
+
+    private val geminiKey = BuildConfig.GEMINI_API_KEY
+
 
     private lateinit var handLandmarkerHelper: HandLandMarkerHelper
 
@@ -186,8 +190,10 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
                 viewModel.clearDetection()
                 Log.d("CameraFragment", "From gemini revised: $res")
 
+                val currentTime = System.currentTimeMillis()
                 val bundle = Bundle().apply {
                     putString("generatedText", res)
+                    putLong("timestamp", currentTime)
                 }
 
                 findNavController().navigate(R.id.action_nav_camera_to_resultsFragment, bundle)
@@ -215,7 +221,7 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
     private suspend fun gemini(text: String): String? {
         val generativeModel = GenerativeModel(
             modelName = "gemini-pro",
-            apiKey ="AIzaSyBby_FEJzpDgOJqLjZA8O9ZKEdj_kvzVzk"
+            apiKey = geminiKey
         )
 
         val prompt = "Revisi kesalahan penulisan ini: $text"

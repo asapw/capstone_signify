@@ -1,9 +1,12 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
     id("kotlin-parcelize")
     id("androidx.navigation.safeargs.kotlin")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -21,8 +24,15 @@ android {
         ndk {
             abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a"))
         }
+        val properties = Properties().apply {
+            load(project.rootProject.file("local.properties").inputStream())
+        }
 
+        buildConfigField("String", "GEMINI_API_KEY", "\"${properties.getProperty("geminiKey")}\"")
+        buildConfigField("String", "NEWS_API_KEY", "\"${properties.getProperty("newsKey")}\"")
     }
+
+
 
     buildTypes {
         release {
@@ -44,6 +54,7 @@ android {
     buildFeatures {
         viewBinding = true
         mlModelBinding = true
+        buildConfig = true
     }
 
 
