@@ -1,10 +1,17 @@
 package com.example.mycapstone.ui.home
 
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.mycapstone.BuildConfig
+import com.example.mycapstone.api.NewsConfig
+import com.example.mycapstone.data.Article
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
@@ -24,6 +31,9 @@ class HomeViewModel : ViewModel() {
 
     private val _quizProgress = MutableLiveData<Int>()
     val quizProgress: LiveData<Int> get() = _quizProgress
+
+    private val _news = MutableLiveData<List<Article>>()
+    val news: LiveData<List<Article>> = _news
 
     private val totalLessons = 4 // Replace with actual count
     private val totalQuizzes = 4 // Replace with actual count
@@ -87,6 +97,18 @@ class HomeViewModel : ViewModel() {
         } else {
             _lessonProgress.value = 0
             _quizProgress.value = 0
+        }
+    }
+
+
+    fun fetchNews() {
+        viewModelScope.launch {
+            try {
+                val response = NewsConfig.getModelService().getNews("hand sign", BuildConfig.NEWS_API_KEY)
+                _news.value = response.articles // Assuming your API returns articles
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "Error fetching news: ${e.message}")
+            }
         }
     }
 }

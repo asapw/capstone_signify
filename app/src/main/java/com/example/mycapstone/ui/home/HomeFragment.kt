@@ -8,8 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.mycapstone.R
+import com.example.mycapstone.adapter.NewsAdapter
+import com.example.mycapstone.data.Article
 import com.example.mycapstone.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -17,6 +20,8 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var adapter: NewsAdapter
+    private val newsList = mutableListOf<Article>()
     private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
@@ -29,6 +34,15 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        adapter = NewsAdapter(newsList)
+        setupNewsRV()
+
+        homeViewModel.news.observe(viewLifecycleOwner) { articles ->
+            newsList.clear()
+            newsList.addAll(articles)
+            adapter.notifyDataSetChanged()
+        }
 
         // Observe LiveData from ViewModel
         homeViewModel.username.observe(viewLifecycleOwner, Observer { username ->
@@ -78,6 +92,16 @@ class HomeFragment : Fragment() {
         binding.btnScan.setOnClickListener {
             findNavController().navigate(R.id.action_nav_home_to_nav_camera)
         }
+    }
+
+    private fun setupNewsRV() {
+        binding.newsRv.layoutManager = LinearLayoutManager(
+            requireContext(),
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+        binding.newsRv.adapter = adapter
+        homeViewModel.fetchNews()
     }
 
     override fun onDestroyView() {
