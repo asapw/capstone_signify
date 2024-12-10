@@ -4,6 +4,35 @@
 
 ---
 
+## 🚀 Getting Started: Step-by-Step Guide
+
+Follow these steps to navigate and use Signify effectively:
+
+### **1. Onboarding**
+- Skip through the **3 onboarding steps** to get started quickly.
+
+### **2. Register an Account**
+- On the **login page**, if you don’t have an account, click **"Register"** at the bottom of the screen.
+- Fill in your **email**, **name**, and **password**.
+- Once registration is successful, you'll be redirected to the **login page**. Log in using the credentials you just created.
+
+### **3. Explore the Home Page**
+- After logging in, you’ll land on the **Home page**, where you can monitor your progress and explore the app's features through the **5 bottom navigation tabs**:
+  - **Home**: View your learning and quiz progress.
+  - **Lesson**: Watch videos to learn sign language. Watching videos will increase your **progress bar** on the Home page.
+  - **Quiz**: Answer questions to test your knowledge. Completing quizzes will also increase your **quiz progress bar**.
+  - **Camera**: Use the main feature of the app! Place your hand in front of the camera, and the app will translate your hand sign into text.
+  - **Profile**: View or edit your account details.
+
+### **4. Editing Your Profile**
+- Go to the **Profile** tab to update your information. Make changes to your email, name, or password as needed.
+
+### **5. Logout**
+- In the **Profile** tab, click the **Logout button** to securely sign out. You’ll be redirected to the **login page**.
+
+---
+
+
 ## 🚀 Features
 - **Learn Sign Language**: Interactive lessons and quizzes to help users master sign language.
 - **Real-Time Gesture Recognition**: AI-powered detection for seamless communication.
