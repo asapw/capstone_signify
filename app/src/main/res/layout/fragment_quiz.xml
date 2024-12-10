@@ -8,15 +8,14 @@
     android:padding="16dp"
     tools:context=".ui.quiz.QuizFragment">
 
-    <!-- Header Section -->
     <LinearLayout
         android:id="@+id/headerSection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="8dp"
-        android:layout_marginTop="16dp"
+        android:padding="16dp"
+        android:background="@drawable/header_background"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -26,21 +25,43 @@
             android:id="@+id/profileIcon"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/ic_profile"
+            android:src="@drawable/ic_capstone"
             android:contentDescription="@string/profile_image"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/btn_circle_background"
+            android:padding="8dp" />
 
-        <!-- Welcome Text -->
-        <TextView
-            android:id="@+id/welcomeText"
-            android:layout_width="wrap_content"
+        <!-- Text Section -->
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/learn"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:fontFamily="@font/poppins_semibold"
-            android:textStyle="bold" />
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Welcome Text -->
+            <TextView
+                android:id="@+id/welcomeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/learn"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:fontFamily="@font/poppins_semibold"
+                android:textStyle="bold" />
+
+            <!-- Subtitle Text -->
+            <TextView
+                android:id="@+id/subtitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Take a quiz and learn!"
+                android:textColor="@color/light_gray"
+                android:textSize="14sp"
+                android:fontFamily="@font/poppins_regular" />
+        </LinearLayout>
     </LinearLayout>
+
+
 
     <!-- Quiz Section -->
     <LinearLayout
