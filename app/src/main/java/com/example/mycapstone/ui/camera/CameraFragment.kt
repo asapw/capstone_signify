@@ -2,6 +2,7 @@ package com.example.mycapstone.ui.camera
 
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
@@ -10,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,6 +22,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.example.mycapstone.R
 import com.example.mycapstone.databinding.FragmentCameraBinding
 import com.example.mycapstone.ui.camera.HandLandMarkerHelper.Companion.TAG
 import com.google.ai.client.generativeai.GenerativeModel
@@ -46,6 +50,8 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
     private var cameraFacing = CameraSelector.LENS_FACING_BACK
     /** Blocking ML operations are performed using this executor */
     private lateinit var backgroundExecutor: ExecutorService
+
+    private var loadingDialog: Dialog? = null
 
     private val cameraPermissionReqLauncher: ActivityResultLauncher<String> =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -123,61 +129,93 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
     }
 
     override fun onResults(resultBundle: HandLandMarkerHelper.ResultBundle) {
-        if (resultBundle.results.isEmpty()) {
-            // Clear any previous results
-            fragmentCameraBinding.overlay.clear()
-            fragmentCameraBinding.overlay.invalidate()
-            fragmentCameraBinding.overlayBounding.clear() // Make sure to add clear() method to your overlay view
-            fragmentCameraBinding.overlayBounding.invalidate()
-            Log.d("CameraOverlay", "No hand results detected.")
-            return
+        viewLifecycleOwner.lifecycleScope.launch {
+
+            _fragmentCameraBinding?.let { binding ->
+                if (resultBundle.results.isEmpty()) {
+                    binding.overlay.clear()
+                    binding.overlay.invalidate()
+                    binding.overlayBounding.clear()
+                    binding.overlayBounding.invalidate()
+                    Log.d("CameraOverlay", "No hand results detected.")
+                    return@launch
+                }
+
+                val result = resultBundle.results[0]
+                Log.d("CameraOverlay", "Detected hands: ${result.landmarks().size}")
+
+                val landmarks = result.landmarks().firstOrNull()
+                if (landmarks != null) {
+                    val bitmap = resultBundle.inputBitmap
+                    viewModel.detect(bitmap, landmarks)
+                }
+
+                // Log detailed information about each hand
+                result.landmarks().forEachIndexed { index, landmarks ->
+                    Log.d("CameraOverlay", "Hand $index landmarks count: ${landmarks.size}")
+
+                    // Optional: Log a few key landmarks
+                    if (landmarks.isNotEmpty()) {
+                        Log.d("CameraOverlay", "First landmark: ${landmarks[0]}")
+                    }
+                }
+
+                fragmentCameraBinding.overlay.setResults(
+                    result,
+                    resultBundle.inputImageHeight,
+                    resultBundle.inputImageWidth,
+                    RunningMode.LIVE_STREAM
+                )
+                fragmentCameraBinding.overlay.invalidate()
         }
-
-        val result = resultBundle.results[0]
-        Log.d("CameraOverlay", "Detected hands: ${result.landmarks().size}")
-
-        val landmarks = result.landmarks().firstOrNull()
-        if (landmarks != null) {
-            val bitmap = resultBundle.inputBitmap
-            viewModel.detect(bitmap, landmarks)
-        }
-
-        // Log detailed information about each hand
-        result.landmarks().forEachIndexed { index, landmarks ->
-            Log.d("CameraOverlay", "Hand $index landmarks count: ${landmarks.size}")
-
-            // Optional: Log a few key landmarks
-            if (landmarks.isNotEmpty()) {
-                Log.d("CameraOverlay", "First landmark: ${landmarks[0]}")
             }
-        }
 
-        fragmentCameraBinding.overlay.setResults(
-            result,
-            resultBundle.inputImageHeight,
-            resultBundle.inputImageWidth,
-            RunningMode.LIVE_STREAM
-        )
-        fragmentCameraBinding.overlay.invalidate()
     }
 
     private fun finishButton(){
         fragmentCameraBinding.btnFinishDetecting.setOnClickListener {
-            Toast.makeText(requireContext(),"Button clicked ${fragmentCameraBinding.predictedTextView.text}",
+            Toast.makeText(requireContext(),"Loading.. Please wait",
                 Toast.LENGTH_LONG).show()
+
+            showLoadingDialog()
 
             lifecycleScope.launch {
                  val res = gemini(fragmentCameraBinding.predictedTextView.text.toString())
-                Toast.makeText(requireContext(),res,Toast.LENGTH_LONG).show()
+                hideLoadingDialog()
+
+                viewModel.clearDetection()
                 Log.d("CameraFragment", "From gemini revised: $res")
+
+                val bundle = Bundle().apply {
+                    putString("generatedText", res)
+                }
+
+                findNavController().navigate(R.id.action_nav_camera_to_resultsFragment, bundle)
             }
         }
+    }
+
+    private fun showLoadingDialog() {
+        if (loadingDialog == null) {
+            loadingDialog = Dialog(requireContext()).apply {
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
+                setContentView(R.layout.loading_dialog)
+                setCancelable(false)
+
+
+            }
+        }
+        loadingDialog?.show()
+    }
+
+    private fun hideLoadingDialog() {
+        loadingDialog?.dismiss()
     }
 
     private suspend fun gemini(text: String): String? {
         val generativeModel = GenerativeModel(
             modelName = "gemini-pro",
-            apiKey = ""
+            apiKey ="AIzaSyBby_FEJzpDgOJqLjZA8O9ZKEdj_kvzVzk"
         )
 
         val prompt = "Revisi kesalahan penulisan ini: $text"

@@ -10,6 +10,7 @@
         <item name="android:colorControlNormal">@color/primaryColorLight</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowActivityTransitions">true</item>
+        <item name="colorButtonNormal">@color/secondaryColor</item>
     </style>
 
     <style name="Theme.MyCapstone" parent="Base.Theme.MyCapstone.Light" />

@@ -5,158 +5,165 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_gradient"
-    tools:context=".ui.home.HomeFragment">
+    tools:context=".ui.home.HomeFragment"
+    android:padding="16dp">
 
     <!-- Profile Section -->
-    <ImageView
-        android:id="@+id/profile_picture"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/profile_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="@string/profile_image"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Circle" />
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello,\nUser"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/profile_picture"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <ImageView
+            android:id="@+id/profile_picture"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="@string/profile_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.Circle" />
 
-    <TextView
-        android:id="@+id/email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Email not available"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@id/username"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Hello, User"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/email"
+            app:layout_constraintStart_toEndOf="@+id/profile_picture"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
 
-    <!-- Frame for Progress and More Section -->
-    <FrameLayout
-        android:id="@+id/progress_frame"
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/poppins_regular"
+            android:text="Email not available"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/profile_picture"
+            app:layout_constraintTop_toBottomOf="@+id/username" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/lineSeparator"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/rounded_frame_white"
-        android:layout_marginTop="45dp"
-        app:layout_constraintTop_toBottomOf="@id/email"
+        android:layout_height="1dp"
+        android:layout_weight="0.1"
+        android:background="?attr/colorOnSurface"
+        android:layout_marginVertical="16dp"
+        app:layout_constraintTop_toBottomOf="@id/profile_section"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnScan"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="32dp"
+        app:cornerRadius="6dp"
+        android:backgroundTint="?attr/colorButtonNormal"
+        android:fontFamily="@font/poppins_bold"
+        android:textColor="?attr/colorSurface"
+        app:icon="@drawable/ic_scan"
+        android:text="Scan and Communicate with other"
+        app:layout_constraintTop_toBottomOf="@id/lineSeparator"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="24dp">
+    <!-- Progress Cards -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/progress_cards_container"
+        android:layout_width="match_parent"
+        android:layout_height="115dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/btnScan">
 
-            <!-- Progress Section -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/lesson_progress_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardCornerRadius="8dp"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/quiz_progress_container"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
             <LinearLayout
-                android:id="@+id/progressSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="16dp"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <!-- Line Before Text -->
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="0.1"
-                    android:background="@android:color/black" />
-
-                <!-- Text -->
-                <TextView
-                    android:id="@+id/progress_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Progress"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:layout_marginHorizontal="8dp"
-                    android:textStyle="bold" />
-
-                <!-- Line After Text -->
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/black" />
-            </LinearLayout>
-
-            <!-- Lesson Progress -->
-            <LinearLayout
-                android:id="@+id/lesson_progress_container"
-                android:background="@drawable/rounded_black_background"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:orientation="vertical"
-                app:layout_constraintTop_toBottomOf="@id/progressSection"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                android:padding="16dp">
 
                 <TextView
                     android:id="@+id/lesson_progress_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Your Lessons Progress"
-                    android:textColor="@android:color/white"
-                    android:padding="8dp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="Lessons "
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="18sp" />
+
 
                 <ProgressBar
                     android:id="@+id/lesson_progress_bar"
                     style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:progress="0"
                     android:max="100"
-                    android:paddingHorizontal="16dp" />
-
+                    android:progress="0" />
                 <TextView
                     android:id="@+id/lesson_progress_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0/4"
-                    android:textColor="@android:color/white"
-                    android:padding="8dp"
+                    android:textColor="?attr/colorOnSurface"
                     android:textStyle="bold" />
-            </LinearLayout>
 
-            <!-- Quiz Progress -->
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/quiz_progress_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardCornerRadius="8dp"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/lesson_progress_container"
+            app:layout_constraintTop_toTopOf="parent">
+
             <LinearLayout
-                android:id="@+id/quiz_progress_container"
-                android:background="@drawable/rounded_black_background"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:orientation="vertical"
-                app:layout_constraintTop_toBottomOf="@id/lesson_progress_container"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                android:padding="16dp">
 
                 <TextView
                     android:id="@+id/quiz_progress_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Your Quiz Progress"
-                    android:textColor="@android:color/white"
-                    android:padding="8dp"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="Quiz "
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <ProgressBar
@@ -164,118 +171,21 @@
                     style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:progress="0"
                     android:max="100"
-                    android:paddingHorizontal="16dp" />
+                    android:progress="0" />
 
                 <TextView
                     android:id="@+id/quiz_progress_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0/4"
-                    android:textColor="@android:color/white"
-                    android:padding="8dp"
+                    android:textColor="?attr/colorOnSurface"
                     android:textStyle="bold" />
             </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- More Section -->
-            <LinearLayout
-                android:id="@+id/moreSection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="16dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@id/quiz_progress_container">
+    <!-- More Section -->
 
-                <!-- Line Before Text -->
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="0.1"
-                    android:background="@android:color/black" />
-
-                <!-- Text -->
-                <TextView
-                    android:id="@+id/more_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="More"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:layout_marginHorizontal="8dp"
-                    android:textStyle="bold" />
-
-                <!-- Line After Text -->
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/black" />
-            </LinearLayout>
-
-            <!-- Buttons in More Section -->
-            <LinearLayout
-                android:id="@+id/more_buttons_container"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@id/moreSection"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
-
-                <!-- About This App Button -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/btn_home"
-                    android:padding="8dp"
-                    android:layout_marginBottom="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="About This App"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_info"
-                        android:contentDescription="About This App"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="16dp" />
-                </LinearLayout>
-
-                <!-- Try Hand Sign Button -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/btn_home"
-                    android:padding="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Let’s Try Your Hand Sign Here"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/logosignify"
-                        android:contentDescription="Try Hand Sign"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="16dp" />
-                </LinearLayout>
-            </LinearLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -43,7 +43,11 @@
         android:id="@+id/nav_camera"
         android:name="com.example.mycapstone.ui.camera.CameraFragment"
         android:label="Camera"
-        tools:layout="@layout/fragment_camera" />
+        tools:layout="@layout/fragment_camera" >
+        <action
+            android:id="@+id/action_nav_camera_to_resultsFragment"
+            app:destination="@id/resultsFragment" />
+    </fragment>
 
     <!-- Quiz Fragment -->
     <fragment
@@ -132,5 +136,10 @@
         android:name="com.example.mycapstone.ui.profile.helpsupport.HelpSupportFragment"
         android:label="Help Support"
         tools:layout="@layout/fragment_help_support" />
+    <fragment
+        android:id="@+id/resultsFragment"
+        android:name="com.example.mycapstone.ui.camera.results.ResultsFragment"
+        android:label="fragment_results"
+        tools:layout="@layout/fragment_results" />
 
 </navigation>

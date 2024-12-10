@@ -5,10 +5,12 @@ import com.google.gson.annotations.SerializedName
 data class ModelResponse(
     @SerializedName("message")
     val message: String,
-    @SerializedName("prediction")
-    val prediction: String,
+    @SerializedName("detection")
+    val detection: String,
     @SerializedName("timestamp")
-    val timestamp: Long
+    val timestamp: String,
+    @SerializedName("image")
+    val image: String
 )
 
 

@@ -78,7 +78,7 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener {
         modelHelper.setup()
     }
 
-    private fun clearDetection() {
+     fun clearDetection() {
         _detectionResults.postValue(emptyList())
         _inferenceTime.postValue(0)
         words.clear()
@@ -120,24 +120,27 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener {
 
             if (res.isSuccessful) {
                 val resBody = res.body()
-                val detectedWord = resBody?.prediction ?: ""
+                val detectedWord = resBody?.detection ?: ""
                 val message = resBody?.message ?: ""
-                val timestampString = resBody?.timestamp ?: ""
+                val timestampString = resBody?.timestamp?.toString() ?: ""
+                val image = resBody?.image ?: ""
 
-                val timestamp = try {
-                    val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy, HH:mm:ss")
-                    LocalDateTime.parse(timestampString.toString(), formatter).toEpochSecond(ZoneOffset.UTC)
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error parsing timestamp: $e")
-                    0L
-                }
+                Log.d(TAG, "Detected word from API: $detectedWord")
 
                 if (detectedWord.isNotEmpty()) {
-                    _signLanguangeWords.postValue(detectedWord)
+                    if (words.isNotEmpty()) {
+                        words.append(" ")
+                    }
+                    words.append(detectedWord)
+                    Log.d(TAG, "Accumulated words: $words")
+                    _signLanguangeWords.postValue(words.toString())
+                    Log.d(TAG, "Posted sign language words: ${words.toString()}")
+                } else {
+                    Log.d(TAG, "Detected word is empty")
                 }
 
                 Log.d(TAG, "API Message: $message")
-                Log.d(TAG, "API Timestamp: $timestamp")
+                Log.d(TAG, "API Timestamp: $timestampString")
             } else {
                 Log.e(TAG, "API Error:  ${res.code()} - ${res.message()}")
                 clearDetection()

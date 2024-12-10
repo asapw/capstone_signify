@@ -8,6 +8,7 @@
         <item name="colorOnSurface">@color/white</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:colorControlNormal">@color/primaryColorDark</item>
+        <item name="colorButtonNormal">@color/primaryColor</item>
     </style>
 
     <style name="Theme.MyCapstone" parent="Base.Theme.MyCapstone.Dark" />
