@@ -50,8 +50,8 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             // Validate password length
-            if (password.length < 8) {
-                binding.registerPasswordEditText.error = "Password must be at least 8 characters"
+            if (password.length < 6) {
+                binding.registerPasswordEditText.error = "Password must be at least 6 characters"
                 return@setOnClickListener
             }
 

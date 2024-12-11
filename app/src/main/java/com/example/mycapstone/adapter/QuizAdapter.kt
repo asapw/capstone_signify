@@ -11,8 +11,8 @@ import com.example.mycapstone.R
 import com.example.mycapstone.data.QuizResponseItem
 
 class QuizAdapter(
-    private val quizItems: List<QuizResponseItem>,
-    private val completedQuizzes: List<String>, // List of completed quiz IDs
+    private var quizItems: List<QuizResponseItem>,
+    private var completedQuizzes: List<String>,
     private val onItemClick: (QuizResponseItem) -> Unit
 ) : RecyclerView.Adapter<QuizAdapter.QuizViewHolder>() {
 
@@ -63,4 +63,10 @@ class QuizAdapter(
     }
 
     override fun getItemCount(): Int = quizItems.size
+
+    fun updateQuizzes(newQuizzes: List<QuizResponseItem>, completedQuizIds: List<String>) {
+        quizItems = newQuizzes
+        completedQuizzes = completedQuizIds
+        notifyDataSetChanged()
+    }
 }

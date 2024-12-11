@@ -66,7 +66,7 @@
                 <com.example.mycapstone.customview.EmailEditText
                     android:id="@+id/registerEmailEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="60dp"
                     android:fontFamily="@font/poppins_regular"
                     android:hint="@string/email"
                     android:textColor="@color/black"
@@ -96,7 +96,7 @@
                 <com.example.mycapstone.customview.NameEditText
                     android:id="@+id/registerNameEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="60dp"
                     android:hint="@string/name"
                     android:fontFamily="@font/poppins_regular"
                     android:textColor="@color/black"
@@ -126,7 +126,7 @@
                 <com.example.mycapstone.customview.PasswordEditText
                     android:id="@+id/registerPasswordEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="60dp"
                     android:hint="@string/password"
                     android:textColor="@color/black"
                     android:fontFamily="@font/poppins_regular"

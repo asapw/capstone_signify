@@ -1,46 +1,48 @@
 package com.example.mycapstone.ui.quiz.question
 
 import android.content.Context
-import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.util.Log
+import android.os.VibratorManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.mycapstone.R
 import com.example.mycapstone.databinding.FragmentQuestionBinding
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import android.media.MediaPlayer
 
 class QuestionFragment : Fragment() {
 
     private var _binding: FragmentQuestionBinding? = null
     private val binding get() = _binding!!
 
-    private var correctOption: String? = null
+    private lateinit var viewModel: QuestionViewModel
     private var quizId: String? = null
-    private var checkQuestion: Boolean? = null
-
-    private val database = FirebaseFirestore.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentQuestionBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this).get(QuestionViewModel::class.java)
 
-        // Retrieve arguments using Safe Args
         val args = QuestionFragmentArgs.fromBundle(requireArguments())
+        quizId = args.quizId
 
-        // Bind the question and options (A, B, C, D) to the UI
+        setupUI(args)
+        return binding.root
+    }
+
+    private fun setupUI(args: QuestionFragmentArgs) {
         binding.questionTitle.text = args.question
         binding.optionA.text = args.optionA
         binding.optionB.text = args.optionB
@@ -53,31 +55,25 @@ class QuestionFragment : Fragment() {
             binding.questionImage.visibility = View.VISIBLE
             Glide.with(this)
                 .load(imageUrl)
-                .placeholder(R.drawable.ic_profile_placeholder) // Add a placeholder image in res/drawable
-                .error(R.drawable.ic_profile_placeholder) // Add an error image in res/drawable
+                .placeholder(R.drawable.ic_profile_placeholder)
+                .error(R.drawable.ic_profile_placeholder)
                 .into(binding.questionImage)
         } else {
             binding.questionImage.visibility = View.GONE
         }
 
-        // Set the correct answer, quizId, and checkQuestion
-        correctOption = args.correctOption
-        quizId = args.quizId
-        checkQuestion = args.checkQuestion
-
-        // Handle Submit Button Click
         binding.submitButton.setOnClickListener {
             val selectedId = binding.optionGroup.checkedRadioButtonId
             if (selectedId != -1) {
                 val selectedOption = binding.root.findViewById<RadioButton>(selectedId).text.toString()
-                if (selectedOption == correctOption) {
+                if (selectedOption == args.correctOption) {
                     showCorrectIndicator()
-                    if (checkQuestion == false) {
-                        markQuizAsCompleted()
+                    if (args.checkQuestion == false) {
+                        viewModel.markQuizAsCompleted(quizId!!)
                     }
                     Handler().postDelayed({
                         findNavController().navigateUp()
-                    }, 2000) // 2 seconds delay
+                    }, 2000) // Delay to allow the user to see the feedback
                 } else {
                     showIncorrectIndicator()
                     Toast.makeText(requireContext(), "Wrong Answer!", Toast.LENGTH_SHORT).show()
@@ -86,23 +82,22 @@ class QuestionFragment : Fragment() {
                 Toast.makeText(requireContext(), "Please select an option", Toast.LENGTH_SHORT).show()
             }
         }
-
-        return binding.root
     }
 
     private fun showCorrectIndicator() {
-        // Show the green "Correct!" text
         binding.correctIndicator.visibility = View.VISIBLE
-
-        // Hide the incorrect indicator if it's visible
         binding.incorrectIndicator.visibility = View.GONE
 
-        // Play the "clink" sound
         val mediaPlayer = MediaPlayer.create(requireContext(), R.raw.clink)
         mediaPlayer.start()
 
-        // Trigger vibration for correct answer
-        val vibrator = requireContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager = requireContext().getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            vibratorManager.defaultVibrator
+        } else {
+            requireContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        }
+
         if (vibrator.hasVibrator()) {
             val vibrationEffect = VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE)
             vibrator.vibrate(vibrationEffect)
@@ -110,49 +105,22 @@ class QuestionFragment : Fragment() {
     }
 
     private fun showIncorrectIndicator() {
-        // Show the red "Incorrect!" text
+        binding.correctIndicator.visibility = View.GONE
         binding.incorrectIndicator.visibility = View.VISIBLE
 
-        // Hide the correct indicator if it's visible
-        binding.correctIndicator.visibility = View.GONE
-
-        // Play the "wrong" sound
-        val mediaPlayer = MediaPlayer.create(requireContext(), R.raw.wrong) // Ensure "wrong.mp3" is in res/raw
+        val mediaPlayer = MediaPlayer.create(requireContext(), R.raw.wrong)
         mediaPlayer.start()
 
-        // Trigger vibration for incorrect answer (different pattern or effect)
-        val vibrator = requireContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager = requireContext().getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            vibratorManager.defaultVibrator
+        } else {
+            requireContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        }
+
         if (vibrator.hasVibrator()) {
             val vibrationEffect = VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE)
             vibrator.vibrate(vibrationEffect)
-        }
-    }
-
-    private fun markQuizAsCompleted() {
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        if (currentUser != null) {
-            val userId = currentUser.uid
-            val userDocRef = database.collection("users").document(userId)
-
-            userDocRef.get().addOnSuccessListener { document ->
-                if (document != null) {
-                    val completedQuizzes = (document.get("completedQuizzes") as? List<*>)?.toMutableList() ?: mutableListOf()
-                    if (!completedQuizzes.contains(quizId)) {
-                        completedQuizzes.add(quizId!!)
-                        userDocRef.update("completedQuizzes", completedQuizzes)
-                            .addOnSuccessListener {
-                                Log.d("Quiz", "Quiz successfully marked as completed.")
-                            }
-                            .addOnFailureListener { exception ->
-                                Log.e("Quiz", "Failed to update completed quizzes", exception)
-                                Toast.makeText(requireContext(), "Failed to mark quiz", Toast.LENGTH_SHORT).show()
-                            }
-                    }
-                }
-            }
-                .addOnFailureListener { exception ->
-                    Log.e("Quiz", "Failed to fetch user document", exception)
-                }
         }
     }
 
