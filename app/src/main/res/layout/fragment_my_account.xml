@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="@color/white">
+    android:background="?attr/backgroundColor">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:layout_marginTop="16dp">
 
         <!-- Back Button and Title -->
         <LinearLayout
@@ -34,8 +35,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/my_account"
                 android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="@color/black" />
+                android:fontFamily="@font/poppins_bold"
+                android:textColor="?attr/colorOnSurface" />
         </LinearLayout>
 
         <!-- Profile Image Section -->
@@ -88,7 +89,9 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etName"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:textColor="@color/black"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Email -->
@@ -102,7 +105,9 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etEmail"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:textColor="@color/black"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Phone -->
@@ -116,7 +121,9 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPhone"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:textColor="@color/black"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Birthdate -->
@@ -131,7 +138,9 @@
                     android:id="@+id/etBirthdate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="dd/mm/yyyy" />
+                    android:hint="dd/mm/yyyy"
+                    android:fontFamily="@font/poppins_regular"
+                    android:textColor="@color/black"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- City -->
@@ -140,12 +149,14 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/city"
                 app:boxStrokeColor="@color/bgBlue"
+                android:fontFamily="@font/poppins_regular"
                 android:layout_marginBottom="12dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etCity"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"/>
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
@@ -159,7 +170,7 @@
             android:layout_marginBottom="16dp"
             android:background="@drawable/btn_rounded_background"
             android:textColor="@color/white"
-            android:textStyle="bold"
+            android:fontFamily="@font/poppins_bold"
             android:elevation="4dp" />
     </LinearLayout>
 </ScrollView>

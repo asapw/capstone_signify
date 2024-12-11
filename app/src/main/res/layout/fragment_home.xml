@@ -5,13 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/backgroundColor"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context=".ui.home.HomeFragment"
-        android:background="@color/backgroundHome"
         android:padding="16dp">
 
         <!-- Profile Section -->
@@ -79,7 +79,7 @@
             app:cornerRadius="6dp"
             android:backgroundTint="@color/primaryColor"
             android:fontFamily="@font/poppins_bold"
-            android:textColor="?attr/colorSurface"
+            android:textColor="@color/white"
             app:icon="@drawable/ic_scan"
             android:text="Scan and Communicate with other"
             app:layout_constraintTop_toBottomOf="@id/lineSeparator"
@@ -112,7 +112,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardBackgroundColor="?attr/itemBackground"
                 app:cardCornerRadius="8dp"
                 android:layout_margin="8dp"
                 app:layout_constraintEnd_toStartOf="@+id/quiz_progress_container"
@@ -158,7 +158,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardBackgroundColor="?attr/itemBackground"
                 app:cardCornerRadius="8dp"
                 android:layout_margin="8dp"
                 app:layout_constraintEnd_toEndOf="parent"

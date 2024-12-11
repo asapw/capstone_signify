@@ -16,13 +16,14 @@
         android:text="@string/quiz_title"
         android:textColor="@android:color/white"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/poppins_bold" />
 
     <ImageView
         android:id="@+id/quiz_icon"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:src="@drawable/ic_play"
+        android:layout_marginStart="16dp"
         android:contentDescription="@string/play_quiz"
         android:layout_gravity="center_vertical" />
 </LinearLayout>

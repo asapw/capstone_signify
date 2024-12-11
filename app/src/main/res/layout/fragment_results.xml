@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?attr/backgroundColor"
     android:orientation="vertical"
     android:padding="16dp"
     tools:context=".ui.camera.results.ResultsFragment">
@@ -22,7 +22,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/ic_back_arrow"
-            app:tint="@color/black" />
+            app:tint="?attr/colorOnSurface" />
 
         <TextView
             android:layout_width="match_parent"
@@ -30,7 +30,7 @@
             android:layout_marginStart="16dp"
             android:text="Detection Results"
             android:fontFamily="@font/poppins_bold"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="28sp"
             android:textStyle="bold" />
 
@@ -40,7 +40,8 @@
         android:id="@+id/cardViewResults"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-       android:layout_margin="16dp"
+        android:layout_margin="16dp"
+        app:cardBackgroundColor="?attr/itemBackground"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp">
 
