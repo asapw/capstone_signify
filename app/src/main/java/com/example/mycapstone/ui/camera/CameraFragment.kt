@@ -143,8 +143,7 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
                 if (resultBundle.results.isEmpty()) {
                     binding.overlay.clear()
                     binding.overlay.invalidate()
-                    binding.overlayBounding.clear()
-                    binding.overlayBounding.invalidate()
+
                     Log.d("CameraOverlay", "No hand results detected.")
                     return@launch
                 }
@@ -158,6 +157,7 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
                     viewModel.detect(bitmap, landmarks)
                 }
 
+                // Log detailed information about each hand
                 // Log detailed information about each hand
                 result.landmarks().forEachIndexed { index, landmarks ->
                     Log.d("CameraOverlay", "Hand $index landmarks count: ${landmarks.size}")
@@ -235,12 +235,12 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
     }
 
     private fun setupObservers() {
-        viewModel.detectionResults.observe(viewLifecycleOwner, Observer { boundingBoxes ->
-            fragmentCameraBinding.overlayBounding.apply {
-                setResults(boundingBoxes)
-                invalidate()
-            }
-        })
+//        viewModel.detectionResults.observe(viewLifecycleOwner, Observer { boundingBoxes ->
+//            fragmentCameraBinding.overlayBounding.apply {
+//                setResults(boundingBoxes)
+//                invalidate()
+//            }
+//        })
 
         viewModel.signLanguangeWords.observe(viewLifecycleOwner) { word ->
             Log.d("CameraFragment", "Detected word: $word")
