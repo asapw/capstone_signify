@@ -18,6 +18,7 @@ The success of this project was made possible through the collective contributio
 
 
 ![App](https://github.com/user-attachments/assets/4c23c729-7e65-4d07-b674-22e8f98351fe)
+![App_results](https://github.com/user-attachments/assets/04986b1e-285a-47d5-af96-1380d8420ee9)
 
 ## Getting Started
 To set up and run the Signify project, follow the steps below:
