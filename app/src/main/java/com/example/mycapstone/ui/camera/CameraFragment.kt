@@ -143,8 +143,7 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
                 if (resultBundle.results.isEmpty()) {
                     binding.overlay.clear()
                     binding.overlay.invalidate()
-                    binding.overlayBounding.clear()
-                    binding.overlayBounding.invalidate()
+
                     Log.d("CameraOverlay", "No hand results detected.")
                     return@launch
                 }
@@ -158,6 +157,7 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
                     viewModel.detect(bitmap, landmarks)
                 }
 
+                // Log detailed information about each hand
                 // Log detailed information about each hand
                 result.landmarks().forEachIndexed { index, landmarks ->
                     Log.d("CameraOverlay", "Hand $index landmarks count: ${landmarks.size}")
@@ -188,7 +188,7 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
             showLoadingDialog()
 
             lifecycleScope.launch {
-                 val res = gemini(fragmentCameraBinding.predictedTextView.text.toString())
+                val res = viewModel.autoCorrect(fragmentCameraBinding.predictedTextView.text.toString())
                 hideLoadingDialog()
 
                 viewModel.clearDetection()
@@ -222,25 +222,25 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
         loadingDialog?.dismiss()
     }
 
-    private suspend fun gemini(text: String): String? {
-        val generativeModel = GenerativeModel(
-            modelName = "gemini-pro",
-            apiKey = geminiKey
-        )
-
-        val prompt = "Revisi kesalahan penulisan ini: $text"
-        val response = generativeModel.generateContent(prompt)
-
-        return response.text
-    }
+//    private suspend fun gemini(text: String): String? {
+//        val generativeModel = GenerativeModel(
+//            modelName = "gemini-pro",
+//            apiKey = geminiKey
+//        )
+//
+//        val prompt = "Revisi kesalahan penulisan ini: $text"
+//        val response = generativeModel.generateContent(prompt)
+//
+//        return response.text
+//    }
 
     private fun setupObservers() {
-        viewModel.detectionResults.observe(viewLifecycleOwner, Observer { boundingBoxes ->
-            fragmentCameraBinding.overlayBounding.apply {
-                setResults(boundingBoxes)
-                invalidate()
-            }
-        })
+//        viewModel.detectionResults.observe(viewLifecycleOwner, Observer { boundingBoxes ->
+//            fragmentCameraBinding.overlayBounding.apply {
+//                setResults(boundingBoxes)
+//                invalidate()
+//            }
+//        })
 
         viewModel.signLanguangeWords.observe(viewLifecycleOwner) { word ->
             Log.d("CameraFragment", "Detected word: $word")
