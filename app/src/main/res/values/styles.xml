@@ -2,7 +2,7 @@
 <resources>
     <style name="Theme.MyCapstone.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/white</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_capstone</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
         <item name="postSplashScreenTheme">@style/Theme.MyCapstone</item>
     </style>
     <style name="ShapeAppearanceOverlay.App.Circle" parent="">

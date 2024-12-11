@@ -13,8 +13,8 @@ class PasswordEditText @JvmOverloads constructor(
     init {
         addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                if (!s.isNullOrEmpty() && s.length < 8) {
-                    error = "Password must be at least 8 characters"
+                if (!s.isNullOrEmpty() && s.length < 6) {
+                    error = "Password must be at least 6 characters"
                 } else {
                     error = null
                 }
