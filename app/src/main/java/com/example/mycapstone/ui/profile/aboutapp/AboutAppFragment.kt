@@ -46,7 +46,7 @@ class AboutAppFragment : Fragment() {
             Triple("Daniel Alexander", "Mobile Development", R.drawable.daniel_a),
             Triple("Agnes Valerie Khoe", "Machine Learning", R.drawable.agnes_k),
             Triple("Natasha Anabela", "Machine Learning", R.drawable.natasha_a),
-            Triple("Nicholas Febrian Liswanto", "Machine Learning", R.drawable.septian_h),
+            Triple("Nicholas Febrian Liswanto", "Machine Learning", R.drawable.nico),
             Triple("Akmal Muzakki Bakir", "Cloud Computing", R.drawable.akmal_m),
             Triple("Septian Hari Sabarno", "Cloud Computing", R.drawable.septian_h)
         )
