@@ -13,4 +13,9 @@ data class ModelResponse(
     val image: String
 )
 
+data class AutoCorrectResponse(
+    @SerializedName("message")
+    val message: String
+)
+
 

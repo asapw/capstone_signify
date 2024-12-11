@@ -188,7 +188,7 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
             showLoadingDialog()
 
             lifecycleScope.launch {
-                 val res = gemini(fragmentCameraBinding.predictedTextView.text.toString())
+                val res = viewModel.autoCorrect(fragmentCameraBinding.predictedTextView.text.toString())
                 hideLoadingDialog()
 
                 viewModel.clearDetection()
@@ -222,17 +222,17 @@ class CameraFragment : Fragment(), HandLandMarkerHelper.LandmarkerListener {
         loadingDialog?.dismiss()
     }
 
-    private suspend fun gemini(text: String): String? {
-        val generativeModel = GenerativeModel(
-            modelName = "gemini-pro",
-            apiKey = geminiKey
-        )
-
-        val prompt = "Revisi kesalahan penulisan ini: $text"
-        val response = generativeModel.generateContent(prompt)
-
-        return response.text
-    }
+//    private suspend fun gemini(text: String): String? {
+//        val generativeModel = GenerativeModel(
+//            modelName = "gemini-pro",
+//            apiKey = geminiKey
+//        )
+//
+//        val prompt = "Revisi kesalahan penulisan ini: $text"
+//        val response = generativeModel.generateContent(prompt)
+//
+//        return response.text
+//    }
 
     private fun setupObservers() {
 //        viewModel.detectionResults.observe(viewLifecycleOwner, Observer { boundingBoxes ->

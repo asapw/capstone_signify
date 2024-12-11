@@ -55,6 +55,9 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener {
     private val _inferenceTime = MutableLiveData<Long>()
     val inferenceTime: LiveData<Long> = _inferenceTime
 
+    private val _correctMessage = MutableLiveData<String>()
+    val correctMessage = _correctMessage
+
     private lateinit var modelHelper: ModelHelper
 
     fun setDelegate(delegate: Int) {
@@ -112,6 +115,24 @@ class CameraViewModel : ViewModel(), ModelHelper.DetectorListener {
             clearDetection()
         }
     }
+
+    suspend fun autoCorrect(message: String): String {
+        return try {
+            val res = withContext(Dispatchers.IO) {
+                ModelConfig.getModelService().autoCorrect(message)
+            }
+
+            if (res.isSuccessful) {
+                res.body()?.message ?: "Correction failed"
+            } else {
+                "Error: ${res.code()} - ${res.message()}"
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error during autocorrect: ${e.message}")
+            "Error during autocorrect: ${e.message}"
+        }
+    }
+
 
     private suspend fun detectWithCloudModel(bitmap: Bitmap) {
         try {
