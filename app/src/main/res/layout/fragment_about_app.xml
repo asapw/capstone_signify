@@ -4,12 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="@color/white">
+    android:background="?attr/backgroundColor">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="16dp">
 
         <!-- Back Button and Title -->
         <LinearLayout
@@ -32,8 +33,8 @@
                 android:layout_height="wrap_content"
                 android:text="About App"
                 android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="@color/black" />
+                android:fontFamily="@font/poppins_bold"
+                android:textColor="?attr/colorOnSurface" />
         </LinearLayout>
 
         <!-- App Description -->
@@ -43,7 +44,8 @@
             android:layout_height="wrap_content"
             android:text="Signify App: Revolutionizing mobile applications with cutting-edge technologies."
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:fontFamily="@font/poppins_regular"
+            android:textColor="?attr/colorOnSurface"
             android:layout_marginBottom="16dp"/>
 
         <!-- App Version -->
@@ -53,6 +55,7 @@
             android:layout_height="wrap_content"
             android:text="Version: 1.0.0"
             android:textSize="14sp"
+            android:fontFamily="@font/poppins_regular"
             android:textColor="@color/light_gray"
             android:layout_marginBottom="16dp"/>
 
@@ -62,8 +65,8 @@
             android:layout_height="wrap_content"
             android:text="Meet the Team"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
+            android:fontFamily="@font/poppins_bold"
+            android:textColor="?attr/colorOnSurface"
             android:layout_marginBottom="16dp"/>
 
         <!-- Team Members -->

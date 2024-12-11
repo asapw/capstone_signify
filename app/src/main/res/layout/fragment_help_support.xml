@@ -3,13 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="@color/white">
+    android:background="?attr/backgroundColor">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:layout_marginTop="16dp">
 
         <!-- Back Button and Title -->
         <LinearLayout
@@ -32,8 +33,8 @@
                 android:layout_height="wrap_content"
                 android:text="Help and Support"
                 android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="@color/black" />
+                android:fontFamily="@font/poppins_bold"
+                android:textColor="?attr/colorOnSurface" />
         </LinearLayout>
 
         <!-- Help and Support Description -->
@@ -41,9 +42,11 @@
             android:id="@+id/helpSupportDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="If you have any questions or need assistance, please contact support."
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:fontFamily="@font/poppins_regular"
+            android:textColor="?attr/colorOnSurface"
             android:layout_marginBottom="16dp"/>
 
         <!-- Contact Support Email -->
@@ -55,6 +58,7 @@
             android:textSize="14sp"
             android:textColor="@color/bgBlue"
             android:layout_marginBottom="16dp"
+            android:fontFamily="@font/poppins_regular"
             android:clickable="true"
             android:focusable="true"
             android:autoLink="email"/>
@@ -67,6 +71,7 @@
             android:text="WhatsApp: 0895335191326"
             android:textSize="14sp"
             android:textColor="@color/bgBlue"
+            android:fontFamily="@font/poppins_regular"
             android:layout_marginBottom="16dp"
             android:clickable="true"
             android:focusable="true" />
@@ -78,7 +83,8 @@
             android:layout_height="wrap_content"
             android:text="FAQ: Visit our website for frequently asked questions."
             android:textSize="14sp"
-            android:textColor="@color/black"
+            android:fontFamily="@font/poppins_regular"
+            android:textColor="?attr/colorOnSurface"
             android:layout_marginBottom="16dp"/>
 
     </LinearLayout>

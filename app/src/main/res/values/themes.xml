@@ -11,6 +11,8 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowActivityTransitions">true</item>
         <item name="colorButtonNormal">@color/secondaryColor</item>
+        <item name="backgroundColor">@color/backgroundLight</item>
+        <item name="itemBackground">@color/backgroundItemLight</item>
     </style>
 
     <style name="Theme.MyCapstone" parent="Base.Theme.MyCapstone.Light" />

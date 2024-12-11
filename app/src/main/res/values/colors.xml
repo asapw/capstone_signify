@@ -7,6 +7,10 @@
     <color name="primaryColorDark">#3E3E71</color> <!-- Darker purple for better contrast in dark mode -->
     <color name="backgroundHome">#F0E8F0</color>
 
+    <color name="backgroundLight">#FFFFFF</color>
+    <color name="backgroundDark">#1F1F1F</color>
+    <color name="backgroundItemLight">#EDEDED</color>
+    <color name="backgroundItemDark">#3A3A3A</color>
 
     <color name="secondaryColorgrey">#B0B0B0</color>
     <color name="bgBlue">#0E3E76</color>

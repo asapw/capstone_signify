@@ -27,14 +27,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/black" />
+            android:fontFamily="@font/poppins_bold"
+            android:textColor="?attr/colorOnSurface" />
 
         <TextView
             android:id="@+id/roleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
+            android:fontFamily="@font/poppins_regular"
             android:textColor="@color/light_gray" />
     </LinearLayout>
 </LinearLayout>
