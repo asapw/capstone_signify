@@ -43,15 +43,22 @@ class RegisterActivity : AppCompatActivity() {
             val password = binding.registerPasswordEditText.text.toString().trim()
             val name = binding.registerNameEditText.text.toString().trim()
 
-
+            // Validate input fields
             if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Show ProgressBar
-           showLoadingDialog()
+            // Validate password length
+            if (password.length < 8) {
+                binding.registerPasswordEditText.error = "Password must be at least 8 characters"
+                return@setOnClickListener
+            }
 
+            // Show ProgressBar
+            showLoadingDialog()
+
+            // Attempt to create user
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     hideLoadingDialog()
@@ -64,6 +71,7 @@ class RegisterActivity : AppCompatActivity() {
                     }
                 }
         }
+
 
         binding.tvLogin.setOnClickListener{
             val intent = Intent(this, LoginActivity::class.java)
