@@ -72,6 +72,8 @@
             <com.google.android.material.button.MaterialButton
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:id="@+id/btnSpeech"
+                android:fontFamily="@font/poppins_regular"
+                android:textColor="?attr/colorOnSurface"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="140dp"
