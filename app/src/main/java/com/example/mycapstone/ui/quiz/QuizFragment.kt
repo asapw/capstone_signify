@@ -53,7 +53,6 @@ class QuizFragment : Fragment() {
     }
 
     private fun navigateToQuestionFragment(quizItem: QuizResponseItem) {
-        // Derive the correctOption safely
         val correctOption = when (quizItem.trueOption) {
             "aOption" -> quizItem.aOption
             "bOption" -> quizItem.bOption
@@ -76,7 +75,6 @@ class QuizFragment : Fragment() {
             )
             findNavController().navigate(action)
         } else {
-            // Handle case where correctOption is null
             Toast.makeText(requireContext(), "Quiz data is incomplete.", Toast.LENGTH_SHORT).show()
         }
     }

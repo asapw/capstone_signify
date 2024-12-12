@@ -18,18 +18,14 @@ class HelpSupportFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentHelpSupportBinding.inflate(inflater, container, false)
 
-        // Set up the UI (help content, contact, etc.)
         setupUI()
 
-        // Set up the back button click listener
         binding.btnBack.setOnClickListener {
-            requireActivity().onBackPressed() // Go back to the previous fragment/activity
+            requireActivity().onBackPressed()
         }
 
-        // Set up email and WhatsApp actions
         binding.contactSupport.setOnClickListener {
             openEmailClient()
         }
@@ -42,7 +38,6 @@ class HelpSupportFragment : Fragment() {
     }
 
     private fun setupUI() {
-        // Set help and support details
         binding.helpSupportDescription.text = "If you have any questions or need assistance, please contact support."
         binding.contactSupport.text = "Contact Support: a195b4ky4107@bangkit.academy"
         binding.helpFAQ.text = "FAQ: Visit our website for frequently asked questions."

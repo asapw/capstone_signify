@@ -4,9 +4,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.view.Window
-import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
@@ -31,34 +29,28 @@ class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Initialize ViewBinding
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
 
-        // Register Button Click Listener
         binding.registerButton.setOnClickListener {
             val email = binding.registerEmailEditText.text.toString().trim()
             val password = binding.registerPasswordEditText.text.toString().trim()
             val name = binding.registerNameEditText.text.toString().trim()
 
-            // Validate input fields
             if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Validate password length
             if (password.length < 6) {
                 binding.registerPasswordEditText.error = "Password must be at least 6 characters"
                 return@setOnClickListener
             }
 
-            // Show ProgressBar
             showLoadingDialog()
 
-            // Attempt to create user
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     hideLoadingDialog()
@@ -92,7 +84,6 @@ class RegisterActivity : AppCompatActivity() {
 
         val userId = user.uid
 
-        // Initialize user data with default values
         val userData = mapOf(
             "name" to name,
             "email" to email,
@@ -102,7 +93,6 @@ class RegisterActivity : AppCompatActivity() {
             "city" to ""
         )
 
-        // Save user data to Firestore
         db.collection("users").document(userId)
             .set(userData)
             .addOnSuccessListener {

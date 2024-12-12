@@ -12,7 +12,6 @@
         android:gravity="center_horizontal"
         android:layout_marginTop="16dp">
 
-        <!-- Back Button and Title -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,7 +30,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Help and Support"
+                android:text="@string/help_and_support"
                 android:textSize="22sp"
                 android:fontFamily="@font/poppins_bold"
                 android:textColor="?attr/colorOnSurface" />
@@ -43,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="If you have any questions or need assistance, please contact support."
+            android:text="@string/if_you_have_any_questions_or_need_assistance_please_contact_support"
             android:textSize="16sp"
             android:fontFamily="@font/poppins_regular"
             android:textColor="?attr/colorOnSurface"
@@ -54,7 +53,7 @@
             android:id="@+id/contactSupport"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Contact Support: a195b4ky4107@bangkit.academy"
+            android:text="@string/contact_support_a195b4ky4107_bangkit_academy"
             android:textSize="14sp"
             android:textColor="@color/bgBlue"
             android:layout_marginBottom="16dp"
@@ -68,7 +67,7 @@
             android:id="@+id/contactWhatsApp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="WhatsApp: 0895335191326"
+            android:text="@string/whatsapp_0895335191326"
             android:textSize="14sp"
             android:textColor="@color/bgBlue"
             android:fontFamily="@font/poppins_regular"
@@ -81,7 +80,7 @@
             android:id="@+id/helpFAQ"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="FAQ: Visit our website for frequently asked questions."
+            android:text="@string/faq_visit_our_website_for_frequently_asked_questions"
             android:textSize="14sp"
             android:fontFamily="@font/poppins_regular"
             android:textColor="?attr/colorOnSurface"

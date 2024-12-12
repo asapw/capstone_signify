@@ -8,7 +8,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!-- FragmentContainerView for fragments -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_container"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -21,7 +20,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Bottom Navigation View -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
@@ -35,13 +33,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Floating Action Button -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_camera"
-        android:contentDescription="Camera"
+        android:contentDescription="@string/camera"
         app:backgroundTint="@color/primaryColorDark"
         app:tint="@android:color/white"
         app:layout_constraintBottom_toBottomOf="@id/bottom_navigation"

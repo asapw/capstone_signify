@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         android:padding="12dp">
 
-        <!-- Lesson Image with rounded corners -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/item_image"
             android:layout_width="80dp"
@@ -27,7 +26,6 @@
             app:shapeAppearanceOverlay="@style/RoundedImageView"
             android:contentDescription="@string/material_image" />
 
-        <!-- Content Container -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -42,7 +40,7 @@
                 android:id="@+id/item_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="LESSON 1"
+                android:text="@string/lesson_1"
                 android:textColor="?attr/colorOnSurface"
                 android:fontFamily="@font/poppins_bold"
                 android:textSize="16sp"
@@ -57,7 +55,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="In the lessons we learn new words and vocabularies"
+                android:text="@string/in_the_lessons_we_learn_new_words_and_vocabularies"
                 android:textColor="?attr/colorOnSurface"
                 android:fontFamily="@font/poppins_medium"
                 android:textSize="14sp"
@@ -74,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/poppins_light"
-                android:text="Completed"
+                android:text="@string/completed"
                 android:textColor="@color/primaryColorLight"
                 android:textSize="12sp"
                 app:layout_constraintTop_toBottomOf="@id/item_subtitle"

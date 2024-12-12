@@ -18,7 +18,7 @@
         android:id="@+id/question_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Question goes here"
+        android:text="@string/question_goes_here"
         android:textSize="18sp" />
 
     <!-- Options -->
@@ -31,25 +31,25 @@
             android:id="@+id/optionA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Option A" />
+            android:text="@string/option_a" />
 
         <RadioButton
             android:id="@+id/optionB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Option B" />
+            android:text="@string/option_b" />
 
         <RadioButton
             android:id="@+id/optionC"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Option C" />
+            android:text="@string/option_c" />
 
         <RadioButton
             android:id="@+id/optionD"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Option D" />
+            android:text="@string/option_d" />
     </RadioGroup>
 
     <!-- Submit Button -->
@@ -57,14 +57,14 @@
         android:id="@+id/submit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Submit" />
+        android:text="@string/submit" />
 
     <!-- Correct Answer Indicator -->
     <TextView
         android:id="@+id/correct_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Correct!"
+        android:text="@string/correct"
         android:textSize="16sp"
         android:textColor="@android:color/holo_green_dark"
         android:visibility="gone" /> <!-- Initially hidden -->
@@ -74,7 +74,7 @@
         android:id="@+id/incorrect_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Incorrect!"
+        android:text="@string/incorrect"
         android:textSize="16sp"
         android:textColor="@android:color/holo_red_dark"
         android:visibility="gone" /> <!-- Initially hidden -->

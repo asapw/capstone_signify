@@ -13,7 +13,7 @@ class BirthdateEditText @JvmOverloads constructor(
 
     init {
         hint = "Birthdate"
-        isFocusable = false // Makes it readonly
+        isFocusable = false
         isClickable = true
 
         setOnClickListener {

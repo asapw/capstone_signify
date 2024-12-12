@@ -14,7 +14,6 @@
         tools:context=".ui.home.HomeFragment"
         android:padding="16dp">
 
-        <!-- Profile Section -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/profile_section"
             android:layout_width="match_parent"
@@ -38,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:fontFamily="@font/poppins_semibold"
-                android:text="Hello, User"
+                android:text="@string/hello_user"
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/email"
@@ -52,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:fontFamily="@font/poppins_regular"
-                android:text="Email not available"
+                android:text="@string/email_not_available"
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -81,7 +80,7 @@
             android:fontFamily="@font/poppins_bold"
             android:textColor="@color/white"
             app:icon="@drawable/ic_scan"
-            android:text="Scan and Communicate with other"
+            android:text="@string/scan_and_communicate_with_other"
             app:layout_constraintTop_toBottomOf="@id/lineSeparator"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -94,7 +93,7 @@
             android:layout_marginTop="16dp"
             android:fontFamily="@font/poppins_semibold"
             android:padding="4dp"
-            android:text="Your Progress"
+            android:text="@string/your_progress"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btnScan"/>
@@ -131,7 +130,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_bold"
-                        android:text="Lessons "
+                        android:text="@string/lessons"
                         android:textColor="?attr/colorOnSurface"
                         android:textSize="18sp" />
 
@@ -147,7 +146,7 @@
                         android:id="@+id/lesson_progress_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0/4"
+                        android:text="@string/_0_4"
                         android:textColor="?attr/colorOnSurface"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -176,7 +175,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_bold"
-                        android:text="Quiz "
+                        android:text="@string/quiz"
                         android:textColor="?attr/colorOnSurface"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -193,7 +192,7 @@
                         android:id="@+id/quiz_progress_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0/4"
+                        android:text="@string/_0_4"
                         android:textColor="?attr/colorOnSurface"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -207,7 +206,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/poppins_semibold"
-            android:text="Latest News"
+            android:text="@string/latest_news"
             android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/progress_cards_container"/>

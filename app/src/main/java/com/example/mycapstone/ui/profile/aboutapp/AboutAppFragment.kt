@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.mycapstone.R
@@ -20,13 +19,10 @@ class AboutAppFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentAboutAppBinding.inflate(inflater, container, false)
 
-        // Set up the UI
         setupUI()
 
-        // Back button listener
         binding.btnBack.setOnClickListener {
             requireActivity().onBackPressed()
         }
@@ -35,12 +31,10 @@ class AboutAppFragment : Fragment() {
     }
 
     private fun setupUI() {
-        // App details
         binding.aboutAppDescription.text =
             "Signify App: Revolutionizing mobile applications with cutting-edge technologies."
         binding.aboutAppVersion.text = "Version: 1.0.0"
 
-        // Team information with corresponding profile images
         val teamMembers = listOf(
             Triple("Septian Wijaya", "Mobile Development", R.drawable.septian_w),
             Triple("Daniel Alexander", "Mobile Development", R.drawable.daniel_a),
@@ -51,7 +45,6 @@ class AboutAppFragment : Fragment() {
             Triple("Septian Hari Sabarno", "Cloud Computing", R.drawable.septian_h)
         )
 
-        // Dynamically add team member views
         for ((name, role, imageRes) in teamMembers) {
             val teamMemberView = createTeamMemberView(name, role, imageRes)
             binding.teamContainer.addView(teamMemberView)
@@ -65,7 +58,6 @@ class AboutAppFragment : Fragment() {
         val nameTextView = view.findViewById<TextView>(R.id.nameTextView)
         val roleTextView = view.findViewById<TextView>(R.id.roleTextView)
 
-        // Set team member details
         profileImage.setImageResource(imageRes)
         nameTextView.text = name
         roleTextView.text = role

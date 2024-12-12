@@ -23,7 +23,7 @@ class ProfileViewModel : ViewModel() {
         val currentUser = auth.currentUser
         if (currentUser != null) {
             val userId = currentUser.uid
-            val email = currentUser.email ?: ""  // Get email from FirebaseAuth
+            val email = currentUser.email ?: ""
 
             db.collection("users").document(userId).get()
                 .addOnSuccessListener { document ->

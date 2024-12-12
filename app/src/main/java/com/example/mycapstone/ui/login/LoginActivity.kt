@@ -3,9 +3,7 @@ package com.example.mycapstone.ui.login
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.view.Window
-import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
@@ -52,7 +50,7 @@ class LoginActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         val userId = auth.currentUser?.uid ?: ""
                         sessionManager.saveLoginState(userId)
-                        sessionManager.completeOnboarding() // Mark onboarding as complete
+                        sessionManager.completeOnboarding()
                         navigateToMainActivity()
                     } else {
                         Toast.makeText(this, "Authentication failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
@@ -62,17 +60,15 @@ class LoginActivity : AppCompatActivity() {
         }
 
 
-        // btn Google Auth
         binding.btnGoogleLogin.setOnClickListener {
             // toDO()
         }
-        // Register
         binding.tvRegister.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             val options = ActivityOptionsCompat.makeCustomAnimation(
                 this,
-                R.anim.slide_in_right,  // Enter animation (from right to left)
-                R.anim.slide_out_left   // Exit animation (left to right)
+                R.anim.slide_in_right,
+                R.anim.slide_out_left
             )
             startActivity(intent, options.toBundle())
         }

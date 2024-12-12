@@ -42,17 +42,14 @@ class LessonFragment : Fragment() {
 
         setupRecyclerView()
 
-        // Dynamically adjust the RecyclerView's bottom margin for the BottomNavigationView
         val bottomNavigationHeight = requireActivity().findViewById<View>(R.id.bottom_navigation)?.height ?: 0
         val params = binding.materialRecyclerView.layoutParams as ViewGroup.MarginLayoutParams
         params.bottomMargin = bottomNavigationHeight
         binding.materialRecyclerView.layoutParams = params
 
-        // Load lessons and fetch completed status
         lessonViewModel.lessons.observe(viewLifecycleOwner) { lessonList ->
             fetchCompletedLessons { completedLessons ->
                 lessonList.forEach { lesson ->
-                    // Check if this lesson is in the completedLessons list
                     lesson.isCompleted = completedLessons.contains(lesson.id)
                     Log.d("LessonFragment", "Lesson: ${lesson.title}, isCompleted: ${lesson.isCompleted}")
                 }

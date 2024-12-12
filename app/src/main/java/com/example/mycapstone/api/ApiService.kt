@@ -5,7 +5,7 @@ import com.example.mycapstone.data.QuizResponseItem
 import retrofit2.http.GET
 
 interface ApiService {
-    @GET("api/lessons") // Correct endpoint with 'api' path
+    @GET("api/lessons")
     suspend fun getLessons(): List<LessonResponseItem>
 
     @GET("api/quizzes")

@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.mycapstone.R
@@ -32,17 +31,17 @@ class ProfileFragment : Fragment() {
 
         sessionManager = SessionManager(requireContext())
 
-        profileViewModel.profileData.observe(viewLifecycleOwner, Observer { profileData ->
+        profileViewModel.profileData.observe(viewLifecycleOwner) { profileData ->
             binding.profileName.text = profileData.name
-            binding.profileEmail.text = profileData.email  // Set email to TextView
+            binding.profileEmail.text = profileData.email
             Glide.with(this)
                 .load(profileData.profileImageUrl)
                 .placeholder(R.drawable.default_profile_image)
                 .error(R.drawable.default_profile_image)
                 .into(binding.profileImage)
-        })
+        }
 
-        profileViewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
+        profileViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             if (isLoading) {
                 binding.profileImageProgressBar.visibility = View.VISIBLE
                 binding.profileNameProgressBar.visibility = View.VISIBLE
@@ -50,7 +49,7 @@ class ProfileFragment : Fragment() {
                 binding.profileImageProgressBar.visibility = View.GONE
                 binding.profileNameProgressBar.visibility = View.GONE
             }
-        })
+        }
 
         setupUI()
         return binding.root

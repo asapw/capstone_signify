@@ -54,7 +54,7 @@
                 android:id="@+id/subtitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Take a quiz and learn!"
+                android:text="@string/take_a_quiz_and_learn"
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 android:fontFamily="@font/poppins_light" />
@@ -89,7 +89,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Quiz"
+            android:text="@string/quiz"
             android:textColor="?attr/colorOnSurface"
             android:fontFamily="@font/poppins_bold"
             android:textSize="16sp"

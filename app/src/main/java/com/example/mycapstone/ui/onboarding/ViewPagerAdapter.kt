@@ -9,12 +9,10 @@ import com.example.mycapstone.ui.onboarding.screen.Screen3
 
 class ViewPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
 
-    // Number of pages in the ViewPager
     override fun getItemCount(): Int {
-        return 3  // Only two screens
+        return 3
     }
 
-    // Create the fragment for the given position
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> Screen1()  // First onboarding screen

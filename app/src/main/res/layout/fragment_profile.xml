@@ -96,7 +96,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Account Settings Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -112,7 +111,6 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- My Account Item -->
                 <LinearLayout
                     android:id="@+id/my_account_button"
                     android:layout_width="match_parent"
@@ -138,7 +136,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="My Account"
+                            android:text="@string/my_account"
                             android:fontFamily="@font/poppins_regular"
                             android:textColor="@color/primaryColorLight"
                             android:textSize="13sp" />
@@ -146,7 +144,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Make changes to your account"
+                            android:text="@string/make_changes_to_your_account"
                             android:textColor="#ABABAB"
                             android:textSize="11sp" />
                     </LinearLayout>
@@ -190,7 +188,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Log out"
+                            android:text="@string/log_out"
                             android:fontFamily="@font/poppins_regular"
                             android:textColor="@color/primaryColorLight"
                             android:textSize="13sp" />
@@ -198,7 +196,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Further secure your account for safety"
+                            android:text="@string/further_secure_your_account_for_safety"
                             android:textColor="#ABABAB"
                             android:textSize="11sp" />
                     </LinearLayout>
@@ -301,7 +299,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:text="About App"
+                        android:text="@string/about_app"
                         android:fontFamily="@font/poppins_regular"
                         android:textColor="@color/primaryColorLight"
                         android:textSize="13sp" />

@@ -28,7 +28,6 @@ class VideoFragment : Fragment() {
     ): View {
         _binding = FragmentVideoBinding.inflate(inflater, container, false)
 
-        // Set up the video player
         setupVideoPlayer(args.ytUrl)
 
         return binding.root
@@ -37,10 +36,8 @@ class VideoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Show a warning message when the fragment's view is created
         showWarningMessage()
 
-        // Adjust the bottom margin of the PlayerView to account for the BottomNavigationView
         val bottomNavigationHeight = requireActivity().findViewById<View>(R.id.bottom_navigation)?.height ?: 0
         val params = binding.videoView.layoutParams as ViewGroup.MarginLayoutParams
         params.bottomMargin = bottomNavigationHeight
@@ -48,17 +45,14 @@ class VideoFragment : Fragment() {
     }
 
     private fun setupVideoPlayer(videoUrl: String) {
-        // Initialize ExoPlayer
         player = ExoPlayer.Builder(requireContext()).build()
         binding.videoView.player = player
 
-        // Create a MediaItem
         val mediaItem = MediaItem.fromUri(Uri.parse(videoUrl))
         player?.setMediaItem(mediaItem)
         player?.prepare()
         player?.playWhenReady = true
 
-        // Listen for video completion
         player?.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(playbackState: Int) {
                 if (playbackState == Player.STATE_ENDED) {
@@ -69,26 +63,22 @@ class VideoFragment : Fragment() {
     }
 
     private fun onVideoCompleted(videoUrl: String) {
-        // Mark the video as completed in SharedPreferences
         val sharedPreferences = requireActivity().getSharedPreferences("VideoCompletionPrefs", 0)
         with(sharedPreferences.edit()) {
             putBoolean(videoUrl, true)
             apply()
         }
 
-        // Navigate to the next fragment or back
         val action = VideoFragmentDirections.actionVideoFragmentToLessonFragment()
         findNavController().navigate(action)
     }
 
     private fun showWarningMessage() {
-        // Ensure the view is fully initialized before showing the Snackbar
         Snackbar.make(binding.root, "You need to watch the video until the end to complete it!", Snackbar.LENGTH_LONG).show()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        // Release the player when the view is destroyed
         player?.release()
         player = null
         _binding = null

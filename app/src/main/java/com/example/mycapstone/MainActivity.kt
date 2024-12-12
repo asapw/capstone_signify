@@ -23,27 +23,21 @@ class MainActivity : AppCompatActivity() {
 
         if (!sessionManager.isLoggedIn()) {
             navigateToLoginActivity()
-            return // Stop further initialization
+            return
         }
 
-        // Initialize binding
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Get userId from session manager
         val userId = sessionManager.getUserId()
 
-        // Set up NavController
         val navHostFragment = supportFragmentManager.findFragmentById(binding.navContainer.id) as NavHostFragment
         navController = navHostFragment.navController
 
-        // Pass the userId to the ProfileFragment using the NavController
         navController.currentBackStackEntry?.savedStateHandle?.set("userId", userId)
 
-        // Set up BottomNavigationView with NavController
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController)
 
-        // Handle BottomNavigation item clicks
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
@@ -70,7 +64,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Handle FloatingActionButton click
         binding.fabCamera.setOnClickListener {
             navController.navigate(R.id.nav_camera)
         }

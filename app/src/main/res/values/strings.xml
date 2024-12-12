@@ -59,6 +59,43 @@
     <string name="or">or</string>
     <string name="search">Search...</string>
     <string name="learn">Learn by answering this quiz</string>
+    <string name="camera">Camera</string>
+    <string name="alamat_email">Alamat Email</string>
+    <string name="nama">Nama</string>
+    <string name="sudah_memiliki_akun">Sudah memiliki akun?</string>
+    <string name="splash">splash</string>
+    <string name="signify_app_revolutionizing_mobile_applications_with_cutting_edge_technologies">Signify App: Revolutionizing mobile applications with cutting-edge technologies.</string>
+    <string name="version_1_0_0">Version: 1.0.0</string>
+    <string name="meet_the_team">Meet the Team</string>
+    <string name="if_you_have_any_questions_or_need_assistance_please_contact_support">If you have any questions or need assistance, please contact support.</string>
+    <string name="contact_support_a195b4ky4107_bangkit_academy">Contact Support: a195b4ky4107@bangkit.academy</string>
+    <string name="whatsapp_0895335191326">WhatsApp: 0895335191326</string>
+    <string name="faq_visit_our_website_for_frequently_asked_questions">FAQ: Visit our website for frequently asked questions.</string>
+    <string name="hello_user">Hello, User</string>
+    <string name="email_not_available">Email not available</string>
+    <string name="scan_and_communicate_with_other">Scan and Communicate with other</string>
+    <string name="your_progress">Your Progress</string>
+    <string name="lessons">Lessons</string>
+    <string name="_0_4">0/4</string>
+    <string name="latest_news">Latest News</string>
+    <string name="dd_mm_yyyy">dd/mm/yyyy</string>
+    <string name="make_changes_to_your_account">Make changes to your account</string>
+    <string name="log_out">Log out</string>
+    <string name="further_secure_your_account_for_safety">Further secure your account for safety</string>
+    <string name="question_goes_here">Question goes here</string>
+    <string name="option_a">Option A</string>
+    <string name="option_b">Option B</string>
+    <string name="option_c">Option C</string>
+    <string name="option_d">Option D</string>
+    <string name="submit">Submit</string>
+    <string name="correct">Correct!</string>
+    <string name="incorrect">Incorrect!</string>
+    <string name="take_a_quiz_and_learn">Take a quiz and learn!</string>
+    <string name="lesson_1">LESSON 1</string>
+    <string name="in_the_lessons_we_learn_new_words_and_vocabularies">In the lessons we learn new words and vocabularies</string>
+    <string name="completed">Completed</string>
+    <string name="image">image</string>
+    <string name="see_more">See More</string>
 
 
 </resources>

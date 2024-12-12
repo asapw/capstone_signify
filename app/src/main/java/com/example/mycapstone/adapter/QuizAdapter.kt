@@ -22,15 +22,15 @@ class QuizAdapter(
 
         fun bind(quizItem: QuizResponseItem) {
             quizTitle.text = quizItem.title ?: "Untitled Quiz"
-            val isCompleted = completedQuizzes.contains(quizItem.id) // Check if quiz is completed
+            val isCompleted = completedQuizzes.contains(quizItem.id)
 
             if (isCompleted) {
                 // Change background and show as completed
-                itemView.setBackgroundResource(R.drawable.completed_quiz_background) // Use custom background for completed quizzes
-                quizIcon.setImageResource(R.drawable.ic_done) // Placeholder for a completed icon
-                itemView.alpha = 0.5f // Dim for completed state
+                itemView.setBackgroundResource(R.drawable.completed_quiz_background)
+                quizIcon.setImageResource(R.drawable.ic_done)
+                itemView.alpha = 0.5f
 
-                // Set click listener for completed quizzes
+
                 itemView.setOnClickListener {
                     Toast.makeText(
                         itemView.context,
@@ -39,14 +39,12 @@ class QuizAdapter(
                     ).show()
                 }
             } else {
-                // Default behavior for non-completed quizzes
-                itemView.setBackgroundResource(R.drawable.rounded_black_background) // Default background
-                quizIcon.setImageResource(R.drawable.ic_play) // Icon for uncompleted quizzes
-                itemView.alpha = 1.0f // Normal visibility
+                itemView.setBackgroundResource(R.drawable.rounded_black_background)
+                quizIcon.setImageResource(R.drawable.ic_play)
+                itemView.alpha = 1.0f
 
-                // Set click listener for non-completed quizzes
                 itemView.setOnClickListener {
-                    onItemClick(quizItem) // Trigger the click callback
+                    onItemClick(quizItem)
                 }
             }
         }

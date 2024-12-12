@@ -2,7 +2,6 @@ package com.example.mycapstone.ui.profile.myaccount
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -13,12 +12,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.mycapstone.R
+import com.example.mycapstone.customview.EmailEditText
+import com.example.mycapstone.customview.PhoneEditText
 import com.example.mycapstone.databinding.FragmentMyAccountBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -42,7 +42,6 @@ class MyAccountFragment : Fragment() {
                 val data = result.data
                 selectedImageUri = data?.data
 
-                // Display the selected image
                 if (selectedImageUri != null) {
                     Glide.with(this)
                         .load(selectedImageUri)
@@ -80,17 +79,14 @@ class MyAccountFragment : Fragment() {
         }
 
         binding.btnUpdateProfile.setOnClickListener {
-            // Show loading indicator
             binding.profileImageProgress.visibility = View.VISIBLE
 
-            // Delay execution by 2500ms (2.5 seconds)
             Handler(Looper.getMainLooper()).postDelayed({
                 if (selectedImageUri != null) {
                     uploadImageToFirebase()
                 }
                 updateUserData()
 
-                // Hide loading indicator after delay
                 binding.profileImageProgress.visibility = View.GONE
             }, 2500)
         }

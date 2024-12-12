@@ -33,12 +33,12 @@ class QuizViewModel : ViewModel() {
             userDocRef.get().addOnSuccessListener { document ->
                 val completedQuizzes = document.get("completedQuizzes") as? List<String> ?: emptyList()
                 _completedQuizIds.postValue(completedQuizzes)
-                fetchQuizzes() // Fetch quizzes after fetching completed quizzes
+                fetchQuizzes()
             }.addOnFailureListener {
-                fetchQuizzes() // Fallback: Fetch quizzes even if completed quizzes fail
+                fetchQuizzes()
             }
         } else {
-            fetchQuizzes() // Fallback for logged-out users
+            fetchQuizzes()
         }
     }
 

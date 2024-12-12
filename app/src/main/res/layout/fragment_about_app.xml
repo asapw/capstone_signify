@@ -12,7 +12,6 @@
         android:orientation="vertical"
         android:layout_marginTop="16dp">
 
-        <!-- Back Button and Title -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,45 +30,41 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="About App"
+                android:text="@string/about_app"
                 android:textSize="22sp"
                 android:fontFamily="@font/poppins_bold"
                 android:textColor="?attr/colorOnSurface" />
         </LinearLayout>
 
-        <!-- App Description -->
         <TextView
             android:id="@+id/aboutAppDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Signify App: Revolutionizing mobile applications with cutting-edge technologies."
+            android:text="@string/signify_app_revolutionizing_mobile_applications_with_cutting_edge_technologies"
             android:textSize="16sp"
             android:fontFamily="@font/poppins_regular"
             android:textColor="?attr/colorOnSurface"
             android:layout_marginBottom="16dp"/>
 
-        <!-- App Version -->
         <TextView
             android:id="@+id/aboutAppVersion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Version: 1.0.0"
+            android:text="@string/version_1_0_0"
             android:textSize="14sp"
             android:fontFamily="@font/poppins_regular"
             android:textColor="@color/light_gray"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Team Section -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Meet the Team"
+            android:text="@string/meet_the_team"
             android:textSize="18sp"
             android:fontFamily="@font/poppins_bold"
             android:textColor="?attr/colorOnSurface"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Team Members -->
         <LinearLayout
             android:id="@+id/teamContainer"
             android:layout_width="match_parent"

@@ -33,7 +33,7 @@ class QuestionFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentQuestionBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this).get(QuestionViewModel::class.java)
+        viewModel = ViewModelProvider(this)[QuestionViewModel::class.java]
 
         val args = QuestionFragmentArgs.fromBundle(requireArguments())
         quizId = args.quizId
@@ -49,7 +49,6 @@ class QuestionFragment : Fragment() {
         binding.optionC.text = args.optionC
         binding.optionD.text = args.optionD
 
-        // Load question image if available
         val imageUrl = args.imageQuestion
         if (!imageUrl.isNullOrEmpty()) {
             binding.questionImage.visibility = View.VISIBLE
@@ -73,7 +72,7 @@ class QuestionFragment : Fragment() {
                     }
                     Handler().postDelayed({
                         findNavController().navigateUp()
-                    }, 2000) // Delay to allow the user to see the feedback
+                    }, 2000)
                 } else {
                     showIncorrectIndicator()
                     Toast.makeText(requireContext(), "Wrong Answer!", Toast.LENGTH_SHORT).show()

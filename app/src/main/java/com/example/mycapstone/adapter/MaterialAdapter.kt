@@ -33,20 +33,15 @@ class MaterialAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
 
-        // Set title and subtitle
         holder.title.text = item.title
         holder.subtitle.text = item.subTitle
 
-        // Load image with Glide
         Glide.with(holder.image.context).load(item.photoUrl).into(holder.image)
 
-        // Determine the lesson completion status
         val isCompleted = item.isCompleted
 
-        // Debugging: Log the completion status
         Log.d("MaterialAdapter", "Item: ${item.title}, Completed: $isCompleted")
 
-        // Update the status text and color based on the completion status
         holder.statusText.text = if (isCompleted) {
             holder.itemView.context.getString(R.string.mark_as_completed)
         } else {
@@ -60,7 +55,6 @@ class MaterialAdapter(
             )
         )
 
-        // Set click listeners
         holder.itemView.setOnClickListener {
             onClick(item)
         }
@@ -68,7 +62,6 @@ class MaterialAdapter(
 
     override fun getItemCount() = items.size
 
-    // Update the adapter data and notify the changes
     fun updateItems(newItems: List<LessonResponseItem>) {
         items.clear()
         items.addAll(newItems)
