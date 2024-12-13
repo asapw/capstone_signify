@@ -108,7 +108,7 @@ class HomeViewModel : ViewModel() {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val response = NewsConfig.getModelService().getNews("Sign Language", BuildConfig.NEWS_API_KEY)
+                val response = NewsConfig.getModelService().getNews("Sign Language", "61d5aab3aa6f4ccdb54d430263099499")
                 _news.value = response.articles // Assuming your API returns articles
                 _isLoading.value = false
             } catch (e: Exception) {
