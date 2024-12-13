@@ -1,6 +1,7 @@
 package com.example.mycapstone.ui.profile.myaccount
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,15 +11,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
 import com.example.mycapstone.R
-import com.example.mycapstone.customview.EmailEditText
-import com.example.mycapstone.customview.PhoneEditText
 import com.example.mycapstone.databinding.FragmentMyAccountBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -35,6 +36,23 @@ class MyAccountFragment : Fragment() {
     private val logTag = "MyAccountFragment"
 
     private var selectedImageUri: Uri? = null
+    private var loadingDialog: Dialog? = null
+
+    private fun showLoadingDialog() {
+        if (loadingDialog == null) {
+            loadingDialog = Dialog(requireContext()).apply {
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
+                setContentView(R.layout.loading_dialog)
+                setCancelable(false)
+                window?.setBackgroundDrawableResource(android.R.color.transparent)
+            }
+        }
+        loadingDialog?.show()
+    }
+
+    private fun hideLoadingDialog() {
+        loadingDialog?.dismiss()
+    }
 
     private val imagePickerLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -79,7 +97,7 @@ class MyAccountFragment : Fragment() {
         }
 
         binding.btnUpdateProfile.setOnClickListener {
-            binding.profileImageProgress.visibility = View.VISIBLE
+            showLoadingDialog()
 
             Handler(Looper.getMainLooper()).postDelayed({
                 if (selectedImageUri != null) {
@@ -87,8 +105,8 @@ class MyAccountFragment : Fragment() {
                 }
                 updateUserData()
 
-                binding.profileImageProgress.visibility = View.GONE
-            }, 2500)
+                hideLoadingDialog()
+            }, 4500)
         }
 
         loadUserData()
@@ -104,7 +122,7 @@ class MyAccountFragment : Fragment() {
             return
         }
 
-        binding.profileImageProgress.visibility = View.VISIBLE
+        showLoadingDialog()
 
         firestore.collection("users").document(user.uid)
             .get()
@@ -137,7 +155,7 @@ class MyAccountFragment : Fragment() {
             }
             .addOnCompleteListener {
                 if (isAdded) {
-                    binding.profileImageProgress.visibility = View.GONE
+                    hideLoadingDialog()
                 }
             }
     }
@@ -254,6 +272,7 @@ class MyAccountFragment : Fragment() {
         bottomNavigationView.visibility = View.VISIBLE
         _binding = null
     }
+
 
     private fun setupWindowInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->

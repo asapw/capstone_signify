@@ -63,12 +63,7 @@
                 android:background="@drawable/btn_circle_background"
                 android:contentDescription="@string/add_image_icon" />
 
-            <ProgressBar
-                android:id="@+id/profileImageProgress"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:visibility="gone" />
+
         </FrameLayout>
 
         <LinearLayout
