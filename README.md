@@ -2,6 +2,9 @@
 
 Signify is an Android app designed to bridge the communication gap between hearing-impaired individuals and the hearing community. Using machine learning, it recognizes and interprets sign language gestures, enabling seamless real-time interaction.
 
+# Notes
+If you are using android version 15, you cannot use the camera feature. Try using a lower version of android
+
 ## Background
 According to The Central Statistics Agency, there were 923,941 Indonesians suffering from hearing impairments or total hearing loss in 2022. In many cases, people don't know how to communicate with them due to a lack of knowledge about sign language. This has motivated us to develop an app aimed at providing assistance and helping people learn sign language. 
 
